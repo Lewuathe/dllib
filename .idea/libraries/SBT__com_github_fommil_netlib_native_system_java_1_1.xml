@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="SBT: com.github.fommil.netlib:native_system-java:1.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.github.fommil.netlib/native_system-java/jars/native_system-java-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.github.fommil.netlib/native_system-java/docs/native_system-java-1.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.github.fommil.netlib/native_system-java/srcs/native_system-java-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

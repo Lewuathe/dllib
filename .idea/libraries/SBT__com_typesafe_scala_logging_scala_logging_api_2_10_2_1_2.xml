@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="SBT: com.typesafe.scala-logging:scala-logging-api_2.10:2.1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.typesafe.scala-logging/scala-logging-api_2.10/jars/scala-logging-api_2.10-2.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.typesafe.scala-logging/scala-logging-api_2.10/docs/scala-logging-api_2.10-2.1.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.typesafe.scala-logging/scala-logging-api_2.10/srcs/scala-logging-api_2.10-2.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
