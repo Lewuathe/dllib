@@ -3,3 +3,4 @@
 .DS_Store
 *.csv
 target
+Main.scala
