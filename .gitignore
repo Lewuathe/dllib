@@ -4,3 +4,4 @@
 *.csv
 target
 Main.scala
+.idea
