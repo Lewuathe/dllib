@@ -9,7 +9,8 @@ libraryDependencies  ++= Seq(
   // native libraries greatly improve performance, but increase jar sizes.
   "org.scalanlp" %% "breeze-natives" % "0.8.1",
   "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
-  "com.github.tototoshi" %% "scala-csv" % "0.8.0"
+  "com.github.tototoshi" %% "scala-csv" % "0.8.0",
+  "org.apache.spark" % "spark-core_2.10" % "1.1.0"
 )
 
 resolvers ++= Seq(
