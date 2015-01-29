@@ -13,4 +13,5 @@ Sonatype repository will be prepared. Please wait.
 
 # Author
 
-Kai Sasaki(@Lewuathe) 
+* Kai Sasaki([@Lewuathe](https://github.com/Lewuathe))
+* Shuichi Suzuki([@shue116](https://github.com/shoe116))
