@@ -1,5 +1,5 @@
 import breeze.linalg.{DenseVector, DenseMatrix}
-import fortytwo.networks.DAE
+import com.lewuathe.neurallib.networks.DAE
 import org.scalatest.FlatSpec
 
 /**

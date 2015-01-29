@@ -8,8 +8,8 @@ import javax.imageio.ImageIO
 import java.io.File
 import breeze.linalg.{DenseVector, DenseMatrix}
 import com.github.tototoshi.csv.{DefaultCSVFormat, CSVFormat, CSVReader, CSVWriter}
-import fortytwo.networks.{SDAE, DAE, NN3, NN, RFNN3}
-import fortytwo.activations._
+import neurallib.networks.{SDAE, DAE, NN3, NN, RFNN3}
+import neurallib.activations._
 
 
 /**

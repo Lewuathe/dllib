@@ -1,8 +1,8 @@
-package fortytwo.networks
+package com.lewuathe.neurallib.networks
 
 import breeze.linalg.{DenseVector, DenseMatrix}
-import fortytwo.regression.LogisticRegression
-import fortytwo.activations._
+import com.lewuathe.neurallib.regression.LogisticRegression
+import com.lewuathe.neurallib.activations._
 
 /**
  * Created by sasakiumi on 7/23/14.

@@ -1,4 +1,4 @@
-package fortytwo.networks
+package com.lewuathe.neurallib.networks
 
 import breeze.linalg.{DenseVector, DenseMatrix}
 
@@ -41,5 +41,5 @@ private[networks] class HiddenLayer(val nIns: Int, val nOuts: Int, val actFunc: 
 
 private[networks] object HiddenLayer {
   def apply(nIns: Int, nOuts: Int, actFunc: (DenseVector[Double]) => DenseVector[Double]): HiddenLayer = new HiddenLayer(nIns, nOuts, actFunc)
-  def apply(nIns: Int, nOuts: Int): HiddenLayer = new HiddenLayer(nIns, nOuts, fortytwo.activations.sigmoid)
+  def apply(nIns: Int, nOuts: Int): HiddenLayer = new HiddenLayer(nIns, nOuts, com.lewuathe.neurallib.activations.sigmoid)
 }

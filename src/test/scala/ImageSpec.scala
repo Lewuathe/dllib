@@ -1,5 +1,5 @@
 import breeze.linalg.DenseVector
-import fortytwo.image.Image
+import com.lewuathe.neurallib.image.Image
 import org.scalatest.FlatSpec
 
 /**

@@ -1,6 +1,6 @@
 import breeze.linalg.DenseVector
 import org.scalatest.FlatSpec
-import fortytwo.activations._
+import com.lewuathe.neurallib.activations._
 /**
  * Created by kaisasak on 6/29/14.
  */
