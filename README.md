@@ -1,4 +1,4 @@
-neurallib
+neurallib [![Build Status](https://travis-ci.org/Lewuathe/neurallib.svg?branch=master)](https://travis-ci.org/Lewuathe/neurallib)
 ================
 
 This is deep learning module running on JVM. Powered by Scala programming language.
