@@ -1,6 +1,6 @@
 import breeze.linalg.{DenseVector, DenseMatrix}
 import org.scalatest.FlatSpec
-import neurallib.regression.LogisticRegression
+import com.lewuathe.neurallib.regression.LogisticRegression
 
 /**
  * Created by sasakiumi on 7/24/14.
