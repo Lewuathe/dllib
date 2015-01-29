@@ -1,4 +1,4 @@
-package fortytwo.networks
+package com.lewuathe.neurallib.networks
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 

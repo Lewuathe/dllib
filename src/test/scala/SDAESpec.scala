@@ -1,6 +1,6 @@
 import breeze.linalg.{DenseVector, DenseMatrix}
-import fortytwo.activations._
-import fortytwo.networks.SDAE
+import com.lewuathe.neurallib.activations._
+import com.lewuathe.neurallib.networks.SDAE
 import org.scalatest.FlatSpec
 
 /**

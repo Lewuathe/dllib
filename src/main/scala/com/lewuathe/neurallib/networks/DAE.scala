@@ -1,8 +1,8 @@
-package fortytwo.networks
+package com.lewuathe.neurallib.networks
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.stats.distributions.Binomial
-import fortytwo.activations._
+import com.lewuathe.neurallib.activations._
 
 /**
  * Created by kaisasak on 7/10/14.

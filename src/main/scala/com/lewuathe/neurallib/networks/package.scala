@@ -1,4 +1,4 @@
-package fortytwo
+package com.lewuathe.neurallib
 
 /**
  * Created by kaisasak on 6/29/14.

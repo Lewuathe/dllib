@@ -1,5 +1,5 @@
-import fortytwo.activations._
-import fortytwo.networks.NN3
+import com.lewuathe.neurallib.activations._
+import com.lewuathe.neurallib.networks.NN3
 import org.scalatest.FlatSpec
 import breeze.linalg._
 

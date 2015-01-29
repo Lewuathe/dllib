@@ -1,7 +1,7 @@
-package fortytwo.networks
+package com.lewuathe.neurallib.networks
 
 import breeze.linalg.{DenseVector, DenseMatrix}
-import fortytwo.activations._
+import com.lewuathe.neurallib.activations._
 
 /**
  * Created by sasakikai on 11/30/14.
