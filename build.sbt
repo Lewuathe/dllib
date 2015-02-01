@@ -1,6 +1,9 @@
+organization := "com.lewuathe"
+
 name := "neurallib"
 
-version := "1.0"
+version := "0.0.1"
+
 
 libraryDependencies  ++= Seq(
   // other dependencies here
@@ -26,9 +29,9 @@ scalaVersion := "2.10.4"
 
 publishMavenStyle := true
 
-publishTo <<= version { (v: String) =>
+publishTo := {
   val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT"))
+  if (isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
@@ -36,6 +39,26 @@ publishTo <<= version { (v: String) =>
 
 publishArtifact in Test := false
 
+pomIncludeRepository := { _ => false }
 
-
-
+pomExtra := (
+  <url>https://github.com/Lewuathe/neurallib</url>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>http://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>git@github.com:Lewuathe/neurallib.git</url>
+    <connection>scm:git:git@github.com:Lewuathe/neurallib.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>lewuathe</id>
+      <name>Kai Sasaki</name>
+      <url>http://lewuathe.com</url>
+    </developer>
+  </developers>
+)
