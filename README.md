@@ -15,7 +15,7 @@ libraryDependencies += "com.lewuathe" % "neurallib_2.10" % "0.0.1"
 
 ## Example
 
-```
+```scala
 object Main {
   val nn = NN3(Array(784, 100, 10), 0.1, (iteration: Int, nn3: NN) => {
     var correctNum = 0
