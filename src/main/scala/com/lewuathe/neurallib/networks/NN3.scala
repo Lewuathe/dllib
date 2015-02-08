@@ -70,6 +70,9 @@ class NN3(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN)
 }
 
 object NN3 {
+  def apply(countOfLayers: Array[Int], lr: Double, 
+            actFunc: (DenseVector[Double]) => DenseVector[Double], actPrimeFunc: (DenseVector[Double]) => DenseVector[Double]) =
+    new NN3(countOfLayers, lr, (iteration: Int, nn: NN) => {}, actFunc, actPrimeFunc)
   def apply(countOfLayers: Array[Int], lr: Double, evaluate: (Int, NN) => Unit,
             actFunc: (DenseVector[Double]) => DenseVector[Double], actPrimeFunc: (DenseVector[Double]) => DenseVector[Double]) =
     new NN3(countOfLayers, lr, evaluate, actFunc, actPrimeFunc)
