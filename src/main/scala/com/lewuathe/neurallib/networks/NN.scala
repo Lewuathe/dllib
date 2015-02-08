@@ -99,7 +99,8 @@ abstract class NN {
     var ret: List[(DenseMatrix[Double], DenseVector[Double])] = List()
 
     // Calculate errors of output layer
-    var d = (activations.last - y) :* actPrimeFunc(zs.last)
+//    var d = (activations.last - y) :* actPrimeFunc(zs.last)
+    var d = (activations.last - y)
     ret = (d * activations(activations.length - 2).t, d) :: ret
 
     // Calculate errors of hidden layers

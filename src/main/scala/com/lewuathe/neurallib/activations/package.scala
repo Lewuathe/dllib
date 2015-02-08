@@ -12,7 +12,6 @@ package object activations {
    * @return
    */
   def sigmoid(x: DenseVector[Double]): DenseVector[Double] = x.map(sigmoid(_))
-
   /**
    * sigmoid function for double value
    * @param input
@@ -62,10 +61,43 @@ package object activations {
    */
   def tanhPrime(input: Double): Double = 1.0 - Math.pow(tanh(input), 2.0)
 
+  /**
+   * Softmax activation function 
+   * @param x
+   */
   def softmax(x: DenseVector[Double]): DenseVector[Double] = {
     val denom = sum(x.map(Math.exp))
     x.map(Math.exp(_) / denom)
   }
+
+  /**
+   * A smooth approximation of ReLU
+   * @param input
+   * @return
+   */
+  def softplus(input: Double): Double = Math.log(1.0 + Math.exp(input))
+
+  /**
+   * A smooth approximation of ReLU for vector 
+   * @param x
+   * @return
+   */
+  def softplus(x: DenseVector[Double]): DenseVector[Double] = x.map(softplus(_))
+
+  /**
+   * Derivative of softplus function 
+   * @param input
+   * @return
+   */
+  def softplusPrime(input: Double): Double = 1.0 / (1.0 + Math.exp(-input))
+
+  /**
+   * Derivative of softplus function for vector
+   * @param x
+   * @return
+   */
+  def softplusPrime(x: DenseVector[Double]): DenseVector[Double] = x.map(softplusPrime(_))
+  
 
 
 }
