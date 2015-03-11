@@ -8,8 +8,9 @@ import javax.imageio.ImageIO
 import java.io.File
 import breeze.linalg.{DenseVector, DenseMatrix}
 import com.github.tototoshi.csv.{DefaultCSVFormat, CSVFormat, CSVReader, CSVWriter}
-import neurallib.networks.{SDAE, DAE, NN3, NN, RFNN3}
-import neurallib.activations._
+import com.lewuathe.neurallib.networks.{NN, MDAE}
+import com.lewuathe.neurallib.networks.{SDAE, DAE, NN3, NN, RFNN3}
+import com.lewuathe.neurallib.activations._
 
 
 /**
@@ -134,18 +135,18 @@ object Main {
     //    submissionReader.close()
 
 
-    val nn = NN3(Array(784, 100, 10), 0.1, (iteration: Int, rfnn3: NN) => {
-      var correctNum = 0
-      for (i <- 0 until testxs.rows) {
-        val ans = rfnn3.predict(testxs(i, ::).t)
-        if (testAnswer(ans, testys(i, ::).t)) correctNum += 1
-      }
-      val accuracy = (correctNum * 100.0) / testDataCount
-      println(f"#$iteration%02d : ${correctNum}/${testDataCount}, ${accuracy}")
-    })
-    nn.tied = false
-    println("start training")
-    nn.train(xs, ys)
+//    val nn = NN3(Array(784, 100, 10), 0.1, (iteration: Int, rfnn3: NN) => {
+//      var correctNum = 0
+//      for (i <- 0 until testxs.rows) {
+//        val ans = rfnn3.predict(testxs(i, ::).t)
+//        if (testAnswer(ans, testys(i, ::).t)) correctNum += 1
+//      }
+//      val accuracy = (correctNum * 100.0) / testDataCount
+//      println(f"#$iteration%02d : ${correctNum}/${testDataCount}, ${accuracy}")
+//    })
+//    nn.tied = false
+//    println("start training")
+//    nn.train(xs, ys)
 
 
 //    val nn = NN3(Array(784, 100, 784), 0.1, (iteration: Int, nn: NN) => {
@@ -160,6 +161,17 @@ object Main {
 //
 //    writeImage(nn.weights(1).t, "1")
 
+    val nn = MDAE(Array(784, 100, 784), 0.1, (iteration: Int, nn: NN) => {
+      for (i <- 0 until testxs.rows) {
+        val ans = nn.predict(testxs(i, ::).t)
+        //println(ans)
+      }
+      println(f"#$iteration%2d")
+    })
+    nn.epochs = 30
+    nn.train(xs, xs)
+
+    writeImage(nn.weights(1).t, "mdae")
 
     //    val sdae = SDAE(Array(784, 100, 30, 10))
     //        println("Start pretraining...")

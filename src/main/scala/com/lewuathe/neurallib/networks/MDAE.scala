@@ -18,7 +18,7 @@ import com.lewuathe.neurallib.activations._
  */
 class MDAE(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN) => Unit,
            var actFunc: (DenseVector[Double]) => DenseVector[Double],
-           var actPrimeFunc: (DenseVector[Double]) => DenseVector[Double]) extends NN{
+           var actPrimeFunc: (DenseVector[Double]) => DenseVector[Double]) extends NN {
 
   // Autoencoder must have same dimention between input and output
   require(countOfLayers.head == countOfLayers.last)
@@ -43,7 +43,7 @@ class MDAE(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN
    * Initialize sampling vector for each mask matrix
    * @return
    */
-  private def initMVec(): Seq[DenseVector[Double]] = {
+  private def updateMVec(): Seq[DenseVector[Double]] = {
     var minK = 0
     for (l <- 0 until countOfLayers.length) yield {
       val v = DenseVector.zeros[Double](countOfLayers(l))
@@ -62,12 +62,14 @@ class MDAE(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN
   }
 
   // mVec is used to initialize mask matrix
-  var mVec: Seq[DenseVector[Double]] = initMVec()
+  var mVec: Seq[DenseVector[Double]] = updateMVec()
 
   /**
    * Masks used restrict connections inside network
    */
-  var masks: Seq[DenseMatrix[Double]] = for (l <- 0 until countOfLayers.length - 1) yield {
+  var masks: Seq[DenseMatrix[Double]] = updateMasks
+
+  private def updateMasks(): Seq[DenseMatrix[Double]] = for (l <- 0 until countOfLayers.length - 1) yield {
     val mask = DenseMatrix.zeros[Double](countOfLayers(l + 1), countOfLayers(l))
     for {
       r <- 0 until mask.rows
@@ -76,15 +78,28 @@ class MDAE(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN
     mask
   }
 
+
+  /**
+   * Training networks with given data
+   * @param xs
+   */
+  def train(xs: DenseMatrix[Double]) {
+    super.train(xs, xs)
+  }
+
   /**
    * Training with backpropagation
    * @param xs
    * @param ys
    */
   override protected def backprop(xs: DenseMatrix[Double], ys: DenseMatrix[Double]): Unit = {
+    require(xs.rows == ys.rows)
+    require(xs.cols == ys.cols)
     var weightDeltas = zeroWeights()
     var biaseDeltas = zeroBiases()
 
+    mVec = updateMVec()
+    masks = updateMasks()
     for (i <- 0 until xs.rows) {
       val deltas = delta(xs(i, ::).t, ys(i, ::).t)
       // Add deltas for updating weight and bias parameters
@@ -107,12 +122,12 @@ class MDAE(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN
   override protected def delta(x: DenseVector[Double], y: DenseVector[Double]): List[(DenseMatrix[Double], DenseVector[Double])] = {
     var act = x
     var z = x
-    val layerValues = for ((w, b) <- weights zip biases) yield {
-      z = w * act + b
+    val layerValues = for ((w, b, m) <- (weights, biases, masks).zipped) yield {
+      z = (w :* m) * act + b
       act = actFunc(z)
       (z, act)
     }
-    val (zs, acts) = layerValues.unzip
+    val (zs, acts) = layerValues.toSeq.unzip
 
     // Prepend input to activations
     val activations = x :: acts.toList
@@ -125,7 +140,7 @@ class MDAE(val countOfLayers: Array[Int], var lr: Double, var evaluate: (Int, NN
 
     // Calculate errors of hidden layers
     for (l <- countOfLayers.length - 2 until 0 by -1) {
-      d = actPrimeFunc(zs(l - 1)) :* (weights(l).t * d)
+      d = actPrimeFunc(zs(l - 1)) :* ((weights(l).t :* masks(l).t) * d)
       ret = (d * activations(l - 1).t, d) :: ret
     }
     ret

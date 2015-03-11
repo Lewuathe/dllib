@@ -1,12 +1,13 @@
-import breeze.linalg.{DenseVector, DenseMatrix}
-import com.lewuathe.neurallib.networks.DAE
+import breeze.linalg.{DenseMatrix, DenseVector}
+import com.lewuathe.neurallib.networks.{MDAE, DAE}
 import org.scalatest.FlatSpec
 
 /**
- * Created by kaisasak on 7/10/14.
+ * Created by sasakikai on 3/11/15.
  */
-class DAESpec extends FlatSpec{
-  "DAE" should "non-supervised learning" in {
+class MDAESpec extends FlatSpec {
+
+  "MDAE" should "non-supervised learning" in {
     val xs = DenseMatrix(
       (0.0, 0.1, 0.0, 0.9),
       (0.9, 0.1, 0.0, 0.2),
@@ -27,10 +28,10 @@ class DAESpec extends FlatSpec{
       (0.0, 0.1, 0.3, 0.9),
       (0.8, 0.4, 0.0, 0.1)
     )
-    val dae = DAE(Array(4, 5, 4))
-    dae.train(xs)
+    val mdae = MDAE(Array(4, 3, 4))
+    mdae.train(xs)
     val v = DenseVector(0.4, 0.8, 0.0, 0.0)
-    println(dae.predict(v))
+    println(mdae.predict(v))
   }
 
 }
