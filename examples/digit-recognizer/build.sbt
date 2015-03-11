@@ -6,7 +6,7 @@ scalaVersion := "2.10.4"
 
 libraryDependencies  ++= Seq(
   // other dependencies here
-  "neurallib" % "fortytwo_2.10" % "1.0",
+  "com.lewuathe" %% "neurallib" % "0.0.2",
   "org.scalanlp" %% "breeze" % "0.8.1",
   // native libraries are not included by default. add this if you want them (as of 0.7)
   // native libraries greatly improve performance, but increase jar sizes.
