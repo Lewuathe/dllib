@@ -10,7 +10,7 @@ This is deep learning module running on JVM. Powered by Scala programming langua
 Write below configuration in your build.sbt.
 
 ```
-libraryDependencies += "com.lewuathe" % "neurallib_2.10" % "0.0.1"
+libraryDependencies += "com.lewuathe" % "neurallib_2.10" % "0.0.2"
 ```
 
 ## Example

@@ -149,29 +149,31 @@ object Main {
 //    nn.train(xs, ys)
 
 
-//    val nn = NN3(Array(784, 100, 784), 0.1, (iteration: Int, nn: NN) => {
-//      for (i <- 0 until testxs.rows) {
-//        val ans = nn.predict(testxs(i, ::).t)
-//        //println(ans)
-//      }
-//      println(f"#$iteration%2d")
-//    })
-//    nn.epochs = 30
-//    nn.train(xs, xs)
-//
-//    writeImage(nn.weights(1).t, "1")
-
-    val nn = MDAE(Array(784, 100, 784), 0.1, (iteration: Int, nn: NN) => {
+    val nn = DAE(Array(784, 100, 784), 0.1, (iteration: Int, nn: NN) => {
       for (i <- 0 until testxs.rows) {
         val ans = nn.predict(testxs(i, ::).t)
         //println(ans)
+        writeImage(nn.weights(1).t, s"-dae-${iteration}")
       }
       println(f"#$iteration%2d")
     })
     nn.epochs = 30
     nn.train(xs, xs)
 
-    writeImage(nn.weights(1).t, "mdae")
+    writeImage(nn.weights(1).t, "1")
+
+//    val nn = MDAE(Array(784, 100, 784), 0.1, (iteration: Int, nn: NN) => {
+//      for (i <- 0 until testxs.rows) {
+//        val ans = nn.predict(testxs(i, ::).t)
+//        //println(ans)
+//      }
+//      writeImage(nn.weights(1).t, s"-${iteration}")
+//      println(f"#$iteration%2d")
+//    })
+//    nn.epochs = 30
+//    nn.train(xs, xs)
+
+//    writeImage(nn.weights(1).t, "mdae")
 
     //    val sdae = SDAE(Array(784, 100, 30, 10))
     //        println("Start pretraining...")
