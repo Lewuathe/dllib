@@ -7,13 +7,13 @@ version := "0.0.2"
 
 libraryDependencies  ++= Seq(
   // other dependencies here
-  "org.scalanlp" %% "breeze" % "0.8.1",
+  "org.scalanlp" %% "breeze" % "0.11.2",
   // native libraries are not included by default. add this if you want them (as of 0.7)
   // native libraries greatly improve performance, but increase jar sizes.
-  "org.scalanlp" %% "breeze-natives" % "0.8.1",
-  "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
-  "com.github.tototoshi" %% "scala-csv" % "0.8.0",
-  "org.apache.spark" % "spark-core_2.10" % "1.1.0"
+  "org.scalanlp" %% "breeze-natives" % "0.11.2",
+  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
+  "com.github.tototoshi" %% "scala-csv" % "1.2.1",
+  "org.apache.spark" %% "spark-core" % "1.3.1"
 )
 
 resolvers ++= Seq(
@@ -25,7 +25,7 @@ resolvers ++= Seq(
 
 // Scala 2.9.2 is still supported for 0.2.1, but is dropped afterwards.
 // Don't use an earlier version of 2.10, you will probably get weird compiler crashes.
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.4"
 
 publishMavenStyle := true
 
