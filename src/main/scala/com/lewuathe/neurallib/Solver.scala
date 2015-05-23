@@ -34,10 +34,16 @@ object Solver {
               + (t._2 / count2)), 0.0, count1 + count2)
           })
 
+      // Update parameters of this network
       net.updateParams(delta)
     }
+
+    // Return parameters of this model.
     net.params
   }
+
+  def predict(data: RDD[Datum], net: Network): RDD[Datum]
+    = data.map(net.forward)
 }
 
 

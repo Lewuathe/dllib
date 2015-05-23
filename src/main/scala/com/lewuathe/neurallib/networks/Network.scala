@@ -33,11 +33,11 @@ abstract class Network {
 
   /**
    * Calculate total output of this network.
-   * @param input
+   * @param downstream
    * @return
    */
-  def forward(input: Datum): Datum = {
-    var d = input
+  def forward(downstream: Datum): Datum = {
+    var d = downstream
     for (layer <- layers) {
       d = layer.forward(d)
     }
@@ -46,14 +46,17 @@ abstract class Network {
 
   /**
    * Calculate error difference of this network.
-   * @param output
+   * @param upstream
    * @return delta
    */
-  def backward(output: Datum): Seq[Datum] = {
-    var d = output
+  def backward(upstream: Datum): Seq[Datum] = {
+    var d = upstream
     var ret = Seq[Datum]()
     for (layer <- layers) {
-      ret = layer.delta(d) +: ret
+      ret = layer.delta(d) match {
+        case Some(delta) if layer.isParamLayer => delta +: ret
+        case None => ret
+      }
       d = layer.backward(d)
     }
     ret
