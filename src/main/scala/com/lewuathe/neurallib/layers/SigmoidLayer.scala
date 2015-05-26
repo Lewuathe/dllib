@@ -65,3 +65,7 @@ class SigmoidLayer extends Layer {
     Datum(newChannels, upstream.channels, upstream.height, upstream.width)
   }
 }
+
+object SigmoidLayer {
+  def apply(): SigmoidLayer = new SigmoidLayer()
+}

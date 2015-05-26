@@ -12,7 +12,7 @@ abstract class Network {
    */
   def params: Seq[Datum] = layers.map(_.param)
 
-  def paramStructs: Seq[Layer.ParamStruct] = layers.map(_.paramStruct)
+  //def paramStructs: Seq[Layer.ParamStruct] = layers.map(_.paramStruct)
 
   def setParams(newParams: Seq[Datum]) = {
     for ((l, p) <- layers zip newParams) {

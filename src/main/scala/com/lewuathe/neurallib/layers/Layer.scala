@@ -8,8 +8,8 @@ import com.lewuathe.neurallib.Datum
 abstract class Layer {
   private[neurallib] var param: Datum = _
 
-  private[neurallib] val paramStruct
-  = new Layer.ParamStruct(param.channels, param.height, param.width)
+//  private[neurallib] val paramStruct
+//  = new Layer.ParamStruct(param.channels, param.height, param.width)
 
   private[neurallib] var prevForward: Datum = _
 

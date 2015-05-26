@@ -8,6 +8,7 @@ import com.lewuathe.neurallib.{Channel, Datum}
  * Created by lewuathe on 5/23/15.
  */
 class InnerProductLayer extends Layer {
+
   var channels: Int = _
   var inputDim: Int = _
   var outputDim: Int = _
@@ -44,7 +45,8 @@ class InnerProductLayer extends Layer {
       val ret = paramMatrix * dsc.getValues
       new Channel(ret, outputDim, 1)
     }
-    Datum(retChannels, channels, outputDim, 1)
+    prevForward = Datum(retChannels, channels, outputDim, 1)
+    prevForward
   }
 
 
@@ -74,7 +76,29 @@ class InnerProductLayer extends Layer {
    * @param upstream
    * @return parameter delta
    */
-  override def delta(upstream: Datum): Option[Datum] = ???
+  override def delta(upstream: Datum): Option[Datum] = {
+    require(upstream.channels == channels)
+    val targetChannels = (upstream.getData zip param.getData zip prevForward.getData) map {
+      case ((u, p), prev) => (u, p, prev)
+    }
+    val retChannels = for ((usc, pc, prevc) <- targetChannels) yield {
+      val paramMatrix
+      = pc.getValues.toDenseVector.toDenseMatrix.reshape(outputDim, inputDim)
+      require(usc.getValues.length == outputDim)
+      val ret
+      = prevc.getValues.toDenseVector * (paramMatrix.t * usc.getValues).t
+      new Channel(ret.toDenseVector, outputDim, inputDim)
+    }
+    Some(Datum(retChannels, channels, outputDim, inputDim))
+  }
 
   override def isParamLayer: Boolean = true
+}
+
+object InnerProductLayer {
+  def apply(conf: Map[String, String]): InnerProductLayer = {
+    val layer = new InnerProductLayer()
+    layer.init(conf)
+    layer
+  }
 }
