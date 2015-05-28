@@ -12,6 +12,13 @@ class InnerProductLayer extends Layer {
   var channels: Int = _
   var inputDim: Int = _
   var outputDim: Int = _
+
+  def matrixParam: Seq[Matrix[Double]] = {
+    for (c <- param.getData) yield {
+      c.getValues.toDenseVector.toDenseMatrix.reshape(outputDim, inputDim)
+    }
+  }
+
   /**
    * Initialize parameters of this layer
    */
