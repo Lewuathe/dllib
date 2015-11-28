@@ -1,4 +1,4 @@
-package com.lewuathe.neurallib.networks
+package com.lewuathe.dllib.network
 
 /**
  * Created by kaisasak on 7/9/14.

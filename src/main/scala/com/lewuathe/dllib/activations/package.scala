@@ -1,4 +1,4 @@
-package com.lewuathe.neurallib
+package com.lewuathe.dllib
 
 import breeze.linalg.{sum, DenseVector}
 

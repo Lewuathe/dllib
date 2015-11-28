@@ -1,4 +1,4 @@
-package com.lewuathe.neurallib.networks
+package com.lewuathe.dllib.network
 
 import breeze.linalg.{DenseVector, DenseMatrix}
 
@@ -12,7 +12,7 @@ import breeze.linalg.{DenseVector, DenseMatrix}
  * @param nOuts
  * @param actFunc
  */
-private[networks] class HiddenLayer(val nIns: Int, val nOuts: Int, val actFunc: (DenseVector[Double]) => DenseVector[Double]) {
+private[network] class HiddenLayer(val nIns: Int, val nOuts: Int, val actFunc: (DenseVector[Double]) => DenseVector[Double]) {
   var weight: DenseMatrix[Double] = DenseMatrix.rand[Double](nOuts, nIns) - 0.5
   var bias: DenseVector[Double] = DenseVector.rand[Double](nOuts) - 0.5
 
@@ -39,7 +39,7 @@ private[networks] class HiddenLayer(val nIns: Int, val nOuts: Int, val actFunc: 
 
 }
 
-private[networks] object HiddenLayer {
+private[network] object HiddenLayer {
   def apply(nIns: Int, nOuts: Int, actFunc: (DenseVector[Double]) => DenseVector[Double]): HiddenLayer = new HiddenLayer(nIns, nOuts, actFunc)
-  def apply(nIns: Int, nOuts: Int): HiddenLayer = new HiddenLayer(nIns, nOuts, com.lewuathe.neurallib.activations.sigmoid)
+  def apply(nIns: Int, nOuts: Int): HiddenLayer = new HiddenLayer(nIns, nOuts, com.lewuathe.dllib.activations.sigmoid)
 }

@@ -1,8 +1,8 @@
-package com.lewuathe.neurallib.networks
+package com.lewuathe.dllib.network
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.stats.distributions.Uniform
-import com.lewuathe.neurallib.activations._
+import com.lewuathe.dllib.activations._
 
 /**
  * Created by sasakikai on 3/10/15.

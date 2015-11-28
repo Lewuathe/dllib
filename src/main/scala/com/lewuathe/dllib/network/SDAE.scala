@@ -1,8 +1,8 @@
-package com.lewuathe.neurallib.networks
+package com.lewuathe.dllib.network
 
 import breeze.linalg.{DenseVector, DenseMatrix}
-import com.lewuathe.neurallib.regression.LogisticRegression
-import com.lewuathe.neurallib.activations._
+import com.lewuathe.dllib.regression.LogisticRegression
+import com.lewuathe.dllib.activations._
 
 /**
  * Created by sasakiumi on 7/23/14.

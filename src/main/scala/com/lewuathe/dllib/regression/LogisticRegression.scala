@@ -1,8 +1,8 @@
-package com.lewuathe.neurallib.regression
+package com.lewuathe.dllib.regression
 
 import breeze.linalg.{DenseVector, DenseMatrix}
 import breeze.stats.mean
-import com.lewuathe.neurallib.activations.softmax
+import com.lewuathe.dllib.activations.softmax
 
 /**
  * Created by sasakiumi on 7/24/14.
@@ -28,7 +28,7 @@ class LogisticRegression(val nIns: Int, val nOuts: Int) {
     }
   }
 
-  private[neurallib] def z(x: DenseVector[Double]): DenseVector[Double] = weight * x + bias
+  private[dllib] def z(x: DenseVector[Double]): DenseVector[Double] = weight * x + bias
 
   def predict(x: DenseVector[Double]): DenseVector[Double] = softmax(weight * x + bias)
 }
