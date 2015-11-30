@@ -1,6 +1,8 @@
 package com.lewuathe.dllib
 
-import org.apache.spark.mllib.linalg.Vector
+import breeze.linalg.Vector
 
-private [dllib] case class Instance(label: Double, weight: Double, features: Vector)
+private [dllib] case class Instance(label: Vector[Double],
+    weight: Double, features: Vector[Double]) {
+
 }

@@ -2,7 +2,7 @@ package com.lewuathe.dllib
 
 import scala.collection.mutable.Stack
 
-import org.apache.spark.mllib.linalg.Vector
+import breeze.linalg.Vector
 
-class ActivationStack extends Stack[Vector] {}
+class ActivationStack extends Stack[Vector[Double]] {}
 

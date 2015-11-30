@@ -1,28 +1,34 @@
 package com.lewuathe.dllib
 
-import scala.util.Random
-
-import org.apache.spark.mllib.linalg.{Vectors, Vector}
+import breeze.linalg.Vector
 
 /**
   * Bias represents a intercept vector of each layer
   * @param id
   * @param size
   */
-class Bias(val id: String, val size: Int, isZero = false: Boolean) {
+class Bias(val id: String, val size: Int, isZero: Boolean = false)
+          (v: Vector[Double] = null) {
 
-  val value: Vector = if (isZero) {
+  val value: Vector[Double] = if (v != null) {
+    v
+  } else if (isZero) {
     zeroBias(size)
   } else {
     randomBias(size)
   }
 
-  private def randomBias(size: Int): Vector = {
-    Vectors.dense(Array.fill(size)(Random.nextDouble()))
+  private def randomBias(size: Int): Vector[Double] = {
+    Vector.rand[Double](size)
   }
 
-  private def zeroBias(size: Int): Vector = {
-    Vectors.zeros(size)
+  private def zeroBias(size: Int): Vector[Double] = {
+    Vector.zeros[Double](size)
+  }
+
+  def +(that: Bias): Bias = {
+    require(this.size == that.size)
+    new Bias(id, size)(this.value + that.value)
   }
 }
 

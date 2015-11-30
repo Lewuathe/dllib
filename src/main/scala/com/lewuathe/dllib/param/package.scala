@@ -1,6 +1,6 @@
 package com.lewuathe.dllib
 
-import org.apache.spark.ml.param._
+import org.apache.spark.ml.param.{Param, Params}
 
 /**
   * Created by sasakikai on 11/27/15.
@@ -9,7 +9,7 @@ package object param {
   /**
     * Trait for shared param featuresCol (default: "features").
     */
-  private[ml] trait HasFeaturesCol extends Params {
+  private[dllib] trait HasFeaturesCol extends Params {
 
     /**
       * Param for features column name.
@@ -26,7 +26,7 @@ package object param {
   /**
     * Trait for shared param labelCol (default: "label").
     */
-  private[ml] trait HasLabelCol extends Params {
+  private[dllib] trait HasLabelCol extends Params {
 
     /**
       * Param for label column name.
@@ -43,7 +43,7 @@ package object param {
   /**
     * Trait for shared param predictionCol (default: "prediction").
     */
-  private[ml] trait HasPredictionCol extends Params {
+  private[dllib] trait HasPredictionCol extends Params {
 
     /**
       * Param for prediction column name.
@@ -60,7 +60,7 @@ package object param {
   /**
     * Trait for shared param weightCol.
     */
-  private[ml] trait HasWeightCol extends Params {
+  private[dllib] trait HasWeightCol extends Params {
 
     /**
       * Param for weight column name. If this is not set or empty, we treat all instance weights as 1.0..

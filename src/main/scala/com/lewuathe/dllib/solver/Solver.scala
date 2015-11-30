@@ -1,14 +1,15 @@
 package com.lewuathe.dllib.solver
 
+import com.lewuathe.dllib.layer.Layer
 import org.apache.spark.ml.param.{ParamMap, Params}
 import org.apache.spark.ml.{PredictionModel, Predictor}
-import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Row}
 import org.apache.spark.sql.functions.{col, lit}
 
-import com.lewuathe.dllib.Instance
-import com.lewuathe.dllib.Model
+import breeze.linalg.{Vector, Matrix}
+
+import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param._
@@ -31,12 +32,46 @@ abstract class Solver[FeaturesType,
   override protected def train(dataset: DataFrame): M = {
     val w = if ($(weightCol).isEmpty) lit(1.0) else col($(weightCol))
     val instances: RDD[Instance] = dataset.select(col($(labelCol)), w, col($(featuresCol))).map {
-      case Row(label: Double, weight: Double, features: Vector) =>
-        Instance(label, weight, features)
+      case Row(label: org.apache.spark.mllib.linalg.Vector, weight: Double,
+        features: org.apache.spark.mllib.linalg.Vector) =>
+          Instance(Vector[Double](label.toArray), weight, Vector[Double](features.toArray))
     }
 
-    val (modelDelta: Model, lossSum: Double, miniBatchSize: Int) = instances.sample(false, miniBatchFraction, 42)
-      .treeAggregate((Model.zero(form), 0.0, 0)()
+    val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
+      = instances.sample(false, miniBatchFraction, 42)
+      .treeAggregate((Model.zero(form), 0.0, 0))(
+      seqOp = (c: (Model, Double, Int), instance: Instance) => {
+
+      },
+      combOp = (m1: Model, m2: Model) => {
+
+      })
+  }
+
+  protected def gradient(form: Form, model: Model, instance: Instance): Model = {
+    val dModel = Model.zero(form)
+    val label = instance.label
+    var z = instance.features
+    val acts = new ActivationStack
+    acts.push(z)
+
+    // Feed forward
+    for (l: Layer <- form.layers) {
+      z = l.forward(acts, model)
+      acts.push(z)
+    }
+
+    val delta = error(acts.last, label)
+    for (l: Layer <- form.layers.reverse) {
+      (delta, acts, dModel) = l.backward(delta, acts, model)
+    }
+
+
+  }
+
+  protected def error(label: Vector[Double], prediction: Vector[Double]): Vector[Double] = {
+    require(label.size == prediction.size)
+    label - prediction
   }
 }
 
@@ -46,5 +81,5 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]]
 
   override def copy(extra: ParamMap): M = ???
 
-  override val uid: String = _
+  override val uid: String = ???
 }

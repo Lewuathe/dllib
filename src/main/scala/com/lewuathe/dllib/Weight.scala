@@ -1,8 +1,6 @@
 package com.lewuathe.dllib
 
-import java.util.Random
-
-import org.apache.spark.mllib.linalg.{Matrices, Matrix}
+import breeze.linalg.Matrix
 
 /**
   * Weight represents a coefficient of each layer
@@ -10,20 +8,29 @@ import org.apache.spark.mllib.linalg.{Matrices, Matrix}
   * @param inputSize
   * @param outputSize
   */
-class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero = false: Boolean) {
+class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Boolean = false)
+            (v: Matrix[Double] = null) {
 
-  val value: Matrix = if (isZero) {
+  val value: Matrix[Double] = if (v != null) {
+    v
+  } else if (isZero) {
     zeroWeight(outputSize, inputSize)
   } else {
     randomWeight(outputSize, inputSize)
   }
 
-  private def randomWeight(outputSize: Int, inputSize: Int): Matrix = {
-    Matrices.rand(outputSize, inputSize, new Random(42)) - 0.5
+  private def randomWeight(outputSize: Int, inputSize: Int): Matrix[Double] = {
+    Matrix.rand[Double](outputSize, inputSize) - 0.5
   }
 
-  private def zeroWeight(outputSize: Int, inputSize: Int): Matrix = {
-    Matrices.zeros(outputSize, inputSize)
+  private def zeroWeight(outputSize: Int, inputSize: Int): Matrix[Double] = {
+    Matrix.zeros(outputSize, inputSize)
+  }
+
+  def +(that: Weight): Weight = {
+    require(this.outputSize == that.outputSize)
+    require(this.inputSize == that.inputSize)
+    new Weight(id, outputSize, inputSize)(this.value + that.value)
   }
 }
 

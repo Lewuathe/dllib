@@ -8,8 +8,8 @@ import javax.imageio.ImageIO
 import java.io.File
 import breeze.linalg.{DenseVector, DenseMatrix}
 import com.github.tototoshi.csv.{DefaultCSVFormat, CSVFormat, CSVReader, CSVWriter}
-import com.lewuathe.dllib.network.{NN, MDAE}
-import com.lewuathe.dllib.network.{SDAE, DAE, NN3, NN, RFNN3}
+import com.lewuathe.dllib.network.MDAE
+import com.lewuathe.dllib.network.{SDAE, DAE, NN3, RFNN3}
 import com.lewuathe.dllib.activations._
 
 

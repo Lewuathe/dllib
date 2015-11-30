@@ -7,10 +7,10 @@ version := "0.0.2"
 
 libraryDependencies  ++= Seq(
   // other dependencies here
-  "org.scalanlp" %% "breeze" % "0.8.1",
+  "org.scalanlp" %% "breeze" % "0.11.2",
   // native libraries are not included by default. add this if you want them (as of 0.7)
   // native libraries greatly improve performance, but increase jar sizes.
-  "org.scalanlp" %% "breeze-natives" % "0.8.1",
+  "org.scalanlp" %% "breeze-natives" % "0.11.2",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test",
   "com.github.tototoshi" % "scala-csv_2.10" % "0.8.0"
 )

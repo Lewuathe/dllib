@@ -1,15 +1,15 @@
 package com.lewuathe.dllib.layer
 
 import com.lewuathe.dllib.{ActivationStack, Model}
-import org.apache.spark.mllib.linalg.Vector
+import breeze.linalg.Vector
 
 abstract class Layer {
   val id: String
   val inputSize: Int
   val outputSize: Int
 
-  def forward(acts: ActivationStack, model: Model): Vector
-  def backward(delta: Vector, acts: ActivationStack, model: Model)
-  : (Vector, ActivationStack)
+  def forward(acts: ActivationStack, model: Model): Vector[Double]
+  def backward(delta: Vector[Double], acts: ActivationStack, model: Model)
+  : (Vector[Double], ActivationStack, Model)
 
 }
