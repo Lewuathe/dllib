@@ -9,7 +9,7 @@ import breeze.linalg.Matrix
   * @param outputSize
   */
 class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Boolean = false)
-            (v: Matrix[Double] = null) {
+            (implicit v: Matrix[Double]) {
 
   val value: Matrix[Double] = if (v != null) {
     v
@@ -35,6 +35,8 @@ class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Bo
 }
 
 object Weight {
+  implicit val nullMatrix: Matrix[Double] = null
+
   def apply(id: String, outputSize: Int, inputSize: Int): Weight
     = new Weight(id, outputSize, inputSize)
 

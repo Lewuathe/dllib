@@ -8,7 +8,7 @@ import breeze.linalg.Vector
   * @param size
   */
 class Bias(val id: String, val size: Int, isZero: Boolean = false)
-          (v: Vector[Double] = null) {
+          (implicit v: Vector[Double]) {
 
   val value: Vector[Double] = if (v != null) {
     v
@@ -33,6 +33,8 @@ class Bias(val id: String, val size: Int, isZero: Boolean = false)
 }
 
 object Bias {
+  implicit val nullVector: Vector[Double] = null
+
   def apply(id: String, size: Int): Bias = new Bias(id, size)
 
   def apply(size: Int): Bias = new Bias(util.genId(), size)

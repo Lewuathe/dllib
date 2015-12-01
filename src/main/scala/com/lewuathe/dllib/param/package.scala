@@ -2,9 +2,6 @@ package com.lewuathe.dllib
 
 import org.apache.spark.ml.param.{Param, Params}
 
-/**
-  * Created by sasakikai on 11/27/15.
-  */
 package object param {
   /**
     * Trait for shared param featuresCol (default: "features").
@@ -17,7 +14,7 @@ package object param {
       */
     final val featuresCol: Param[String] = new Param[String](this, "featuresCol", "features column name")
 
-    setDefault(featuresCol, "features")
+//    setDefault(featuresCol, "features")
 
     /** @group getParam */
     final def getFeaturesCol: String = $(featuresCol)
@@ -34,7 +31,7 @@ package object param {
       */
     final val labelCol: Param[String] = new Param[String](this, "labelCol", "label column name")
 
-    setDefault(labelCol, "label")
+//    setDefault(labelCol, "label")
 
     /** @group getParam */
     final def getLabelCol: String = $(labelCol)
@@ -51,7 +48,7 @@ package object param {
       */
     final val predictionCol: Param[String] = new Param[String](this, "predictionCol", "prediction column name")
 
-    setDefault(predictionCol, "prediction")
+//    setDefault(predictionCol, "prediction")
 
     /** @group getParam */
     final def getPredictionCol: String = $(predictionCol)

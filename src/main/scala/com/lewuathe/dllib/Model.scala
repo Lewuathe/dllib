@@ -13,7 +13,7 @@ class ModelShape(form: Form) {
 }
 
 class Model(form: Form, isZero: Boolean = false)
-           (ws: Map[String, Weight], bs: Map[String, Bias]) {
+           (implicit ws: Map[String, Weight], bs: Map[String, Bias]) {
   val shape: ModelShape = new ModelShape(form)
 
   def init(): (Map[String, Weight], Map[String, Bias]) = {
@@ -33,22 +33,29 @@ class Model(form: Form, isZero: Boolean = false)
     (weights, biases)
   }
 
-  val (weights, biases) = init()
+  val (weights, biases) = if (ws == null && bs == null) {
+    init()
+  } else {
+    (ws, bs)
+  }
 
   def +(that: Model): Model = {
     require(this.weights.size == that.weights.size)
     require(this.biases.size == that.biases.size)
     val newWeights = this.weights.map({
-      case (id, w) => w + that.weights(id)
+      case (id, w) => (id, w + that.weights(id))
     })
     val newBiases = this.biases.map({
-      case (id, b) => b + that.biases(id)
+      case (id, b) => (id, b + that.biases(id))
     })
     new Model(this.form)(newWeights, newBiases)
   }
 }
 
 object Model {
+  implicit val nullWeight: Map[String, Weight] = null
+  implicit val nullBias : Map[String, Bias] = null
+
   def apply(form: Form): Model = new Model(form)
   def zero(form: Form): Model = new Model(form, isZero = true)
 }

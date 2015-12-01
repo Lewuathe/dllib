@@ -1,35 +1,36 @@
 package com.lewuathe.dllib.solver
 
-import com.lewuathe.dllib.layer.Layer
-import org.apache.spark.ml.param.{ParamMap, Params}
+import org.apache.spark.Logging
 import org.apache.spark.ml.{PredictionModel, Predictor}
+import org.apache.spark.ml.param.{Params, ParamMap}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Row}
 import org.apache.spark.sql.functions.{col, lit}
 
 import breeze.linalg.{Vector, Matrix}
 
+import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param._
 
-private [dllib] trait SolverParams extends Params with HasFeaturesCol with HasLabelCol
-  with HasWeightCol {
-
+private [dllib] trait SolverParams extends Params
+  with HasWeightCol with HasFeaturesCol with HasLabelCol {
 }
 
 abstract class Solver[FeaturesType,
                       E <: Solver[FeaturesType, E, M],
                       M <: SolverModel[FeaturesType, M]](val network: Network)
-  extends Predictor[FeaturesType, E, M] with SolverParams {
+  extends Predictor[FeaturesType, E, M] with SolverParams with Logging {
 
   val form: Form = network.form
   val model: Model = network.model
 
   val miniBatchFraction = 0.7
 
-  override protected def train(dataset: DataFrame): M = {
+  protected def trainInternal(dataset: DataFrame): Model = {
+    Model.zero(form)
     val w = if ($(weightCol).isEmpty) lit(1.0) else col($(weightCol))
     val instances: RDD[Instance] = dataset.select(col($(labelCol)), w, col($(featuresCol))).map {
       case Row(label: org.apache.spark.mllib.linalg.Vector, weight: Double,
@@ -37,36 +38,53 @@ abstract class Solver[FeaturesType,
           Instance(Vector[Double](label.toArray), weight, Vector[Double](features.toArray))
     }
 
-    val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
+    var localModel = model
+    val bcForm = dataset.sqlContext.sparkContext.broadcast(form)
+    val numIterations = 10
+
+    for (i <- 0 until numIterations) {
+      val bcModel = dataset.sqlContext.sparkContext.broadcast(localModel)
+      val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
       = instances.sample(false, miniBatchFraction, 42)
-      .treeAggregate((Model.zero(form), 0.0, 0))(
-      seqOp = (c: (Model, Double, Int), instance: Instance) => {
+        .treeAggregate((Model.zero(form), 0.0, 0))(
+          seqOp = (c: (Model, Double, Int), instance: Instance) => {
+            val dModel = gradient(bcForm.value, bcModel.value, instance)
+            (c._1 + dModel, c._2, c._3 + 1)
+          },
+          combOp = (c1, c2) => {
+            // (Model, loss, count)
+            (c1._1 + c2._1, c1._2 + c2._2, c1._3 + c2._3)
+          })
 
-      },
-      combOp = (m1: Model, m2: Model) => {
+      localModel = model + modelDelta
+    }
 
-      })
+    localModel
   }
 
   protected def gradient(form: Form, model: Model, instance: Instance): Model = {
-    val dModel = Model.zero(form)
+    var deltaModel = Model.zero(form)
     val label = instance.label
     var z = instance.features
-    val acts = new ActivationStack
-    acts.push(z)
+    var activations = new ActivationStack
+    activations.push(z)
 
     // Feed forward
     for (l: Layer <- form.layers) {
-      z = l.forward(acts, model)
-      acts.push(z)
+      z = l.forward(activations, model)
+      activations.push(z)
     }
 
-    val delta = error(acts.last, label)
+    // Back propagation
+    var delta = error(activations.last, label)
     for (l: Layer <- form.layers.reverse) {
-      (delta, acts, dModel) = l.backward(delta, acts, model)
+      val (d, acts, dModel) = l.backward(delta, activations, model)
+      delta = d
+      activations = acts
+      deltaModel += dModel
     }
 
-
+    deltaModel
   }
 
   protected def error(label: Vector[Double], prediction: Vector[Double]): Vector[Double] = {
@@ -75,11 +93,25 @@ abstract class Solver[FeaturesType,
   }
 }
 
-abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]]
+abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val network: Network)
   extends PredictionModel[FeaturesType, M] {
-  override protected def predict(features: FeaturesType): Double = ???
 
-  override def copy(extra: ParamMap): M = ???
+  val model = network.model
+  val form = network.form
+
+  protected def predictInternal(features: Vector[Double]): Vector[Double] = {
+    var z = features
+    val activations = new ActivationStack
+    activations.push(z)
+    // Feed forward
+    for (l: Layer <- form.layers) {
+      z = l.forward(activations, model)
+      activations.push(z)
+    }
+    activations.last
+  }
+
+  override def copy(extra: ParamMap): M = defaultCopy(extra)
 
   override val uid: String = ???
 }
