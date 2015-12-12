@@ -1,6 +1,7 @@
 package com.lewuathe.dllib
 
 import org.apache.spark.ml.param.{Param, Params}
+import org.apache.spark.sql.types.StructType
 
 package object param {
   /**

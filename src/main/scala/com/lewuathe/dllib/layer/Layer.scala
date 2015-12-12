@@ -1,6 +1,6 @@
 package com.lewuathe.dllib.layer
 
-import com.lewuathe.dllib.{ActivationStack, Model}
+import com.lewuathe.dllib.{Weight, Bias, ActivationStack, Model}
 import breeze.linalg.Vector
 
 abstract class Layer {
@@ -8,8 +8,8 @@ abstract class Layer {
   val inputSize: Int
   val outputSize: Int
 
-  def forward(acts: ActivationStack, model: Model): Vector[Double]
+  def forward(acts: ActivationStack, model: Model): (Vector[Double], Vector[Double])
   def backward(delta: Vector[Double], acts: ActivationStack, model: Model)
-  : (Vector[Double], ActivationStack, Model)
+  : (Vector[Double], ActivationStack, Weight, Bias)
 
 }

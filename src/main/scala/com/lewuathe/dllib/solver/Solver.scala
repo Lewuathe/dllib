@@ -13,16 +13,12 @@ import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.network.Network
-import com.lewuathe.dllib.param._
-
-private [dllib] trait SolverParams extends Params
-  with HasWeightCol with HasFeaturesCol with HasLabelCol {
-}
+import com.lewuathe.dllib.param.HasWeightCol
 
 abstract class Solver[FeaturesType,
                       E <: Solver[FeaturesType, E, M],
                       M <: SolverModel[FeaturesType, M]](val network: Network)
-  extends Predictor[FeaturesType, E, M] with SolverParams with Logging {
+  extends Predictor[FeaturesType, E, M] with HasWeightCol with Logging {
 
   val form: Form = network.form
   val model: Model = network.model
@@ -65,23 +61,23 @@ abstract class Solver[FeaturesType,
   protected def gradient(form: Form, model: Model, instance: Instance): Model = {
     var deltaModel = Model.zero(form)
     val label = instance.label
-    var z = instance.features
     var activations = new ActivationStack
-    activations.push(z)
+    activations.push((null, instance.features))
 
     // Feed forward
     for (l: Layer <- form.layers) {
-      z = l.forward(activations, model)
-      activations.push(z)
+      val (u, z) = l.forward(activations, model)
+      activations.push((u, z))
     }
 
     // Back propagation
-    var delta = error(activations.last, label)
+    var delta = error(label, activations.last._2)
     for (l: Layer <- form.layers.reverse) {
-      val (d, acts, dModel) = l.backward(delta, activations, model)
+      val (d, acts, dWeight, dBias) = l.backward(delta, activations, model)
       delta = d
       activations = acts
-      deltaModel += dModel
+      deltaModel += dWeight
+      deltaModel += dBias
     }
 
     deltaModel
@@ -100,15 +96,14 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
   val form = network.form
 
   protected def predictInternal(features: Vector[Double]): Vector[Double] = {
-    var z = features
     val activations = new ActivationStack
-    activations.push(z)
+    activations.push((null, features))
     // Feed forward
     for (l: Layer <- form.layers) {
-      z = l.forward(activations, model)
-      activations.push(z)
+      val (u, z) = l.forward(activations, model)
+      activations.push((u, z))
     }
-    activations.last
+    activations.last._2
   }
 
   override def copy(extra: ParamMap): M = defaultCopy(extra)

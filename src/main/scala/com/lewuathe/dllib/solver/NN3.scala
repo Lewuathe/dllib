@@ -8,7 +8,8 @@ import breeze.linalg.Vector
 import com.lewuathe.dllib.network.Network
 
 
-class NN3(override val uid: String, network: Network) extends Solver[Vector[Double], NN3, NN3Model](network) {
+class NN3(override val uid: String, network: Network)
+  extends Solver[Vector[Double], NN3, NN3Model](network) {
   override def copy(extra: ParamMap): NN3 = ???
 
   override protected def train(dataset: DataFrame): NN3Model = {

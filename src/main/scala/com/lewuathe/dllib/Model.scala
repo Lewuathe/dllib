@@ -33,7 +33,7 @@ class Model(form: Form, isZero: Boolean = false)
     (weights, biases)
   }
 
-  val (weights, biases) = if (ws == null && bs == null) {
+  var (weights, biases) = if (ws == null && bs == null) {
     init()
   } else {
     (ws, bs)
@@ -50,6 +50,21 @@ class Model(form: Form, isZero: Boolean = false)
     })
     new Model(this.form)(newWeights, newBiases)
   }
+
+  def +(that: Weight): Model = {
+    val oldWeight = weights.get(that.id).get
+    weights = weights + (that.id -> (oldWeight + that))
+    this
+  }
+
+  def +(that: Bias): Model = {
+    val oldBias = biases.get(that.id).get
+    biases = biases + (that.id -> (oldBias + that))
+    this
+  }
+
+  def getWeight(id: String): Option[Weight] = weights.get(id)
+  def getBias(id: String): Option[Bias] = biases.get(id)
 }
 
 object Model {
