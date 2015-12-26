@@ -1,5 +1,6 @@
 package com.lewuathe.dllib
 
+import breeze.linalg.Vector
 /**
   * Created by sasakikai on 11/26/15.
   */
@@ -17,4 +18,21 @@ package object util {
     randomString("abcdefghijklmnopqrstuvwxyz0123456789")(n)
 
   def genId(): String = randomAlphanumericString(ID_SIZE)
+
+  def encodeLabel(label: Double, labelCount: Int): Vector[Double] = {
+    val output = Array.fill(labelCount)(0.0)
+    output(label.toInt) = 1.0
+    Vector(output)
+  }
+
+  /**
+    * Converts a vector to a label.
+    * Returns the position of the maximal element of a vector.
+    *
+    * @param output label encoded with a vector
+    * @return label
+    */
+  def decodeLabel(output: Vector[Double]): Double = {
+    output.argmax.toDouble
+  }
 }

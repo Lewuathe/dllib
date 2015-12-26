@@ -14,6 +14,7 @@ import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param.HasWeightCol
+import com.lewuathe.dllib.util
 
 abstract class Solver[FeaturesType,
                       E <: Solver[FeaturesType, E, M],
@@ -27,11 +28,14 @@ abstract class Solver[FeaturesType,
 
   protected def trainInternal(dataset: DataFrame): Model = {
     Model.zero(form)
-    val w = if ($(weightCol).isEmpty) lit(1.0) else col($(weightCol))
+    // TODO: weightCol can be set
+    // val w = if ($(weightCol).isEmpty) lit(1.0) else col($(weightCol))
+    val w = lit(1.0)
     val instances: RDD[Instance] = dataset.select(col($(labelCol)), w, col($(featuresCol))).map {
-      case Row(label: org.apache.spark.mllib.linalg.Vector, weight: Double,
-        features: org.apache.spark.mllib.linalg.Vector) =>
-          Instance(Vector[Double](label.toArray), weight, Vector[Double](features.toArray))
+      case Row(label: Double, weight: Double, features: org.apache.spark.mllib.linalg.Vector) => {
+        val l = util.encodeLabel(label, form.layers.last.outputSize)
+        Instance(l, weight, Vector[Double](features.toArray))
+      }
     }
 
     var localModel = model
@@ -62,7 +66,8 @@ abstract class Solver[FeaturesType,
     var deltaModel = Model.zero(form)
     val label = instance.label
     var activations = new ActivationStack
-    activations.push((null, instance.features))
+    // Input vector can be regarded as it is applied indentity mapping.
+    activations.push((instance.features, instance.features))
 
     // Feed forward
     for (l: Layer <- form.layers) {
@@ -71,7 +76,7 @@ abstract class Solver[FeaturesType,
     }
 
     // Back propagation
-    var delta = error(label, activations.last._2)
+    var delta = error(label, activations.top._2)
     for (l: Layer <- form.layers.reverse) {
       val (d, acts, dWeight, dBias) = l.backward(delta, activations, model)
       delta = d
@@ -95,7 +100,7 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
   val model = network.model
   val form = network.form
 
-  protected def predictInternal(features: Vector[Double]): Vector[Double] = {
+  protected def predictInternal(features: Vector[Double]): Double = {
     val activations = new ActivationStack
     activations.push((null, features))
     // Feed forward
@@ -103,10 +108,10 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
       val (u, z) = l.forward(activations, model)
       activations.push((u, z))
     }
-    activations.last._2
+    val ret = activations.top._2
+    println(ret)
+    util.decodeLabel(ret)
   }
 
   override def copy(extra: ParamMap): M = defaultCopy(extra)
-
-  override val uid: String = ???
 }

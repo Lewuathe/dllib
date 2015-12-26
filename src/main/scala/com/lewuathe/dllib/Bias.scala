@@ -8,7 +8,7 @@ import breeze.linalg.Vector
   * @param size
   */
 class Bias(val id: String, val size: Int, isZero: Boolean = false)
-          (implicit v: Vector[Double]) {
+          (implicit v: Vector[Double]) extends Serializable {
 
   val value: Vector[Double] = if (v != null) {
     v

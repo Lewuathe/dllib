@@ -9,7 +9,7 @@ import breeze.linalg.Matrix
   * @param outputSize
   */
 class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Boolean = false)
-            (implicit v: Matrix[Double]) {
+            (implicit v: Matrix[Double]) extends Serializable {
 
   val value: Matrix[Double] = if (v != null) {
     v

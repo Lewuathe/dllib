@@ -15,7 +15,7 @@ package object param {
       */
     final val featuresCol: Param[String] = new Param[String](this, "featuresCol", "features column name")
 
-//    setDefault(featuresCol, "features")
+    setDefault(featuresCol, "features")
 
     /** @group getParam */
     final def getFeaturesCol: String = $(featuresCol)
@@ -32,7 +32,7 @@ package object param {
       */
     final val labelCol: Param[String] = new Param[String](this, "labelCol", "label column name")
 
-//    setDefault(labelCol, "label")
+    setDefault(labelCol, "label")
 
     /** @group getParam */
     final def getLabelCol: String = $(labelCol)
