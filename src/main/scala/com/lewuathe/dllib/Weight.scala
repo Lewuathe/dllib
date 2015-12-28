@@ -46,6 +46,10 @@ class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Bo
   def *(times: Double): Weight = {
     new Weight(id, outputSize, inputSize)(this.value * times)
   }
+
+  override def toString: String = {
+    s"Weight: ${id} -> ${value}"
+  }
 }
 
 object Weight {

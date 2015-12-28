@@ -19,7 +19,7 @@ class Bias(val id: String, val size: Int, isZero: Boolean = false)
   }
 
   private def randomBias(size: Int): Vector[Double] = {
-    Vector.rand[Double](size)
+    Vector.rand[Double](size) - 0.5
   }
 
   private def zeroBias(size: Int): Vector[Double] = {
@@ -42,6 +42,10 @@ class Bias(val id: String, val size: Int, isZero: Boolean = false)
 
   def *(times: Double): Bias = {
     new Bias(id, size)(this.value * times)
+  }
+
+  override def toString: String = {
+    s"Bias ${id} -> ${value}"
   }
 }
 

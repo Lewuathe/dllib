@@ -22,12 +22,12 @@ class ClassificationLayer(override val outputSize: Int,
     require(input.size == inputSize, "Invalid input")
     val u: Vector[Double] = weight * input + bias
     val z = softmax(u)
-//    acts.push((u, z))
     (u, z)
   }
 
   override def backward(delta: Vector[Double], acts: ActivationStack,
                         model: Model): (Vector[Double], ActivationStack, Weight, Bias) = {
+    require(delta.size == outputSize)
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
@@ -38,6 +38,7 @@ class ClassificationLayer(override val outputSize: Int,
       inputSize)(delta.toDenseVector * backZ.toDenseVector.t)
     require(dWeight.value.rows == outputSize)
     require(dWeight.value.cols == inputSize)
+
     val dBias: Bias = new Bias(id, outputSize)(delta)
     require(dBias.value.size == outputSize)
 

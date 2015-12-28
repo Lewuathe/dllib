@@ -40,6 +40,7 @@ class FullConnectedLayer(override val outputSize: Int,
       inputSize)(delta.toDenseVector * backZ.toDenseVector.t)
     require(dWeight.value.rows == outputSize)
     require(dWeight.value.cols == inputSize)
+
     val dBias: Bias = new Bias(id, outputSize)(delta)
     require(dBias.value.size == outputSize)
 

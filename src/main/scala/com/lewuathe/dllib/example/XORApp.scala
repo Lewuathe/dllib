@@ -39,7 +39,7 @@ object XORApp {
     val nn3Model = Model(nn3Form)
     val nn3 = Network(nn3Model, nn3Form)
 
-    val multilayerPerceptron = new MultiLayerPerceptron("one", nn3)
+    val multilayerPerceptron = new MultiLayerPerceptron("XOR", nn3)
     val model = multilayerPerceptron.fit(createTrainingData(sqlContext))
 
     val testData = Seq(

@@ -84,14 +84,14 @@ class Model(form: Form, isZero: Boolean = false)
   }
 
   def +(that: Weight): Model = {
-    val oldWeight = weights.get(that.id).get
-    weights = weights + (that.id -> (oldWeight + that))
+    val oldWeight = this.weights.get(that.id).get
+    this.weights += (that.id -> (oldWeight + that))
     this
   }
 
   def +(that: Bias): Model = {
-    val oldBias = biases.get(that.id).get
-    biases = biases + (that.id -> (oldBias + that))
+    val oldBias = this.biases.get(that.id).get
+    this.biases += (that.id -> (oldBias + that))
     this
   }
 
@@ -102,11 +102,11 @@ class Model(form: Form, isZero: Boolean = false)
     "Model\n  " +
     "  Weights\n" +
     weights.map({
-      case (id, w) => s"    id=>${id}, weight=>${w.value}\n"
+      case (id, w) => s"    id=>${id}, weight=>${w}\n"
     }) +
     "  Biases\n" +
     biases.map({
-      case (id, b) => s"    id=>${id}, weight=>${b.value}\n"
+      case (id, b) => s"    id=>${id}, bias=>${b}\n"
     })
   }
 }

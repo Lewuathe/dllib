@@ -8,10 +8,10 @@ import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{SQLContext, DataFrame}
 
-class MNISTApp {
+class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Double) {
   def createMNISTDataset(path: String, sc: SparkContext): DataFrame = {
     val dataset = MNIST(path)
-    MNIST.asDF(dataset, sc, 2000)
+    MNIST.asDF(dataset, sc, 5000)
   }
 
   def submit(sc: SparkContext) = {
@@ -27,6 +27,9 @@ class MNISTApp {
     val nn3 = Network(nn3Model, nn3Form)
 
     val multilayerPerceptron = new MultiLayerPerceptron("MNIST", nn3)
+    multilayerPerceptron.miniBatchFraction = miniBatchFraction
+    multilayerPerceptron.numIterations = numIterations
+    multilayerPerceptron.learningRate = learningRate
     val model = multilayerPerceptron.fit(df)
 
     val result = model.transform(df)

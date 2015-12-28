@@ -24,7 +24,11 @@ abstract class Solver[FeaturesType,
   val form: Form = network.form
   val model: Model = network.model
 
-  val miniBatchFraction = 0.3
+  var miniBatchFraction = 1.0
+  var numIterations = 10
+  var learningRate = 0.3
+
+  val learningRateDecay = 0.99
 
   protected def trainInternal(dataset: DataFrame): Model = {
     Model.zero(form)
@@ -40,12 +44,11 @@ abstract class Solver[FeaturesType,
 
     var localModel = model
     val bcForm = dataset.sqlContext.sparkContext.broadcast(form)
-    val numIterations = 10
 
     for (i <- 0 until numIterations) {
       val bcModel = dataset.sqlContext.sparkContext.broadcast(localModel)
       val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
-      = instances.sample(false, miniBatchFraction, 42)
+      = instances.sample(false, miniBatchFraction, 42 + i)
         .treeAggregate((Model.zero(form), 0.0, 0))(
           seqOp = (c: (Model, Double, Int), instance: Instance) => {
             val (dModel, loss) = gradient(bcForm.value, bcModel.value, instance)
@@ -56,8 +59,10 @@ abstract class Solver[FeaturesType,
             (c1._1 + c2._1, c1._2 + c2._2, c1._3 + c2._3)
           })
 
-      println(s"Iteration ${i} -> loss: ${lossSum}, count: ${miniBatchSize}")
-      localModel -= (modelDelta / miniBatchSize)
+      println(s"Iteration ${i} -> loss: ${lossSum / miniBatchSize}, " +
+        s"count: ${miniBatchSize}, learning rate: ${learningRate}")
+      localModel += (modelDelta / miniBatchSize) * learningRate
+      learningRate *= learningRateDecay
     }
 
     localModel
@@ -93,7 +98,11 @@ abstract class Solver[FeaturesType,
 
   protected def error(label: Vector[Double], prediction: Vector[Double]): Vector[Double] = {
     require(label.size == prediction.size)
-    label - prediction
+    val ret = label - prediction
+    ret.map({
+      case (d: Double) if d.isNaN => 0.0
+      case (d: Double) => d
+    })
   }
 }
 
