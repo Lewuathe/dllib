@@ -30,6 +30,19 @@ class Bias(val id: String, val size: Int, isZero: Boolean = false)
     require(this.size == that.size)
     new Bias(id, size)(this.value + that.value)
   }
+
+  def -(that: Bias): Bias = {
+    require(this.size == that.size)
+    new Bias(id, size)(this.value - that.value)
+  }
+
+  def /(denom: Double): Bias = {
+    new Bias(id, size)(this.value / denom)
+  }
+
+  def *(times: Double): Bias = {
+    new Bias(id, size)(this.value * times)
+  }
 }
 
 object Bias {

@@ -1,6 +1,6 @@
 package com.lewuathe.dllib
 
-import breeze.linalg.Vector
+import breeze.linalg.{DenseVector, Vector}
 /**
   * Created by sasakikai on 11/26/15.
   */
@@ -34,5 +34,12 @@ package object util {
     */
   def decodeLabel(output: Vector[Double]): Double = {
     output.argmax.toDouble
+  }
+
+  def oneHotLabel(output: Vector[Double]): Vector[Double] = {
+    val i = output.argmax
+    val ret = DenseVector.zeros[Double](output.size)
+    ret(i) = 1.0
+    ret
   }
 }

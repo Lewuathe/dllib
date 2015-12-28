@@ -32,6 +32,20 @@ class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Bo
     require(this.inputSize == that.inputSize)
     new Weight(id, outputSize, inputSize)(this.value + that.value)
   }
+
+  def -(that: Weight): Weight = {
+    require(this.outputSize == that.outputSize)
+    require(this.inputSize == that.inputSize)
+    new Weight(id, outputSize, inputSize)(this.value - that.value)
+  }
+
+  def /(denom: Double): Weight = {
+    new Weight(id, outputSize, inputSize)(this.value / denom)
+  }
+
+  def *(times: Double): Weight = {
+    new Weight(id, outputSize, inputSize)(this.value * times)
+  }
 }
 
 object Weight {

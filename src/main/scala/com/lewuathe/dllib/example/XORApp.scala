@@ -1,13 +1,7 @@
 package com.lewuathe.dllib.example
 
 import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.form.Form
-import com.lewuathe.dllib.layer.ClassificationLayer
-import com.lewuathe.dllib.layer.FullConnectedLayer
 import com.lewuathe.dllib.layer.{ClassificationLayer, FullConnectedLayer}
-import com.lewuathe.dllib.network.Network
-import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}

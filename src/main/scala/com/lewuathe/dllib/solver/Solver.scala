@@ -24,7 +24,7 @@ abstract class Solver[FeaturesType,
   val form: Form = network.form
   val model: Model = network.model
 
-  val miniBatchFraction = 0.7
+  val miniBatchFraction = 0.3
 
   protected def trainInternal(dataset: DataFrame): Model = {
     Model.zero(form)
@@ -48,21 +48,22 @@ abstract class Solver[FeaturesType,
       = instances.sample(false, miniBatchFraction, 42)
         .treeAggregate((Model.zero(form), 0.0, 0))(
           seqOp = (c: (Model, Double, Int), instance: Instance) => {
-            val dModel = gradient(bcForm.value, bcModel.value, instance)
-            (c._1 + dModel, c._2, c._3 + 1)
+            val (dModel, loss) = gradient(bcForm.value, bcModel.value, instance)
+            (c._1 + dModel, c._2 + loss, c._3 + 1)
           },
           combOp = (c1, c2) => {
             // (Model, loss, count)
             (c1._1 + c2._1, c1._2 + c2._2, c1._3 + c2._3)
           })
 
-      localModel = model + modelDelta
+      println(s"Iteration ${i} -> loss: ${lossSum}, count: ${miniBatchSize}")
+      localModel -= (modelDelta / miniBatchSize)
     }
 
     localModel
   }
 
-  protected def gradient(form: Form, model: Model, instance: Instance): Model = {
+  protected def gradient(form: Form, model: Model, instance: Instance): (Model, Double) = {
     var deltaModel = Model.zero(form)
     val label = instance.label
     var activations = new ActivationStack
@@ -75,8 +76,10 @@ abstract class Solver[FeaturesType,
       activations.push((u, z))
     }
 
-    // Back propagation
     var delta = error(label, activations.top._2)
+    val loss = Math.sqrt((delta :* delta).sum)
+
+    // Back propagation
     for (l: Layer <- form.layers.reverse) {
       val (d, acts, dWeight, dBias) = l.backward(delta, activations, model)
       delta = d
@@ -85,7 +88,7 @@ abstract class Solver[FeaturesType,
       deltaModel += dBias
     }
 
-    deltaModel
+    (deltaModel, loss)
   }
 
   protected def error(label: Vector[Double], prediction: Vector[Double]): Vector[Double] = {
@@ -109,7 +112,6 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
       activations.push((u, z))
     }
     val ret = activations.top._2
-    println(ret)
     util.decodeLabel(ret)
   }
 
