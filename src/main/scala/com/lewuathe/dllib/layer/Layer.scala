@@ -10,6 +10,6 @@ abstract class Layer {
 
   def forward(acts: ActivationStack, model: Model): (Vector[Double], Vector[Double])
   def backward(delta: Vector[Double], acts: ActivationStack, model: Model)
-  : (Vector[Double], ActivationStack, Weight, Bias)
+  : (Vector[Double], Weight, Bias)
 
 }

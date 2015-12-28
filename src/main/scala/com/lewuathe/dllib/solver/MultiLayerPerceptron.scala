@@ -1,16 +1,15 @@
 package com.lewuathe.dllib.solver
 
+import breeze.linalg.Vector
+
 import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.sql.DataFrame
 
-import breeze.linalg.Vector
-
 import com.lewuathe.dllib.network.Network
-import com.lewuathe.dllib.util._
-
 
 class MultiLayerPerceptron(override val uid: String, network: Network)
-  extends Solver[org.apache.spark.mllib.linalg.Vector, MultiLayerPerceptron, MultiLayerPerceptronModel](network) {
+  extends Solver[org.apache.spark.mllib.linalg.Vector,
+    MultiLayerPerceptron, MultiLayerPerceptronModel](network) {
   override def copy(extra: ParamMap): MultiLayerPerceptron = defaultCopy(extra)
 
   override protected def train(dataset: DataFrame): MultiLayerPerceptronModel = {
@@ -21,7 +20,8 @@ class MultiLayerPerceptron(override val uid: String, network: Network)
 }
 
 class MultiLayerPerceptronModel(override val uid: String, network: Network)
-  extends SolverModel[org.apache.spark.mllib.linalg.Vector, MultiLayerPerceptronModel](network) {
+  extends SolverModel[org.apache.spark.mllib.linalg.Vector,
+    MultiLayerPerceptronModel](network) {
   override protected def predict(features: org.apache.spark.mllib.linalg.Vector): Double = {
     val brzFeatures = Vector[Double](features.toArray)
     predictInternal(brzFeatures)

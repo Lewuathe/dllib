@@ -1,13 +1,13 @@
 package com.lewuathe.dllib.solver
 
+import breeze.linalg.{Vector, Matrix}
+
 import org.apache.spark.Logging
 import org.apache.spark.ml.{PredictionModel, Predictor}
 import org.apache.spark.ml.param.{Params, ParamMap}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Row}
 import org.apache.spark.sql.functions.{col, lit}
-
-import breeze.linalg.{Vector, Matrix}
 
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
@@ -71,7 +71,7 @@ abstract class Solver[FeaturesType,
   protected def gradient(form: Form, model: Model, instance: Instance): (Model, Double) = {
     var deltaModel = Model.zero(form)
     val label = instance.label
-    var activations = new ActivationStack
+    val activations = new ActivationStack
     // Input vector can be regarded as it is applied indentity mapping.
     activations.push((instance.features, instance.features))
 
@@ -86,9 +86,8 @@ abstract class Solver[FeaturesType,
 
     // Back propagation
     for (l: Layer <- form.layers.reverse) {
-      val (d, acts, dWeight, dBias) = l.backward(delta, activations, model)
+      val (d, dWeight, dBias) = l.backward(delta, activations, model)
       delta = d
-      activations = acts
       deltaModel += dWeight
       deltaModel += dBias
     }

@@ -26,7 +26,7 @@ class ClassificationLayer(override val outputSize: Int,
   }
 
   override def backward(delta: Vector[Double], acts: ActivationStack,
-                        model: Model): (Vector[Double], ActivationStack, Weight, Bias) = {
+                        model: Model): (Vector[Double], Weight, Bias) = {
     require(delta.size == outputSize)
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
@@ -43,6 +43,6 @@ class ClassificationLayer(override val outputSize: Int,
     require(dBias.value.size == outputSize)
 
     val d: Vector[Double] = sigmoidPrime(backU) :* (weight.toDenseMatrix.t * delta.toDenseVector)
-    (d, acts, dWeight, dBias)
+    (d, dWeight, dBias)
   }
 }
