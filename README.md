@@ -1,17 +1,11 @@
-neurallib [![Build Status](https://travis-ci.org/Lewuathe/neurallib.svg?branch=master)](https://travis-ci.org/Lewuathe/neurallib)
+dllib 
 ================
 
-This is deep learning module running on JVM. Powered by Scala programming language.
+This is deep learning module running on Apache Spark. Powered by Scala programming language.
 
 # How to use
 
-[Maven Central](http://mvnrepository.com/artifact/com.lewuathe/neurallib_2.10/0.0.1)
-
 Write below configuration in your build.sbt.
-
-```
-libraryDependencies += "com.lewuathe" % "neurallib_2.10" % "0.0.2"
-```
 
 ## Example
 
@@ -34,9 +28,8 @@ object Main {
 
 # License
 
-[MIT License](http://opensource.org/licenses/MIT)
+[Apache v2](http://www.apache.org/licenses/LICENSE-2.0)
 
 # Author
 
 * Kai Sasaki([@Lewuathe](https://github.com/Lewuathe))
-* Shuichi Suzuki([@shue116](https://github.com/shoe116))
