@@ -1,9 +1,10 @@
-organization := "com.lewuathe"
+organization := "Lewuathe"
 
 name := "dllib"
 
-version := "0.0.2"
+version := "0.0.5"
 
+sparkVersion := "1.5.2"
 
 libraryDependencies  ++= Seq(
   // other dependencies here
@@ -27,15 +28,13 @@ resolvers ++= Seq(
 // Don't use an earlier version of 2.10, you will probably get weird compiler crashes.
 scalaVersion := "2.11.7"
 
-//crossScalaVersions := Seq("2.11.7")
+crossScalaVersions := Seq("2.10.5", "2.11.7")
 
-//spAppendScalaVersion := true
+spAppendScalaVersion := true
 
-sparkVersion := "1.5.2"
+sparkComponents ++= Seq("mllib", "sql")
 
-sparkComponents += "mllib"
-
-spName := "com.lewuathe/dllib"
+spName := "Lewuathe/dllib"
 
 spShortDescription := "Distributed Deep learning module on Spark"
 
@@ -47,7 +46,10 @@ spDescription :=
 
 spHomepage := "https://github.com/Lewuathe/dllib"
 
-spIncludeMaven := true
+//spIncludeMaven := true
 
+credentials += Credentials(Path.userHome / ".ivy2" / ".sbtcredentials")
 
 licenses += "Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0")
+
+publishMavenStyle := true

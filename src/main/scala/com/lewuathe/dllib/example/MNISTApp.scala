@@ -1,12 +1,13 @@
 package com.lewuathe.dllib.example
 
+import org.apache.spark.SparkContext
+import org.apache.spark.sql.{SQLContext, DataFrame}
+
 import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.layer.{ClassificationLayer, FullConnectedLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.{SQLContext, DataFrame}
 
 class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Double) {
   def createMNISTDataset(path: String, sc: SparkContext): DataFrame = {
