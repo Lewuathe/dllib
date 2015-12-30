@@ -9,7 +9,7 @@ This is an uploaded on [Spark Packages](http://spark-packages.org/package/Lewuat
 
 ```bash
 
-$ $SPARK_HOME/bin/spark-shell --packages com.lewuathe:dllib:0.0.7
+$ $SPARK_HOME/bin/spark-shell --packages Lewuathe:dllib:0.0.7
 
 ```
 
