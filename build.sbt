@@ -2,7 +2,7 @@ organization := "Lewuathe"
 
 name := "dllib"
 
-version := "0.0.6"
+version := "0.0.7"
 
 sparkVersion := "1.5.2"
 
@@ -25,17 +25,17 @@ resolvers ++= Seq(
 
 // Scala 2.9.2 is still supported for 0.2.1, but is dropped afterwards.
 // Don't use an earlier version of 2.10, you will probably get weird compiler crashes.
-scalaVersion := "2.11.7"
+scalaVersion := "2.10.5"
 
 crossScalaVersions := Seq("2.10.5", "2.11.7")
 
-spAppendScalaVersion := true
+//spAppendScalaVersion := true
 
 sparkComponents ++= Seq("mllib", "sql")
 
 spName := "Lewuathe/dllib"
 
-spShortDescription := "Distributed Deep learning module on Spark"
+spShortDescription := "Distributed Deep learning module on Apache Spark"
 
 spDescription :=
 """dllib is a distributed deep learning module running on Spark
