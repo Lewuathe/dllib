@@ -5,11 +5,11 @@ This is deep learning module running on Apache Spark. Powered by Scala programmi
 
 # How to use
 
-This is an uploaded on [Spark package](http://spark-packages.org/)
+This is an uploaded on [Spark Packages](http://spark-packages.org/package/Lewuathe/dllib)
 
 ```bash
 
-$ $SPARK_HOME/bin/spark-shell --packages com.lewuathe:dllib_2.11:0.0.2 
+$ $SPARK_HOME/bin/spark-shell --packages com.lewuathe:dllib:0.0.7
 
 ```
 
