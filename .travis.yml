@@ -3,5 +3,8 @@ scala:
    - 2.10.4
    - 2.11.7
 
+script: "sbt clean coverage test"
+
+after_success: "sbt coveralls"
 
 
