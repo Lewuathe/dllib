@@ -24,6 +24,8 @@ abstract class Solver[FeaturesType,
   val form: Form = network.form
   val model: Model = network.model
 
+  logInfo(network.toString)
+
   var miniBatchFraction = 1.0
   var numIterations = 10
   var learningRate = 0.3
@@ -59,7 +61,7 @@ abstract class Solver[FeaturesType,
             (c1._1 + c2._1, c1._2 + c2._2, c1._3 + c2._3)
           })
 
-      println(s"Iteration ${i} -> loss: ${lossSum / miniBatchSize}, " +
+      logInfo(s"Iteration ${i} -> loss: ${lossSum / miniBatchSize}, " +
         s"count: ${miniBatchSize}, learning rate: ${learningRate}")
       localModel += (modelDelta / miniBatchSize) * learningRate
       learningRate *= learningRateDecay

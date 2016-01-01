@@ -38,3 +38,12 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
     result.filter("label = prediction").count()
   }
 }
+
+object MNISTApp {
+  def submit(sc: SparkContext) = new MNISTApp(0.03, 10, 0.5).submit(sc)
+
+  def apply(sc: SparkContext, miniBatchFraction: Double,
+            numIterations: Int, learningRate: Double) = {
+    new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(sc)
+  }
+}

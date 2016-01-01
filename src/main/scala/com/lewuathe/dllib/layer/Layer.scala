@@ -12,4 +12,7 @@ abstract class Layer {
   def backward(delta: Vector[Double], acts: ActivationStack, model: Model)
   : (Vector[Double], Weight, Bias)
 
+  override def toString: String = {
+    s"id: ${id}, ${inputSize} -> ${outputSize}"
+  }
 }
