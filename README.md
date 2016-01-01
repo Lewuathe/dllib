@@ -38,3 +38,7 @@ val result = model.transform(df)
 # Author
 
 * Kai Sasaki([@Lewuathe](https://github.com/Lewuathe))
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Lewuathe/dllib/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
