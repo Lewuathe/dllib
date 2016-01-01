@@ -6,6 +6,12 @@ import com.lewuathe.dllib.activations.{sigmoid, sigmoidPrime}
 import com.lewuathe.dllib.{Bias, Weight, Model, ActivationStack}
 import com.lewuathe.dllib.util.genId
 
+/**
+  * FullConnectedLayer is an intermediate layer used for updating all
+  * parameters between every units.
+  * @param outputSize
+  * @param inputSize
+  */
 class FullConnectedLayer(override val outputSize: Int,
                          override val inputSize: Int) extends Layer with Serializable {
 

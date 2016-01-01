@@ -5,6 +5,12 @@ import com.lewuathe.dllib.activations._
 import com.lewuathe.dllib.{Bias, Weight, Model, ActivationStack}
 import com.lewuathe.dllib.util._
 
+/**
+  * Simple output layer for multi-class classification problem.
+  * It uses softmax function as activation function of output.
+  * @param outputSize
+  * @param inputSize
+  */
 class ClassificationLayer(override val outputSize: Int,
                          override val inputSize: Int) extends Layer with Serializable {
 

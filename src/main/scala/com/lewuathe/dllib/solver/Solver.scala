@@ -16,6 +16,14 @@ import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param.HasWeightCol
 import com.lewuathe.dllib.util
 
+/**
+  * Solver implements distributed training algorithm for deep learning models.
+  * Currently this class is doing backpropagation under data parallelism schema.
+  * @param network
+  * @tparam FeaturesType
+  * @tparam E
+  * @tparam M
+  */
 abstract class Solver[FeaturesType,
                       E <: Solver[FeaturesType, E, M],
                       M <: SolverModel[FeaturesType, M]](val network: Network)
@@ -70,6 +78,13 @@ abstract class Solver[FeaturesType,
     localModel
   }
 
+  /**
+    * Calculate the gradient of Model parameter with given training instance.
+    * @param form
+    * @param model
+    * @param instance
+    * @return
+    */
   protected def gradient(form: Form, model: Model, instance: Instance): (Model, Double) = {
     var deltaModel = Model.zero(form)
     val label = instance.label
@@ -97,6 +112,12 @@ abstract class Solver[FeaturesType,
     (deltaModel, loss)
   }
 
+  /**
+    * Calculate the error of output layer between label data and prediction.
+    * @param label
+    * @param prediction
+    * @return
+    */
   protected def error(label: Vector[Double], prediction: Vector[Double]): Vector[Double] = {
     require(label.size == prediction.size)
     val ret = label - prediction

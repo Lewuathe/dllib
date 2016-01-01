@@ -7,6 +7,11 @@ import org.apache.spark.sql.DataFrame
 
 import com.lewuathe.dllib.network.Network
 
+/**
+  * Simple multilayer perceptron implementing backpropagation.
+  * @param uid
+  * @param network
+  */
 class MultiLayerPerceptron(override val uid: String, network: Network)
   extends Solver[org.apache.spark.mllib.linalg.Vector,
     MultiLayerPerceptron, MultiLayerPerceptronModel](network) {
