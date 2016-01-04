@@ -9,7 +9,10 @@ class XORSpec extends FlatSpec with Matchers {
     val conf = new SparkConf()
     val sc = new SparkContext(master = "local[*]",
       appName = "XORSpec", conf = conf)
+    sc.setLogLevel("WARN")
     val app = XORApp
+    app.numIterations = 2000
+    app.learningRate = 0.7
     app.submit(sc)
   }
 }

@@ -26,6 +26,10 @@ object XORApp {
     data.toDF()
   }
 
+  var miniBatchFraction = 1.0
+  var numIterations = 100
+  var learningRate = 0.7
+
   def submit(sc: SparkContext) = {
     val sqlContext = new SQLContext(sc)
 
@@ -40,6 +44,9 @@ object XORApp {
     val nn3 = Network(nn3Model, nn3Form)
 
     val multilayerPerceptron = new MultiLayerPerceptron("XOR", nn3)
+    multilayerPerceptron.miniBatchFraction = miniBatchFraction
+    multilayerPerceptron.numIterations = numIterations
+    multilayerPerceptron.learningRate = learningRate
     val model = multilayerPerceptron.fit(createTrainingData(sqlContext))
 
     val testData = Seq(
