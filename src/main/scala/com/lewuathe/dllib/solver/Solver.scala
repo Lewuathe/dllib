@@ -40,8 +40,7 @@ abstract class Solver[FeaturesType,
 
   val learningRateDecay = 0.99
 
-  protected def trainInternal(dataset: DataFrame): Model = {
-    Model.zero(form)
+  protected def trainInternal(dataset: DataFrame, model: Model): Model = {
     // TODO: weightCol can be set
     // val w = if ($(weightCol).isEmpty) lit(1.0) else col($(weightCol))
     val w = lit(1.0)

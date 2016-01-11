@@ -10,7 +10,7 @@ import com.lewuathe.dllib.{Weight, Bias, ActivationStack, Model}
   * not coefficient and intercept. Actual parameters are kept in Model class.
   * The parameters can be accessed with id.
   */
-abstract class Layer {
+abstract class Layer extends Serializable {
   val id: String
   val inputSize: Int
   val outputSize: Int
