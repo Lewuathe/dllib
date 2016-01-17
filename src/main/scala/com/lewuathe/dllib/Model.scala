@@ -98,6 +98,21 @@ class Model(form: Form, isZero: Boolean = false)
   def getWeight(id: String): Option[Weight] = weights.get(id)
   def getBias(id: String): Option[Bias] = biases.get(id)
 
+  def addWeight(w: Weight): Unit = {
+    require(!weights.contains(w.id))
+    weights += (w.id -> w)
+  }
+
+  def addBias(b: Bias): Unit = {
+    require(!biases.contains(b.id))
+    biases += (b.id -> b)
+  }
+
+  def contains(w: Weight): Boolean = weights.contains(w.id)
+
+  def contains(b: Bias): Boolean = biases.contains(b.id)
+
+
   override def toString: String = {
     "Model\n  " +
     "  Weights\n" +

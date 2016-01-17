@@ -18,7 +18,7 @@ class MultiLayerPerceptron(override val uid: String, network: Network)
   override def copy(extra: ParamMap): MultiLayerPerceptron = defaultCopy(extra)
 
   override protected def train(dataset: DataFrame): MultiLayerPerceptronModel = {
-    val newModel = trainInternal(dataset)
+    val newModel = trainInternal(dataset, model)
     val newNetwork = new Network(newModel, network.form)
     copyValues(new MultiLayerPerceptronModel(uid, newNetwork))
   }
@@ -30,5 +30,5 @@ class MultiLayerPerceptronModel(override val uid: String, network: Network)
   override protected def predict(features: org.apache.spark.mllib.linalg.Vector): Double = {
     val brzFeatures = Vector[Double](features.toArray)
     predictInternal(brzFeatures)
-  }
+}
 }
