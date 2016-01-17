@@ -1,6 +1,7 @@
 package com.lewuathe.dllib.layer
 
 import breeze.linalg.{Vector, Matrix}
+import breeze.stats.distributions.Binomial
 
 import com.lewuathe.dllib.activations.{sigmoid, sigmoidPrime}
 import com.lewuathe.dllib.{Bias, Weight, Model, ActivationStack}
@@ -9,22 +10,43 @@ import com.lewuathe.dllib.util.genId
 class DenoisingAutoEncodeLayer(override val outputSize: Int,
                               override val inputSize: Int) extends PretrainLayer with ShapeValidator {
   override val id = genId()
+  // Temporary ID used for storing pretrain parameters on Model
   override val pretrainId = "p_" + id
 
+  val corruptionLevel = 0.2
+
+  protected def corrupt(input: Vector[Double]): Vector[Double] = {
+    val mask = Vector(Binomial(1, 1.0 - corruptionLevel).sample(input.length).map(_.toDouble): _*)
+    mask :* input
+  }
+
+  /**
+    * Encode the input to hidden layer
+    * @param input
+    * @param model
+    * @return
+    */
   override def encode(input: Vector[Double], model: Model): (Vector[Double], Vector[Double]) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
-    val u: Vector[Double] = weight * input + bias
+    val u: Vector[Double] = weight * corrupt(input) + bias
     val z = sigmoid(u)
     (u, z)
   }
 
+  /**
+    * Decode hidden layer value to visible layer
+    * @param input
+    * @param model
+    * @return
+    */
   override def decode(input: Vector[Double], model: Model): (Vector[Double], Vector[Double]) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     // Make sure to restore a Bias for pretrain visualization layer
     val bias: Vector[Double] = Bias(pretrainId, inputSize).value
 
+    // TODO: decode bias should be stored in model
     val u: Vector[Double] = weight.toDenseMatrix.t * input + bias
     val z = sigmoid(u)
     (u, z)
