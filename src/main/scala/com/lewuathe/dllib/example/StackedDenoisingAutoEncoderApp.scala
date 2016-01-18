@@ -34,8 +34,8 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     val model = unsupervisedPretrainer.fit(df)
 
     sdaForm.layers.foreach({
-      case l: DenoisingAutoEncodeLayer => l.vizWeight("weight_denoising.png", model.model)
-      case l: ClassificationLayer => l.vizWeight("weight_classification.png", model.model)
+      case l: DenoisingAutoEncodeLayer => l.vizWeight("./images/weight_denoising.png", model.model)
+      case l: ClassificationLayer => l.vizWeight("./images/weight_classification.png", model.model)
     })
 
     val result = model.transform(df)
