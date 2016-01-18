@@ -13,7 +13,7 @@ import com.lewuathe.dllib.util.genId
   * @param inputSize
   */
 class FullConnectedLayer(override val outputSize: Int,
-                         override val inputSize: Int) extends Layer with ShapeValidator {
+                         override val inputSize: Int) extends Layer with ShapeValidator with Visualizable {
 
   override val id = genId()
 

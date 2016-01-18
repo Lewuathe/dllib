@@ -8,7 +8,7 @@ import com.lewuathe.dllib.{Bias, Weight, Model, ActivationStack}
 import com.lewuathe.dllib.util.genId
 
 class DenoisingAutoEncodeLayer(override val outputSize: Int,
-                              override val inputSize: Int) extends PretrainLayer with ShapeValidator {
+                              override val inputSize: Int) extends PretrainLayer with ShapeValidator with Visualizable {
   override val id = genId()
   // Temporary ID used for storing pretrain parameters on Model
   override val pretrainId = "p_" + id

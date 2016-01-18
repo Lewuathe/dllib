@@ -5,7 +5,7 @@ import org.apache.spark.sql.{SQLContext, DataFrame}
 
 import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.form.Form
-import com.lewuathe.dllib.layer.{ClassificationLayer, FullConnectedLayer}
+import com.lewuathe.dllib.layer.{DenoisingAutoEncodeLayer, ClassificationLayer, FullConnectedLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 
