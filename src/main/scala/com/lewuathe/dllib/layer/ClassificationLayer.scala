@@ -12,7 +12,7 @@ import com.lewuathe.dllib.util._
   * @param inputSize
   */
 class ClassificationLayer(override val outputSize: Int,
-                         override val inputSize: Int) extends Layer with ShapeValidator {
+                         override val inputSize: Int) extends Layer with ShapeValidator with Visualizable {
 
   override val id: String = genId()
 

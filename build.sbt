@@ -8,7 +8,8 @@ sparkVersion := "1.5.2"
 
 libraryDependencies  ++= Seq(
   // other dependencies here
-  "org.scalanlp" %% "breeze" % "0.11.2",
+  "org.scalanlp" %% "breeze" % "0.12",
+  "org.scalanlp" %% "breeze-viz" % "0.12",
   // native libraries are not included by default. add this if you want them (as of 0.7)
   // native libraries greatly improve performance, but increase jar sizes.
 //  "org.scalanlp" %% "breeze-natives" % "0.11.2",
