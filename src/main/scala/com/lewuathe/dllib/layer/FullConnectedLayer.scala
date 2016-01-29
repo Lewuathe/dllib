@@ -15,7 +15,7 @@ import com.lewuathe.dllib.util.genId
 class FullConnectedLayer(override val outputSize: Int,
                          override val inputSize: Int) extends Layer with ShapeValidator with Visualizable {
 
-  override val id = genId()
+  override var id = genId()
 
   override def forward(acts: ActivationStack, model: Model): (Vector[Double], Vector[Double]) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value

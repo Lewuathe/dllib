@@ -11,7 +11,7 @@ import com.lewuathe.dllib.{Weight, Bias, ActivationStack, Model}
   * The parameters can be accessed with id.
   */
 abstract class Layer extends Serializable {
-  val id: String
+  var id: String
   val inputSize: Int
   val outputSize: Int
 
@@ -20,9 +20,12 @@ abstract class Layer extends Serializable {
     * Input is given as a top of ActivationStack.
     * @param acts
     * @param model
-    * @return
+    * @return The output tuple of the layer. First value of the tuple
+    *         represents the raw output, the second is applied activation
+    *         function of the layer.
     */
-  def forward(acts: ActivationStack, model: Model): (Vector[Double], Vector[Double])
+  def forward(acts: ActivationStack, model: Model)
+      : (Vector[Double], Vector[Double])
 
   /**
     * Calculate the delta of this iteration. The input of the layer in forward
@@ -31,10 +34,12 @@ abstract class Layer extends Serializable {
     * @param delta
     * @param acts
     * @param model
-    * @return
+    * @return The delta tuple of the layer while back propagation.
+    *         First is passed previous layer, the second and third is
+    *         the delta of Weight and Bias parameter of the layer.
     */
   def backward(delta: Vector[Double], acts: ActivationStack, model: Model)
-  : (Vector[Double], Weight, Bias)
+      : (Vector[Double], Weight, Bias)
 
   override def toString: String = {
     s"id: ${id}, ${inputSize} -> ${outputSize}"

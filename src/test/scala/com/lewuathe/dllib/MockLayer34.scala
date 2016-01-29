@@ -6,7 +6,7 @@ import com.lewuathe.dllib.util._
 import com.lewuathe.dllib.layer.Layer
 
 class MockLayer34 extends Layer {
-  override val id: String = "layer34"
+  override var id: String = "layer34"
 
   /**
     * Calculate the output corresponding given input.
