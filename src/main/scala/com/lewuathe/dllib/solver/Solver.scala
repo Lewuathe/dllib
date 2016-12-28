@@ -1,14 +1,12 @@
 package com.lewuathe.dllib.solver
 
-import breeze.linalg.{Vector, Matrix}
-
-import org.apache.spark.Logging
+import breeze.linalg.{Matrix, Vector => brzVector}
 import org.apache.spark.ml.{PredictionModel, Predictor}
-import org.apache.spark.ml.param.{Params, ParamMap}
+import org.apache.spark.ml.param.{ParamMap, Params}
+import org.apache.spark.ml.linalg.Vector
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, Row}
+import org.apache.spark.sql.{DataFrame, Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
-
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.form.Form
@@ -27,7 +25,7 @@ import com.lewuathe.dllib.util
 abstract class Solver[FeaturesType,
                       E <: Solver[FeaturesType, E, M],
                       M <: SolverModel[FeaturesType, M]](val network: Network)
-  extends Predictor[FeaturesType, E, M] with HasWeightCol with Logging {
+  extends Predictor[FeaturesType, E, M] with HasWeightCol {
 
   val form: Form = network.form
   val model: Model = network.model
@@ -40,15 +38,15 @@ abstract class Solver[FeaturesType,
 
   val learningRateDecay = 0.99
 
-  protected def trainInternal(dataset: DataFrame, model: Model): Model = {
-    // TODO: weightCol can be set
-    // val w = if ($(weightCol).isEmpty) lit(1.0) else col($(weightCol))
-    val w = lit(1.0)
-    val instances: RDD[Instance] = dataset.select(col($(labelCol)), w, col($(featuresCol))).map {
-      case Row(label: Double, weight: Double, features: org.apache.spark.mllib.linalg.Vector) => {
+  protected def trainInternal(dataset: Dataset[_], model: Model): Model = {
+    val numFeatures = dataset.select(col($(featuresCol))).first().getAs[Vector](0).size
+    val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) lit(1.0) else col($(weightCol))
+
+    val instances: RDD[Instance] = dataset.select(
+      col($(labelCol)), w, col($(featuresCol))).rdd.map {
+      case Row(label: Double, weight: Double, features: Vector) =>
         val l = util.encodeLabel(label, form.layers.last.outputSize)
-        Instance(l, weight, Vector[Double](features.toArray))
-      }
+        Instance(l, weight, brzVector[Double](features.toArray))
     }
 
     var localModel = model
@@ -117,7 +115,7 @@ abstract class Solver[FeaturesType,
     * @param prediction
     * @return
     */
-  protected def error(label: Vector[Double], prediction: Vector[Double]): Vector[Double] = {
+  protected def error(label: brzVector[Double], prediction: brzVector[Double]): brzVector[Double] = {
     require(label.size == prediction.size)
     val ret = label - prediction
     ret.map({
@@ -133,7 +131,7 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
   val model = network.model
   val form = network.form
 
-  protected def predictInternal(features: Vector[Double]): Double = {
+  protected def predictInternal(features: brzVector[Double]): Double = {
     val activations = new ActivationStack
     activations.push((null, features))
     // Feed forward

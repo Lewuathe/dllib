@@ -5,7 +5,7 @@ import com.lewuathe.dllib.layer.{ClassificationLayer, FullConnectedLayer}
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
-import org.apache.spark.mllib.linalg.{Vector, Vectors}
+import org.apache.spark.ml.linalg.{Vector, Vectors}
 
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.network.Network

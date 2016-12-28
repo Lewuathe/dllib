@@ -6,7 +6,7 @@ import java.nio.file.{ Files, Paths }
 import java.nio.channels.Channels
 import java.util.zip.GZIPInputStream
 
-import org.apache.spark.mllib.linalg.{Vector, Vectors}
+import org.apache.spark.ml.linalg.{Vector, Vectors}
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.sql.{SQLContext, DataFrame}
 

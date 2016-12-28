@@ -2,9 +2,9 @@ organization := "Lewuathe"
 
 name := "dllib"
 
-version := "0.0.7"
+version := "0.0.8-SNAPSHOT"
 
-sparkVersion := "1.5.2"
+sparkVersion := "2.0.2"
 
 libraryDependencies  ++= Seq(
   // other dependencies here
@@ -27,9 +27,7 @@ resolvers ++= Seq(
 
 // Scala 2.9.2 is still supported for 0.2.1, but is dropped afterwards.
 // Don't use an earlier version of 2.10, you will probably get weird compiler crashes.
-scalaVersion := "2.10.5"
-
-crossScalaVersions := Seq("2.10.5", "2.11.7")
+scalaVersion := "2.11.8"
 
 //spAppendScalaVersion := true
 

@@ -1,25 +1,25 @@
 package com.lewuathe.dllib.solver
 
+import breeze.linalg.{Vector => brzVector}
+
 import com.lewuathe.dllib.form.Form
 import com.lewuathe.dllib.network.Network
 import org.apache.spark.SparkContext
 
 import scala.util.control.Breaks._
-
-import breeze.linalg.Vector
 import com.lewuathe.dllib.layer.{Layer, PretrainLayer}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{Row, DataFrame}
+import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.sql.{DataFrame, Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
-
-import com.lewuathe.dllib.{ActivationStack, Model, Instance, util}
+import com.lewuathe.dllib.{ActivationStack, Instance, Model, util}
 
 /**
   * Pretrainer provides a way to train pre train networks before running
   * fully backpropagation. Pretrainer assumes pretrain layers are put
   * continuously at the head of network.
   */
-trait Pretrainer extends Solver[org.apache.spark.mllib.linalg.Vector,
+trait Pretrainer extends Solver[Vector,
   UnsupervisedPretrainingSolver, UnsupervisedPretrainingSolverModel] {
 
   private def iteration(pretrainLayer: PretrainLayer, iter: Int,
@@ -64,15 +64,15 @@ trait Pretrainer extends Solver[org.apache.spark.mllib.linalg.Vector,
       pretrainTmpModel + (pretrainTmpModelDelta / miniBatchSize) * learningRate)
   }
 
-  def pretrainInternal(dataset: DataFrame, model: Model): Model = {
-    val w = lit(1.0)
-    val instances: RDD[Instance]
-      = dataset.select(col($(labelCol)), w, col($(featuresCol))).map {
-      case Row(label: Double, weight: Double,
-      features: org.apache.spark.mllib.linalg.Vector) => {
+  def pretrainInternal(dataset: Dataset[_], model: Model): Model = {
+    val numFeatures = dataset.select(col($(featuresCol))).first().getAs[Vector](0).size
+    val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) lit(1.0) else col($(weightCol))
+
+    val instances: RDD[Instance] = dataset.select(
+      col($(labelCol)), w, col($(featuresCol))).rdd.map {
+      case Row(label: Double, weight: Double, features: Vector) =>
         val l = util.encodeLabel(label, form.layers.last.outputSize)
-        Instance(l, weight, Vector[Double](features.toArray))
-      }
+        Instance(l, weight, brzVector[Double](features.toArray))
     }
 
     var localModel = model
