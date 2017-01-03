@@ -20,12 +20,10 @@ abstract class Layer extends Serializable {
     * Input is given as a top of ActivationStack.
     * @param acts
     * @param model
-    * @return The output tuple of the layer. First value of the tuple
-    *         represents the raw output, the second is applied activation
-    *         function of the layer.
+    * @return The output tuple of the layer.
     */
   def forward(acts: ActivationStack, model: Model)
-      : (Vector[Double], Vector[Double])
+      : Vector[Double]
 
   /**
     * Calculate the delta of this iteration. The input of the layer in forward

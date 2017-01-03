@@ -21,7 +21,7 @@ abstract class PretrainLayer extends Layer with ShapeValidator {
     */
   def pretrain(acts: ActivationStack, model: Model, tmpModel: Model):
       ((Weight, Bias), (Weight, Bias), Double) = {
-    val (_, input) = acts.top
+    val input = acts.top
 
     val (hiddenU, hiddenZ) = encode(input, model, tmpModel)
     val (visibleU, visibleZ) = decode(hiddenZ, model, tmpModel)

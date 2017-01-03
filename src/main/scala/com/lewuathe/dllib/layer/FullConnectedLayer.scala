@@ -17,18 +17,17 @@ class FullConnectedLayer(override val outputSize: Int,
 
   override var id = genId()
 
-  override def forward(acts: ActivationStack, model: Model): (Vector[Double], Vector[Double]) = {
+  override def forward(acts: ActivationStack, model: Model): Vector[Double] = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
     validateParamShapes(weight, bias)
 
-    val (_, input) = acts.top
+    val input = acts.top
     require(input.size == inputSize, "Invalid input")
 
     val u: Vector[Double] = weight * input + bias
-    val z = sigmoid(u)
-    (u, z)
+    u
   }
 
   override def backward(delta: Vector[Double], acts: ActivationStack,
@@ -36,16 +35,16 @@ class FullConnectedLayer(override val outputSize: Int,
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
-    val (thisU, thisZ) = acts.pop()
-    val (backU, backZ) = acts.top
+    val thisOutput = acts.pop()
+    val thisInput = acts.top
 
     val dWeight: Weight = new Weight(id, outputSize,
-      inputSize)(delta.toDenseVector * backZ.toDenseVector.t)
+      inputSize)(delta.toDenseVector * thisInput.toDenseVector.t)
     val dBias: Bias = new Bias(id, outputSize)(delta)
 
     validateParamShapes(dWeight.value, dBias.value)
 
-    val d: Vector[Double] = sigmoidPrime(backU) :* (weight.toDenseMatrix.t * delta.toDenseVector)
+    val d: Vector[Double] = weight.toDenseMatrix.t * delta.toDenseVector
     (d, dWeight, dBias)
   }
 

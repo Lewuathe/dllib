@@ -2,11 +2,11 @@ package com.lewuathe.dllib.example
 
 import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.layer.{ClassificationLayer, DenoisingAutoEncodeLayer}
+import com.lewuathe.dllib.layer._
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{SQLContext, DataFrame}
+import org.apache.spark.sql.{DataFrame, SQLContext}
 
 class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
                                      numIterations: Int, learningRate: Double) {
@@ -21,7 +21,9 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
 
     val sdaForm = new Graph(Array(
       new DenoisingAutoEncodeLayer(100, 784),
-      new ClassificationLayer(10, 100)
+      new SigmoidLayer(100, 100),
+      new FullConnectedLayer(10, 100),
+      new SoftmaxLayer(10, 10)
     ))
 
     val sdaModel = Model(sdaForm)
@@ -35,7 +37,6 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
 
     sdaForm.layers.foreach({
       case l: DenoisingAutoEncodeLayer => l.vizWeight("./images/weight_denoising.png", model.model)
-      case l: ClassificationLayer => l.vizWeight("./images/weight_classification.png", model.model)
     })
 
     val result = model.transform(df)

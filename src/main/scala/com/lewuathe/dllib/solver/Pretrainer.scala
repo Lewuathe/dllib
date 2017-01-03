@@ -35,15 +35,15 @@ trait Pretrainer extends Solver[Vector,
         seqOp = (c: (Model, Double, Int, Model), instance: Instance) => {
           // Sample feature
           val activations = new ActivationStack
-          activations.push((instance.features, instance.features))
+          activations.push(instance.features)
 
           // Feed forward to pretrained target layer
           breakable(
             for (l: Layer <- form.layers) {
               // Target pretrain layer does not need to forward
               if (l.id == pretrainLayer.id) break
-              val (u, z) = l.forward(activations, bcModel.value)
-              activations.push((u, z))
+              val z = l.forward(activations, bcModel.value)
+              activations.push(z)
             }
           )
 
