@@ -1,11 +1,10 @@
 package com.lewuathe.dllib.example
 
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{SQLContext, DataFrame}
-
+import org.apache.spark.sql.{DataFrame, SQLContext}
 import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.layer.{DenoisingAutoEncodeLayer, ClassificationLayer, FullConnectedLayer}
+import com.lewuathe.dllib.layer.{FullConnectedLayer, SigmoidLayer, SoftmaxLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 
@@ -21,7 +20,9 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
 
     val nn3Form = new Graph(Array(
       new FullConnectedLayer(100, 784),
-      new ClassificationLayer(10, 100)
+      new SigmoidLayer(100, 100),
+      new FullConnectedLayer(10, 100),
+      new SoftmaxLayer(10, 10)
     ))
 
     val nn3Model = Model(nn3Form)

@@ -15,7 +15,7 @@ class MockLayer23 extends Layer {
     * @param model
     * @return
     */
-  override def forward(acts: ActivationStack, model: Model): (linalg.Vector[Double], linalg.Vector[Double]) = ???
+  override def forward(acts: ActivationStack, model: Model): linalg.Vector[Double] = ???
 
   /**
     * Calculate the delta of this iteration. The input of the layer in forward

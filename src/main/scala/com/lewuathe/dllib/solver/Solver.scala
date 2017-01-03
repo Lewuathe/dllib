@@ -87,15 +87,15 @@ abstract class Solver[FeaturesType,
     val label = instance.label
     val activations = new ActivationStack
     // Input vector can be regarded as it is applied indentity mapping.
-    activations.push((instance.features, instance.features))
+    activations.push(instance.features)
 
     // Feed forward
     for (l: Layer <- form.layers) {
-      val (u, z) = l.forward(activations, model)
-      activations.push((u, z))
+      val z = l.forward(activations, model)
+      activations.push(z)
     }
 
-    var delta = error(label, activations.top._2)
+    var delta = error(label, activations.top)
     val loss = Math.sqrt((delta :* delta).sum)
 
     // Back propagation
@@ -133,13 +133,13 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
 
   protected def predictInternal(features: brzVector[Double]): Double = {
     val activations = new ActivationStack
-    activations.push((null, features))
+    activations.push(features)
     // Feed forward
     for (l: Layer <- form.layers) {
-      val (u, z) = l.forward(activations, model)
-      activations.push((u, z))
+      val z = l.forward(activations, model)
+      activations.push(z)
     }
-    val ret = activations.top._2
+    val ret = activations.top
     util.decodeLabel(ret)
   }
 

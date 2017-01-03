@@ -25,6 +25,7 @@ trait Visualizable extends Layer {
 
   /**
     * Calculate visualizable window size
+    *
     * @return
     */
   private def calculateWindow(size: Int): (Int, Int) = {
