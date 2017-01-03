@@ -1,4 +1,4 @@
-package com.lewuathe.dllib.form
+package com.lewuathe.dllib.graph
 
 import com.lewuathe.dllib.layer.Layer
 
@@ -8,7 +8,7 @@ import com.lewuathe.dllib.layer.Layer
   * of every layer not model parameters.
   * @param layers
   */
-class Form(val layers: Array[Layer]) extends Serializable {
+class Graph(val layers: Array[Layer]) extends Serializable {
   override def toString: String = {
     layers.mkString(" ==> ")
   }

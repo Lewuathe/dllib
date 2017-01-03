@@ -4,7 +4,7 @@ import breeze.linalg.{Vector, Matrix}
 import breeze.stats.distributions.Binomial
 
 import com.lewuathe.dllib.activations.{sigmoid, sigmoidPrime}
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.{Bias, Weight, Model, ActivationStack}
 import com.lewuathe.dllib.util.genId
 

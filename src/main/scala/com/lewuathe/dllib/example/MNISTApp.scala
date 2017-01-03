@@ -4,7 +4,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{SQLContext, DataFrame}
 
 import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.{DenoisingAutoEncodeLayer, ClassificationLayer, FullConnectedLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
@@ -19,7 +19,7 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
     val sqlContext = new SQLContext(sc)
     val df = createMNISTDataset("/tmp/", sc)
 
-    val nn3Form = new Form(Array(
+    val nn3Form = new Graph(Array(
       new FullConnectedLayer(100, 784),
       new ClassificationLayer(10, 100)
     ))

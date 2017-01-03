@@ -1,7 +1,7 @@
 package com.lewuathe.dllib.example
 
 import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.{ClassificationLayer, DenoisingAutoEncodeLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
@@ -19,7 +19,7 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     val sqlContext = new SQLContext(sc)
     val df = createMNISTDataset("/tmp/", sc)
 
-    val sdaForm = new Form(Array(
+    val sdaForm = new Graph(Array(
       new DenoisingAutoEncodeLayer(100, 784),
       new ClassificationLayer(10, 100)
     ))

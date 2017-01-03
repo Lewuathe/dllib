@@ -1,7 +1,7 @@
 package com.lewuathe.dllib
 
 import breeze.linalg.{Vector, Matrix}
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 
 import com.lewuathe.dllib.layer.{FullConnectedLayer, Layer}
 import org.scalatest._
@@ -54,14 +54,14 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "create correct shape" in {
-    val form = new Form(mockLayers)
+    val form = new Graph(mockLayers)
     val model = Model(form)
 
     verifyModelShape(model)
   }
 
   "Model" should "be added" in {
-    val form = new Form(mockLayers)
+    val form = new Graph(mockLayers)
     val model1 = Model(form)
     val model2 = Model(form)
 
@@ -71,7 +71,7 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "be subtracted" in {
-    val form = new Form(mockLayers)
+    val form = new Graph(mockLayers)
     val model1 = Model(form)
     val model2 = Model(form)
 
@@ -81,7 +81,7 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "be divided" in {
-    val form = new Form(mockLayers)
+    val form = new Graph(mockLayers)
     val model1 = Model(form)
 
     val ret = model1 / 2.0
@@ -90,7 +90,7 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "be multiplied" in {
-    val form = new Form(mockLayers)
+    val form = new Graph(mockLayers)
     val model1 = Model(form)
 
     val ret = model1 * 0.5
