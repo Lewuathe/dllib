@@ -7,7 +7,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.apache.spark.ml.linalg.{Vector, Vectors}
 
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.network.Network
 
 object XORApp {
@@ -35,7 +35,7 @@ object XORApp {
 
     val df = createTrainingData(sqlContext)
 
-    val nn3Form = new Form(Array(
+    val nn3Form = new Graph(Array(
       new FullConnectedLayer(2, 2),
       new ClassificationLayer(2, 2)
     ))

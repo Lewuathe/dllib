@@ -2,7 +2,7 @@ package com.lewuathe.dllib.solver
 
 import breeze.linalg.{Vector => brzVector}
 
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.network.Network
 import org.apache.spark.SparkContext
 
@@ -23,8 +23,8 @@ trait Pretrainer extends Solver[Vector,
   UnsupervisedPretrainingSolver, UnsupervisedPretrainingSolverModel] {
 
   private def iteration(pretrainLayer: PretrainLayer, iter: Int,
-                        instances: RDD[Instance], model: Model, form: Form,
-                        pretrainTmpModel: Model, pretrainTmpForm: Form,
+                        instances: RDD[Instance], model: Model, form: Graph,
+                        pretrainTmpModel: Model, pretrainTmpForm: Graph,
                         sc: SparkContext): (Model, Model) = {
     val bcModel = sc.broadcast(model)
     val bcPretrainTmpModel = sc.broadcast(pretrainTmpModel)
@@ -103,8 +103,8 @@ trait Pretrainer extends Solver[Vector,
 
   // Tmp model represents a model that is only used while pretraining
   private def createPretrainTmpNetwork(pretrainLayer: PretrainLayer):
-      (Model, Form) = {
-    val tmpForm = new Form(Array(pretrainLayer.createTmpLayer()))
+      (Model, Graph) = {
+    val tmpForm = new Graph(Array(pretrainLayer.createTmpLayer()))
     (Model(tmpForm), tmpForm)
   }
 }

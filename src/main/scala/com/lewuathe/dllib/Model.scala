@@ -1,9 +1,9 @@
 package com.lewuathe.dllib
 
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
 
-class ModelShape(form: Form) extends Serializable {
+class ModelShape(form: Graph) extends Serializable {
   val weightShape = form.layers.map({
     case layer: Layer => (layer.id, layer.outputSize, layer.inputSize)
   })
@@ -12,7 +12,7 @@ class ModelShape(form: Form) extends Serializable {
   })
 }
 
-class Model(form: Form, isZero: Boolean = false)
+class Model(form: Graph, isZero: Boolean = false)
            (implicit ws: Map[String, Weight], bs: Map[String, Bias]) extends Serializable {
   val shape: ModelShape = new ModelShape(form)
 
@@ -130,6 +130,6 @@ object Model {
   implicit val nullWeight: Map[String, Weight] = null
   implicit val nullBias : Map[String, Bias] = null
 
-  def apply(form: Form): Model = new Model(form)
-  def zero(form: Form): Model = new Model(form, isZero = true)
+  def apply(form: Graph): Model = new Model(form)
+  def zero(form: Graph): Model = new Model(form, isZero = true)
 }

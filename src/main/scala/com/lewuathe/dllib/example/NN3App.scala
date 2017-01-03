@@ -7,7 +7,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.apache.spark.ml.linalg.{Vector, Vectors}
 
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.network.Network
 
 object NN3App {
@@ -31,7 +31,7 @@ object NN3App {
 
     val df = createTrainingData(sqlContext)
 
-    val nn3Form = new Form(Array(
+    val nn3Form = new Graph(Array(
       new FullConnectedLayer(3, 3),
       new FullConnectedLayer(2, 3),
       new ClassificationLayer(2, 2)

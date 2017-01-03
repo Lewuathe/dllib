@@ -1,7 +1,7 @@
 package com.lewuathe.dllib.layer
 
 import breeze.linalg.{Vector, Matrix}
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 
 import com.lewuathe.dllib.{Weight, Bias, ActivationStack, Model}
 import com.lewuathe.dllib.activations._

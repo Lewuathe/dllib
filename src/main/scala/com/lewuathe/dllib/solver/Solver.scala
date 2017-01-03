@@ -9,7 +9,7 @@ import org.apache.spark.sql.{DataFrame, Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param.HasWeightCol
 import com.lewuathe.dllib.util
@@ -27,7 +27,7 @@ abstract class Solver[FeaturesType,
                       M <: SolverModel[FeaturesType, M]](val network: Network)
   extends Predictor[FeaturesType, E, M] with HasWeightCol {
 
-  val form: Form = network.form
+  val form: Graph = network.form
   val model: Model = network.model
 
   logInfo(network.toString)
@@ -82,7 +82,7 @@ abstract class Solver[FeaturesType,
     * @param instance
     * @return
     */
-  protected def gradient(form: Form, model: Model, instance: Instance): (Model, Double) = {
+  protected def gradient(form: Graph, model: Model, instance: Instance): (Model, Double) = {
     var deltaModel = Model.zero(form)
     val label = instance.label
     val activations = new ActivationStack

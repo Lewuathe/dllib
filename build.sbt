@@ -2,7 +2,7 @@ organization := "Lewuathe"
 
 name := "dllib"
 
-version := "0.0.8"
+version := "0.0.9-SNAPSHOT"
 
 sparkVersion := "2.0.2"
 

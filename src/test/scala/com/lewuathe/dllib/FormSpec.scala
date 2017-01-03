@@ -5,7 +5,7 @@ import breeze.linalg.Vector
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
-import com.lewuathe.dllib.form.Form
+import com.lewuathe.dllib.graph.Graph
 
 class FormSpec extends FlatSpec with Matchers with MockFactory {
   def mockLayers() = {
@@ -15,7 +15,7 @@ class FormSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Form" should "create correct layers" in {
-    val form = new Form(mockLayers)
+    val form = new Graph(mockLayers)
     form.toString should be("id: layer34, 4 -> 3 ==> id: layer23, 3 -> 2")
   }
 }
