@@ -4,7 +4,7 @@ name := "dllib"
 
 version := "0.0.9-SNAPSHOT"
 
-sparkVersion := "2.0.2"
+sparkVersion := "2.1.0"
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 
