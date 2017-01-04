@@ -3,8 +3,8 @@ package com.lewuathe.dllib
 import breeze.linalg.{sum, Vector}
 
 /**
- * Created by kaisasak on 6/29/14.
- */
+  * The collection of activation functions
+  */
 package object activations {
   /**
    * sigmoid function for vector
