@@ -19,19 +19,20 @@
 
 package com.lewuathe.dllib.solver
 
+import scala.util.control.Breaks._
+
+import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.rdd.RDD
+import org.apache.spark.SparkContext
+import org.apache.spark.sql.{Dataset, Row}
+import org.apache.spark.sql.functions.{col, lit}
+
 import breeze.linalg.{Vector => brzVector}
 
+import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.network.Network
-import org.apache.spark.SparkContext
-
-import scala.util.control.Breaks._
 import com.lewuathe.dllib.layer.{Layer, PretrainLayer}
-import org.apache.spark.rdd.RDD
-import org.apache.spark.ml.linalg.Vector
-import org.apache.spark.sql.{DataFrame, Dataset, Row}
-import org.apache.spark.sql.functions.{col, lit}
-import com.lewuathe.dllib.{ActivationStack, Instance, Model, util}
+import com.lewuathe.dllib.util
 
 /**
   * Pretrainer provides a way to train pre train networks before running

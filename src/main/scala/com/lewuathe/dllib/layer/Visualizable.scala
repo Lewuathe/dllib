@@ -21,6 +21,7 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg._
 import breeze.plot._
+
 import com.lewuathe.dllib.Model
 
 trait Visualizable extends Layer {

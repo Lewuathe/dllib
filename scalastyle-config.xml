@@ -118,4 +118,16 @@
  <check level="warning" class="org.scalastyle.scalariform.PublicMethodsHaveTypeChecker" enabled="true"></check>
  <check level="warning" class="org.scalastyle.file.NewLineAtEofChecker" enabled="true"></check>
  <check level="warning" class="org.scalastyle.file.NoNewLineAtEofChecker" enabled="false"></check>
+ <check enabled="true" class="org.scalastyle.file.WhitespaceEndOfLineChecker" level="warning"/>
+ <check level="warning" class="org.scalastyle.scalariform.ImportOrderChecker" enabled="true">
+  <parameters>
+   <parameter name="groups">java,scala,spark,3rdParty,dllib</parameter>
+   <parameter name="group.java">java\..*</parameter>
+   <parameter name="group.scala">scala\..*</parameter>
+   <parameter name="group.spark">org\.apache\.spark\..*</parameter>
+   <parameter name="group.3rdParty">(?!com\.lewuathe\.dllib\.).*</parameter>
+   <parameter name="group.dllib">com\.lewuathe\.dllib\..*</parameter>
+  </parameters>
+ </check>
+ <check enabled="false" class="org.scalastyle.scalariform.UnderscoreImportChecker" level="warning"/>
 </scalastyle>

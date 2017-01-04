@@ -6,6 +6,12 @@ version := "0.0.9-SNAPSHOT"
 
 sparkVersion := "2.0.2"
 
+lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
+
+compileScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Compile).toTask("").value
+
+(compile in Compile) <<= (compile in Compile) dependsOn compileScalastyle
+
 libraryDependencies  ++= Seq(
   // other dependencies here
   "org.scalanlp" %% "breeze" % "0.12",

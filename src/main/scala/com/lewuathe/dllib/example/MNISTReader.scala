@@ -19,15 +19,15 @@
 
 package com.lewuathe.dllib.example
 
-import java.io.{ File, FileInputStream, FileOutputStream, DataInputStream }
+import java.io.{DataInputStream, File, FileInputStream, FileOutputStream}
 import java.net.URL
-import java.nio.file.{ Files, Paths }
 import java.nio.channels.Channels
+import java.nio.file.{Files, Paths}
 import java.util.zip.GZIPInputStream
 
 import org.apache.spark.ml.linalg.{Vector, Vectors}
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.sql.{SQLContext, DataFrame}
+import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.SparkContext
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 
@@ -117,9 +117,6 @@ class MNISTDataset(location: String, dataset: String) {
 
   def labelsAsInts: Stream[Int] = labelReader.labelsAsInts
   def labelsAsVectors: Stream[DenseVector[Double]] = labelReader.labelsAsVectors
-
-  def examples = imagesAsVectors zip labelsAsVectors
-
 }
 
 object MNIST {

@@ -19,13 +19,14 @@
 
 package com.lewuathe.dllib.example
 
-import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.layer._
-import com.lewuathe.dllib.network.Network
-import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
+
+import com.lewuathe.dllib.graph.Graph
+import com.lewuathe.dllib.Model
+import com.lewuathe.dllib.layer.{AffineLayer, DenoisingAutoEncodeLayer, SigmoidLayer, SoftmaxLayer}
+import com.lewuathe.dllib.network.Network
+import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
 
 class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
                                      numIterations: Int, learningRate: Double) {

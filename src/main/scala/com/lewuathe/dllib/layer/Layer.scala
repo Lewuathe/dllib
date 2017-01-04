@@ -21,7 +21,7 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.Vector
 
-import com.lewuathe.dllib.{Weight, Bias, ActivationStack, Model}
+import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
 
 /**
   * Layer is an abstraction of neural network layer.

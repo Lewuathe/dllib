@@ -19,16 +19,18 @@
 
 package com.lewuathe.dllib.solver
 
-import breeze.linalg.{Matrix, Vector => brzVector}
 import org.apache.spark.ml.{PredictionModel, Predictor}
-import org.apache.spark.ml.param.{ParamMap, Params}
 import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, Dataset, Row}
+import org.apache.spark.sql.{Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
-import com.lewuathe.dllib.layer.Layer
+
+import breeze.linalg.{Vector => brzVector}
+
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.graph.Graph
+import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param.HasWeightCol
 import com.lewuathe.dllib.util

@@ -19,10 +19,12 @@
 
 package com.lewuathe.dllib.solver
 
-import breeze.linalg.{Vector => brzVector}
-import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.ml.linalg.Vector
-import org.apache.spark.sql.{DataFrame, Dataset}
+import org.apache.spark.ml.param.ParamMap
+import org.apache.spark.sql.Dataset
+
+import breeze.linalg.{Vector => brzVector}
+
 import com.lewuathe.dllib.network.Network
 
 /**

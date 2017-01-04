@@ -19,15 +19,17 @@
 
 package com.lewuathe.dllib.example
 
-import org.apache.log4j.Logger
-import org.apache.log4j.Level
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession}
-import com.lewuathe.dllib.Model
+import org.apache.spark.sql.{DataFrame, SQLContext}
+
+import org.apache.log4j.Level
+import org.apache.log4j.Logger
+
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.{AffineLayer, SigmoidLayer, SoftmaxLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
+import com.lewuathe.dllib.Model
 
 class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Double) {
   def createMNISTDataset(path: String, sc: SparkContext): DataFrame = {

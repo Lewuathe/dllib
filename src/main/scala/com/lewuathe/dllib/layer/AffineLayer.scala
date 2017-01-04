@@ -19,10 +19,9 @@
 
 package com.lewuathe.dllib.layer
 
-import breeze.linalg.{Vector, Matrix}
+import breeze.linalg.{Matrix, Vector}
 
-import com.lewuathe.dllib.activations.{sigmoid, sigmoidPrime}
-import com.lewuathe.dllib.{Bias, Weight, Model, ActivationStack}
+import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
 import com.lewuathe.dllib.util.genId
 
 /**
@@ -66,5 +65,4 @@ class AffineLayer(override val outputSize: Int,
     val d: Vector[Double] = weight.toDenseMatrix.t * delta.toDenseVector
     (d, dWeight, dBias)
   }
-
 }

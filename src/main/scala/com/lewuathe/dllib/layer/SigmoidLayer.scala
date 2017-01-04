@@ -20,9 +20,10 @@
 package com.lewuathe.dllib.layer
 
 import breeze.linalg.Vector
+
 import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
-import com.lewuathe.dllib.util.genId
 import com.lewuathe.dllib.activations.{sigmoid, sigmoidPrime}
+import com.lewuathe.dllib.util.genId
 
 /**
   * Sigmoid function layer

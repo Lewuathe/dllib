@@ -19,7 +19,7 @@
 
 package com.lewuathe.dllib.layer
 
-import breeze.linalg.{Vector, Matrix}
+import breeze.linalg.{Matrix, Vector}
 
 trait ShapeValidator extends Layer {
   protected def validateParamShapes(weight: Matrix[Double], bias:

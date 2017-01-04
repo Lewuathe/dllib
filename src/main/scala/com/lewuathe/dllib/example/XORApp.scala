@@ -19,15 +19,15 @@
 
 package com.lewuathe.dllib.example
 
-import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.layer.{AffineLayer, SigmoidLayer, SoftmaxLayer}
-import com.lewuathe.dllib.solver.MultiLayerPerceptron
+import org.apache.spark.ml.linalg.{Vector, Vectors}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
-import org.apache.spark.ml.linalg.{Vector, Vectors}
 
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.network.Network
+import com.lewuathe.dllib.Model
+import com.lewuathe.dllib.layer.{AffineLayer, SoftmaxLayer}
+import com.lewuathe.dllib.solver.MultiLayerPerceptron
 
 object XORApp {
   case class Sample(label: Double, features: Vector)

@@ -19,10 +19,9 @@
 
 package com.lewuathe.dllib.layer
 
-import breeze.linalg.{Vector, Matrix}
-import com.lewuathe.dllib.graph.Graph
+import breeze.linalg.{Matrix, Vector}
 
-import com.lewuathe.dllib.{Weight, Bias, ActivationStack, Model}
+import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
 import com.lewuathe.dllib.activations._
 
 abstract class PretrainLayer extends Layer with ShapeValidator {
