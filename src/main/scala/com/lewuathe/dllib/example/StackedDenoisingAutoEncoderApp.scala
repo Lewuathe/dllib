@@ -22,7 +22,7 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     val sdaForm = new Graph(Array(
       new DenoisingAutoEncodeLayer(100, 784),
       new SigmoidLayer(100, 100),
-      new FullConnectedLayer(10, 100),
+      new AffineLayer(10, 100),
       new SoftmaxLayer(10, 10)
     ))
 

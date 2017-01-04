@@ -1,7 +1,7 @@
 package com.lewuathe.dllib.example
 
 import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.layer.{FullConnectedLayer, SigmoidLayer, SoftmaxLayer}
+import com.lewuathe.dllib.layer.{AffineLayer, SigmoidLayer, SoftmaxLayer}
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
@@ -36,7 +36,7 @@ object XORApp {
     val df = createTrainingData(sqlContext)
 
     val nn3Form = new Graph(Array(
-      new FullConnectedLayer(2, 2),
+      new AffineLayer(2, 2),
       new SoftmaxLayer(2, 2)
     ))
 

@@ -12,8 +12,8 @@ import com.lewuathe.dllib.util.genId
   * @param outputSize
   * @param inputSize
   */
-class FullConnectedLayer(override val outputSize: Int,
-                         override val inputSize: Int) extends Layer with ShapeValidator with Visualizable {
+class AffineLayer(override val outputSize: Int,
+                  override val inputSize: Int) extends Layer with ShapeValidator with Visualizable {
 
   override var id = genId()
 

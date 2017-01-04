@@ -3,7 +3,7 @@ package com.lewuathe.dllib
 import breeze.linalg.{Vector, Matrix}
 import com.lewuathe.dllib.graph.Graph
 
-import com.lewuathe.dllib.layer.{FullConnectedLayer, Layer}
+import com.lewuathe.dllib.layer.{AffineLayer, Layer}
 import org.scalatest._
 import org.scalamock.scalatest.MockFactory
 
