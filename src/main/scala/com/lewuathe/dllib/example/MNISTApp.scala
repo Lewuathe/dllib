@@ -1,7 +1,9 @@
 package com.lewuathe.dllib.example
 
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession}
 import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.{AffineLayer, SigmoidLayer, SoftmaxLayer}
@@ -45,6 +47,7 @@ object MNISTApp {
 
   def apply(sc: SparkContext, miniBatchFraction: Double,
             numIterations: Int, learningRate: Double) = {
+    Logger.getLogger("org.apache.spark").setLevel(Level.OFF)
     new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(sc)
   }
 }

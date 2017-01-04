@@ -69,7 +69,6 @@ abstract class Solver[FeaturesType,
       logInfo(s"Iteration ${i} -> loss: ${lossSum / miniBatchSize}, " +
         s"count: ${miniBatchSize}, learning rate: ${learningRate}")
       localModel += (modelDelta / miniBatchSize) * learningRate
-      learningRate *= learningRateDecay
     }
 
     localModel

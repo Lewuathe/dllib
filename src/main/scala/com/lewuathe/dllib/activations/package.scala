@@ -66,6 +66,4 @@ package object activations {
     val denom = sum(x.map(Math.exp))
     x.map(Math.exp(_) / denom)
   }
-
-
 }

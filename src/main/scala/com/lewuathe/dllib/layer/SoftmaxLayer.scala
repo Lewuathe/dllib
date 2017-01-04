@@ -49,7 +49,8 @@ class SoftmaxLayer(override val outputSize: Int,
     val dWeight = Weight.zero(id, outputSize, inputSize)
     val dBias = Bias.zero(id, outputSize)
 
-    val d: Vector[Double] = sigmoidPrime(thisInput) :* delta.toDenseVector
+    // Pass through error delta
+    val d: Vector[Double] = delta.toDenseVector
     (d, dWeight, dBias)
   }
 }
