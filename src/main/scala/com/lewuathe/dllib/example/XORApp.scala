@@ -49,7 +49,7 @@ object XORApp {
   var numIterations = 100
   var learningRate = 0.7
 
-  def submit(sc: SparkContext) = {
+  def submit(sc: SparkContext): Unit = {
     val sqlContext = new SQLContext(sc)
 
     val df = createTrainingData(sqlContext)
@@ -79,8 +79,5 @@ object XORApp {
     result.show()
   }
 
-  def main(args: Array[String]) {
-
-  }
-
+  def main(args: Array[String]) {}
 }

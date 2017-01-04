@@ -20,9 +20,7 @@
 package com.lewuathe.dllib
 
 import breeze.linalg.{DenseVector, Vector}
-/**
-  * Created by sasakikai on 11/26/15.
-  */
+
 package object util {
   private val ID_SIZE = 16
 

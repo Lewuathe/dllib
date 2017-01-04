@@ -34,7 +34,7 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     MNIST.asDF(dataset, sc, 5000)
   }
 
-  def submit(sc: SparkContext) = {
+  def submit(sc: SparkContext): Unit = {
     val sqlContext = new SQLContext(sc)
     val df = createMNISTDataset("/tmp/", sc)
 
@@ -65,10 +65,11 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
 }
 
 object StackedDenoisingAutoEncoderApp {
-  def submit(sc: SparkContext) = new StackedDenoisingAutoEncoderApp(0.03, 10, 0.5).submit(sc)
+  def submit(sc: SparkContext): Unit
+    = new StackedDenoisingAutoEncoderApp(0.03, 10, 0.5).submit(sc)
 
   def apply(sc: SparkContext, miniBatchFraction: Double,
-            numIterations: Int, learningRate: Double) = {
+            numIterations: Int, learningRate: Double): Unit = {
     new StackedDenoisingAutoEncoderApp(miniBatchFraction, numIterations, learningRate).submit(sc)
   }
 }

@@ -35,7 +35,7 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
     MNIST.asDF(dataset, sc, 5000)
   }
 
-  def submit(sc: SparkContext) = {
+  def submit(sc: SparkContext): Unit = {
     val sqlContext = new SQLContext(sc)
     val df = createMNISTDataset("/tmp/", sc)
 
@@ -62,10 +62,10 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
 }
 
 object MNISTApp {
-  def submit(sc: SparkContext) = new MNISTApp(0.03, 10, 0.5).submit(sc)
+  def submit(sc: SparkContext): Unit = new MNISTApp(0.03, 10, 0.5).submit(sc)
 
   def apply(sc: SparkContext, miniBatchFraction: Double,
-            numIterations: Int, learningRate: Double) = {
+            numIterations: Int, learningRate: Double): Unit = {
     Logger.getLogger("org.apache.spark").setLevel(Level.OFF)
     new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(sc)
   }

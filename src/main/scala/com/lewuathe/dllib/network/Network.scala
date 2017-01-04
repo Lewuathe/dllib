@@ -34,5 +34,5 @@ class Network(val model: Model, val form: Graph) extends Serializable {
 }
 
 object Network {
-  def apply(model: Model, form: Graph) = new Network(model, form)
+  def apply(model: Model, form: Graph): Network = new Network(model, form)
 }

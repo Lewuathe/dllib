@@ -45,7 +45,7 @@ object NN3App {
     data.toDF()
   }
 
-  def submit(sc: SparkContext) = {
+  def submit(sc: SparkContext): Unit = {
     val sqlContext = new SQLContext(sc)
 
     val df = createTrainingData(sqlContext)
@@ -74,8 +74,5 @@ object NN3App {
     result.show()
   }
 
-  def main(args: Array[String]) {
-
-  }
-
+  def main(args: Array[String]) {}
 }

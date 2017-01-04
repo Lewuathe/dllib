@@ -109,14 +109,14 @@ class MNISTDataset(location: String, dataset: String) {
   lazy val imageReader = new MNISTImageReader(location, s"$dataset-images-idx3-ubyte.gz")
   lazy val labelReader = new MNISTLabelReader(location, s"$dataset-labels-idx1-ubyte.gz")
 
-  def imageWidth = imageReader.width
-  def imageHeight = imageReader.height
+  def imageWidth: Int = imageReader.width
+  def imageHeight: Int = imageReader.height
 
-  def imagesAsMatrices = imageReader.imagesAsMatrices
-  def imagesAsVectors = imageReader.imagesAsVectors
+  def imagesAsMatrices: Stream[DenseMatrix[Int]] = imageReader.imagesAsMatrices
+  def imagesAsVectors: Stream[DenseVector[Double]] = imageReader.imagesAsVectors
 
-  def labelsAsInts = labelReader.labelsAsInts
-  def labelsAsVectors = labelReader.labelsAsVectors
+  def labelsAsInts: Stream[Int] = labelReader.labelsAsInts
+  def labelsAsVectors: Stream[DenseVector[Double]] = labelReader.labelsAsVectors
 
   def examples = imagesAsVectors zip labelsAsVectors
 
