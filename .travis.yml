@@ -7,6 +7,3 @@ script:
 
 after_success:
   - ./sbt coveralls
-
-
-
