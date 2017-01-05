@@ -13,6 +13,6 @@ dependencies:
 test:
   override:
     - ./sbt coverage test coverageReport && ./sbt coverageAggregate
-    - cp target/scala-2.11 $CIRCLE_ARTIFACTS
+    - cp -R target/scala-2.11 $CIRCLE_ARTIFACTS
 #  post:
 #    - ./sbt coveralls
