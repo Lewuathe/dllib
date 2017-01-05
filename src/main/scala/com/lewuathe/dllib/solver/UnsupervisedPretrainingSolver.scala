@@ -39,7 +39,7 @@ class UnsupervisedPretrainingSolver(override val uid: String, network: Network)
     val pretrainedModel = pretrainInternal(dataset, model)
     logInfo(s"Fine tuning")
     val newModel = trainInternal(dataset, pretrainedModel)
-    val newNetwork = new Network(newModel, network.form)
+    val newNetwork = new Network(newModel, network.graph)
     copyValues(new UnsupervisedPretrainingSolverModel(uid, newNetwork))
   }
 }

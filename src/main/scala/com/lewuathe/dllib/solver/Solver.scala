@@ -48,7 +48,7 @@ abstract class Solver[FeaturesType,
                       M <: SolverModel[FeaturesType, M]](val network: Network)
   extends Predictor[FeaturesType, E, M] with HasWeightCol {
 
-  val form: Graph = network.form
+  val graph: Graph = network.graph
   val model: Model = network.model
 
   logInfo(network.toString)
@@ -66,20 +66,20 @@ abstract class Solver[FeaturesType,
     val instances: RDD[Instance] = dataset.select(
       col($(labelCol)), w, col($(featuresCol))).rdd.map {
       case Row(label: Double, weight: Double, features: Vector) =>
-        val l = util.encodeLabel(label, form.layers.last.outputSize)
+        val l = util.encodeLabel(label, graph.layers.last.outputSize)
         Instance(l, weight, brzVector[Double](features.toArray))
     }
 
     var localModel = model
-    val bcForm = dataset.sqlContext.sparkContext.broadcast(form)
+    val bcGraph = dataset.sqlContext.sparkContext.broadcast(graph)
 
     for (i <- 0 until numIterations) {
       val bcModel = dataset.sqlContext.sparkContext.broadcast(localModel)
       val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
       = instances.sample(false, miniBatchFraction, 42 + i)
-        .treeAggregate((Model.zero(form), 0.0, 0))(
+        .treeAggregate((Model.zero(graph), 0.0, 0))(
           seqOp = (c: (Model, Double, Int), instance: Instance) => {
-            val (dModel, loss) = gradient(bcForm.value, bcModel.value, instance)
+            val (dModel, loss) = gradient(bcGraph.value, bcModel.value, instance)
             (c._1 + dModel, c._2 + loss, c._3 + 1)
           },
           combOp = (c1, c2) => {
@@ -149,13 +149,13 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
   extends PredictionModel[FeaturesType, M] {
 
   val model = network.model
-  val form = network.form
+  val graph = network.graph
 
   protected def predictInternal(features: brzVector[Double]): Double = {
     val activations = new ActivationStack
     activations.push(features)
     // Feed forward
-    for (l: Layer <- form.layers) {
+    for (l: Layer <- graph.layers) {
       val z = l.forward(activations, model)
       activations.push(z)
     }

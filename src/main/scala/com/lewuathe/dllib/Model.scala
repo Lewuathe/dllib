@@ -1,7 +1,7 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
+ * distributed with this work for additional ingraphation
  * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
@@ -22,28 +22,28 @@ package com.lewuathe.dllib
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
 
-class ModelShape(form: Graph) extends Serializable {
-  val weightShape = form.layers.map({
+class ModelShape(graph: Graph) extends Serializable {
+  val weightShape = graph.layers.map({
     case layer: Layer => (layer.id, layer.outputSize, layer.inputSize)
   })
-  val biasShape = form.layers.map({
+  val biasShape = graph.layers.map({
     case layer: Layer => (layer.id, layer.outputSize)
   })
 }
 
-class Model(form: Graph, isZero: Boolean = false)
+class Model(graph: Graph, isZero: Boolean = false)
            (implicit ws: Map[String, Weight], bs: Map[String, Bias]) extends Serializable {
-  val shape: ModelShape = new ModelShape(form)
+  val shape: ModelShape = new ModelShape(graph)
 
   def init(): (Map[String, Weight], Map[String, Bias]) = {
-    val weights: Map[String, Weight] = form.layers.map({
+    val weights: Map[String, Weight] = graph.layers.map({
       case layer: Layer => {
         val w = Weight(layer.id, layer.outputSize, layer.inputSize, isZero)
         (w.id, w)
       }
     }).toMap
 
-    val biases: Map[String, Bias] = form.layers.map({
+    val biases: Map[String, Bias] = graph.layers.map({
       case layer: Layer => {
         val b = Bias(layer.id, layer.outputSize, isZero)
         (b.id, b)
@@ -67,7 +67,7 @@ class Model(form: Graph, isZero: Boolean = false)
     val newBiases = this.biases.map({
       case (id, b) => (id, b + that.biases(id))
     })
-    new Model(this.form)(newWeights, newBiases)
+    new Model(this.graph)(newWeights, newBiases)
   }
 
   def -(that: Model): Model = {
@@ -79,7 +79,7 @@ class Model(form: Graph, isZero: Boolean = false)
     val newBiases = this.biases.map({
       case (id, b) => (id, b - that.biases(id))
     })
-    new Model(this.form)(newWeights, newBiases)
+    new Model(this.graph)(newWeights, newBiases)
   }
 
   def /(denom: Double): Model = {
@@ -89,7 +89,7 @@ class Model(form: Graph, isZero: Boolean = false)
     val newBiases = this.biases.map({
       case (id, b) => (id, b / denom)
     })
-    new Model(this.form)(newWeights, newBiases)
+    new Model(this.graph)(newWeights, newBiases)
   }
 
   def *(times: Double): Model = {
@@ -99,7 +99,7 @@ class Model(form: Graph, isZero: Boolean = false)
     val newBiases = this.biases.map({
       case (id, b) => (id, b * times)
     })
-    new Model(this.form)(newWeights, newBiases)
+    new Model(this.graph)(newWeights, newBiases)
   }
 
   def +(that: Weight): Model = {
@@ -149,6 +149,6 @@ object Model {
   implicit val nullWeight: Map[String, Weight] = null
   implicit val nullBias : Map[String, Bias] = null
 
-  def apply(form: Graph): Model = new Model(form)
-  def zero(form: Graph): Model = new Model(form, isZero = true)
+  def apply(graph: Graph): Model = new Model(graph)
+  def zero(graph: Graph): Model = new Model(graph, isZero = true)
 }

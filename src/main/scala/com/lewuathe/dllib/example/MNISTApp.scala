@@ -41,15 +41,15 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
     val sqlContext = new SQLContext(sc)
     val df = createMNISTDataset("/tmp/", sc)
 
-    val nn3Form = new Graph(Array(
+    val nn3Graph = new Graph(Array(
       new AffineLayer(100, 784),
       new SigmoidLayer(100, 100),
       new AffineLayer(10, 100),
       new SoftmaxLayer(10, 10)
     ))
 
-    val nn3Model = Model(nn3Form)
-    val nn3 = Network(nn3Model, nn3Form)
+    val nn3Model = Model(nn3Graph)
+    val nn3 = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("MNIST", nn3)
     multilayerPerceptron.miniBatchFraction = miniBatchFraction

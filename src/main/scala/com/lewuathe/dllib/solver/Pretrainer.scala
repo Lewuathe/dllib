@@ -43,15 +43,15 @@ trait Pretrainer extends Solver[Vector,
   UnsupervisedPretrainingSolver, UnsupervisedPretrainingSolverModel] {
 
   private def iteration(pretrainLayer: PretrainLayer, iter: Int,
-                        instances: RDD[Instance], model: Model, form: Graph,
-                        pretrainTmpModel: Model, pretrainTmpForm: Graph,
+                        instances: RDD[Instance], model: Model, graph: Graph,
+                        pretrainTmpModel: Model, pretrainTmpGraph: Graph,
                         sc: SparkContext): (Model, Model) = {
     val bcModel = sc.broadcast(model)
     val bcPretrainTmpModel = sc.broadcast(pretrainTmpModel)
     val (modelDelta: Model, lossSum: Double, miniBatchSize: Int,
         pretrainTmpModelDelta: Model)
     = instances.sample(false, miniBatchFraction, 42 + iter)
-      .treeAggregate(Model.zero(form), 0.0, 0, Model.zero(pretrainTmpForm))(
+      .treeAggregate(Model.zero(graph), 0.0, 0, Model.zero(pretrainTmpGraph))(
         seqOp = (c: (Model, Double, Int, Model), instance: Instance) => {
           // Sample feature
           val activations = new ActivationStack
@@ -59,7 +59,7 @@ trait Pretrainer extends Solver[Vector,
 
           // Feed forward to pretrained target layer
           breakable(
-            for (l: Layer <- form.layers) {
+            for (l: Layer <- graph.layers) {
               // Target pretrain layer does not need to forward
               if (l.id == pretrainLayer.id) break
               val z = l.forward(activations, bcModel.value)
@@ -91,15 +91,15 @@ trait Pretrainer extends Solver[Vector,
     val instances: RDD[Instance] = dataset.select(
       col($(labelCol)), w, col($(featuresCol))).rdd.map {
       case Row(label: Double, weight: Double, features: Vector) =>
-        val l = util.encodeLabel(label, form.layers.last.outputSize)
+        val l = util.encodeLabel(label, graph.layers.last.outputSize)
         Instance(l, weight, brzVector[Double](features.toArray))
     }
 
     var localModel = model
-    val bcForm = dataset.sqlContext.sparkContext.broadcast(form)
+    val bcGraph = dataset.sqlContext.sparkContext.broadcast(graph)
 
     // TODO: Refactoring to be readable
-    for (layer <- form.layers if layer.isInstanceOf[PretrainLayer]) {
+    for (layer <- graph.layers if layer.isInstanceOf[PretrainLayer]) {
       // Pretraining can be applied only for PretrainLayer
       layer match {
         case pretrainLayer: PretrainLayer => {
@@ -109,7 +109,7 @@ trait Pretrainer extends Solver[Vector,
             = dataset.sqlContext.sparkContext.broadcast(pretrainTmpForm)
           for (iter <- 0 until numIterations) {
             val ret = iteration(pretrainLayer, iter, instances, localModel,
-              bcForm.value, pretrainTmpModel , bcPretrainTmpForm.value,
+              bcGraph.value, pretrainTmpModel , bcPretrainTmpForm.value,
               instances.sparkContext)
             localModel = ret._1
             pretrainTmpModel = ret._2

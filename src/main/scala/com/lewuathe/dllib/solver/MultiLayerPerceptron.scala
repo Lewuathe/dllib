@@ -39,7 +39,7 @@ class MultiLayerPerceptron(override val uid: String, network: Network)
 
   override protected def train(dataset: Dataset[_]): MultiLayerPerceptronModel = {
     val newModel = trainInternal(dataset, model)
-    val newNetwork = new Network(newModel, network.form)
+    val newNetwork = new Network(newModel, network.graph)
     copyValues(new MultiLayerPerceptronModel(uid, newNetwork))
   }
 }

@@ -1,7 +1,7 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
+ * distributed with this work for additional ingraphation
  * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
@@ -73,16 +73,16 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "create correct shape" in {
-    val form = new Graph(mockLayers)
-    val model = Model(form)
+    val graph = new Graph(mockLayers)
+    val model = Model(graph)
 
     verifyModelShape(model)
   }
 
   "Model" should "be added" in {
-    val form = new Graph(mockLayers)
-    val model1 = Model(form)
-    val model2 = Model(form)
+    val graph = new Graph(mockLayers)
+    val model1 = Model(graph)
+    val model2 = Model(graph)
 
     val ret = model1 + model2
 
@@ -90,9 +90,9 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "be subtracted" in {
-    val form = new Graph(mockLayers)
-    val model1 = Model(form)
-    val model2 = Model(form)
+    val graph = new Graph(mockLayers)
+    val model1 = Model(graph)
+    val model2 = Model(graph)
 
     val ret = model1 - model2
 
@@ -100,8 +100,8 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "be divided" in {
-    val form = new Graph(mockLayers)
-    val model1 = Model(form)
+    val graph = new Graph(mockLayers)
+    val model1 = Model(graph)
 
     val ret = model1 / 2.0
 
@@ -109,8 +109,8 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "Model" should "be multiplied" in {
-    val form = new Graph(mockLayers)
-    val model1 = Model(form)
+    val graph = new Graph(mockLayers)
+    val model1 = Model(graph)
 
     val ret = model1 * 0.5
 

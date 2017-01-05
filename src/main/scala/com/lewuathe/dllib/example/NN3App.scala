@@ -50,15 +50,15 @@ object NN3App {
 
     val df = createTrainingData(sqlContext)
 
-    val nn3Form = new Graph(Array(
+    val nn3Graph = new Graph(Array(
       new AffineLayer(3, 3),
       new SigmoidLayer(3, 3),
       new AffineLayer(2, 3),
       new SoftmaxLayer(2, 2)
     ))
 
-    val nn3Model = Model(nn3Form)
-    val nn3 = Network(nn3Model, nn3Form)
+    val nn3Model = Model(nn3Graph)
+    val nn3 = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("one", nn3)
     val model = multilayerPerceptron.fit(createTrainingData(sqlContext))
