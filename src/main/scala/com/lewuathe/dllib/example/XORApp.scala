@@ -54,13 +54,13 @@ object XORApp {
 
     val df = createTrainingData(sqlContext)
 
-    val nn3Form = new Graph(Array(
+    val nn3Graph = new Graph(Array(
       new AffineLayer(2, 2),
       new SoftmaxLayer(2, 2)
     ))
 
-    val nn3Model = Model(nn3Form)
-    val nn3 = Network(nn3Model, nn3Form)
+    val nn3Model = Model(nn3Graph)
+    val nn3 = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("XOR", nn3)
     multilayerPerceptron.miniBatchFraction = miniBatchFraction

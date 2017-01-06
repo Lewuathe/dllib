@@ -39,15 +39,15 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     val sqlContext = new SQLContext(sc)
     val df = createMNISTDataset("/tmp/", sc)
 
-    val sdaForm = new Graph(Array(
+    val sdaGraph = new Graph(Array(
       new DenoisingAutoEncodeLayer(100, 784),
       new SigmoidLayer(100, 100),
       new AffineLayer(10, 100),
       new SoftmaxLayer(10, 10)
     ))
 
-    val sdaModel = Model(sdaForm)
-    val sda = Network(sdaModel, sdaForm)
+    val sdaModel = Model(sdaGraph)
+    val sda = Network(sdaModel, sdaGraph)
 
     val unsupervisedPretrainer = new UnsupervisedPretrainingSolver("MNIST", sda)
     unsupervisedPretrainer.miniBatchFraction = miniBatchFraction
@@ -55,7 +55,7 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     unsupervisedPretrainer.learningRate = learningRate
     val model = unsupervisedPretrainer.fit(df)
 
-    sdaForm.layers.foreach({
+    sdaGraph.layers.foreach({
       case l: DenoisingAutoEncodeLayer => l.vizWeight("./images/weight_denoising.png", model.model)
     })
 
