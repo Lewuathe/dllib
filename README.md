@@ -1,4 +1,4 @@
-dllib [![Build Status](https://travis-ci.org/Lewuathe/dllib.svg?branch=master)](https://travis-ci.org/Lewuathe/dllib) [![license](https://img.shields.io/github/license/Lewuathe/dllib.svg)](https://www.apache.org/licenses/LICENSE-2.0) 
+dllib [![Build Status](https://travis-ci.org/Lewuathe/dllib.svg?branch=master)](https://travis-ci.org/Lewuathe/dllib) [![license](https://img.shields.io/github/license/Lewuathe/dllib.svg)](https://www.apache.org/licenses/LICENSE-2.0) [![codecov](https://codecov.io/gh/Lewuathe/dllib/branch/master/graph/badge.svg)](https://codecov.io/gh/Lewuathe/dllib)
 ================
 
 This is deep learning module running on Apache Spark. Powered by Scala programming language.
@@ -38,4 +38,3 @@ val result = model.transform(df)
 # Author
 
 * Kai Sasaki([@Lewuathe](https://github.com/Lewuathe))
-
