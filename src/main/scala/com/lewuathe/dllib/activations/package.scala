@@ -30,7 +30,7 @@ package object activations {
    * @param x
    * @return
    */
-  def sigmoid(x: Vector[Double]): Vector[Double] = x.map(sigmoid(_))
+  def sigmoid(x: Vector[Double]): Vector[Double] = x.map(sigmoid)
 
   /**
    * sigmoid function for double value
@@ -44,7 +44,7 @@ package object activations {
    * @param x
    * @return
    */
-  def sigmoidPrime(x: Vector[Double]): Vector[Double] = x.map(sigmoidPrime(_))
+  def sigmoidPrime(x: Vector[Double]): Vector[Double] = x.map(sigmoidPrime)
 
   /**
    * Derivative of sigmoid function for double value
@@ -58,7 +58,7 @@ package object activations {
    * @param x
    * @return
    */
-  def tanh(x: Vector[Double]): Vector[Double] = x.map(tanh(_))
+  def tanh(x: Vector[Double]): Vector[Double] = x.map(tanh)
 
   /**
    * Hyperbolic tangent for double value
@@ -72,7 +72,7 @@ package object activations {
    * @param x
    * @return
    */
-  def tanhPrime(x: Vector[Double]): Vector[Double] = x.map(tanhPrime(_))
+  def tanhPrime(x: Vector[Double]): Vector[Double] = x.map(tanhPrime)
 
   /**
    * Derivative of hyperbolic tangent for double value
