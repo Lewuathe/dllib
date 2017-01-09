@@ -25,13 +25,12 @@ import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
-
 import breeze.linalg.{Vector => brzVector}
-
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.network.Network
+import com.lewuathe.dllib.objective.{MeanSquaredError, Objective}
 import com.lewuathe.dllib.param.HasWeightCol
 import com.lewuathe.dllib.util
 
@@ -56,6 +55,7 @@ abstract class Solver[FeaturesType,
   var miniBatchFraction = 1.0
   var numIterations = 10
   var learningRate = 0.3
+  val objective: Objective = new MeanSquaredError
 
   val learningRateDecay = 0.99
 
@@ -114,8 +114,8 @@ abstract class Solver[FeaturesType,
       activations.push(z)
     }
 
-    var delta = error(label, activations.top)
-    val loss = Math.sqrt((delta :* delta).sum)
+    var delta = objective.error(label, activations.top)
+    val loss = objective.loss(label, activations.top)
 
     // Back propagation
     for (l: Layer <- form.layers.reverse) {
@@ -126,21 +126,6 @@ abstract class Solver[FeaturesType,
     }
 
     (deltaModel, loss)
-  }
-
-  /**
-    * Calculate the error of output layer between label data and prediction.
-    * @param label
-    * @param prediction
-    * @return
-    */
-  protected def error(label: brzVector[Double], prediction: brzVector[Double]): brzVector[Double] = {
-    require(label.size == prediction.size)
-    val ret = label - prediction
-    ret.map({
-      case (d: Double) if d.isNaN => 0.0
-      case (d: Double) => d
-    })
   }
 }
 
