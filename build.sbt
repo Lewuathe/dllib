@@ -58,3 +58,16 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".sbtcredentials")
 licenses += "Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0")
 
 publishMavenStyle := true
+
+// Site configurations
+enablePlugins(SiteScaladocPlugin)
+
+enablePlugins(JekyllPlugin)
+
+mappings in makeSite ++= Seq(
+  file("LICENSE") -> "LICENSE"
+)
+
+ghpages.settings
+
+git.remoteRepo := "git@github.com:Lewuathe/dllib.git"
