@@ -37,7 +37,7 @@ import com.lewuathe.dllib.util
 
 /**
   * Solver implements distributed training algorithm for deep learning models.
-  * Currently this class is doing backpropagation under data parallelism schema.
+  * Currently this class is doing Back propagation under data parallelism schema.
   * @param network
   * @tparam FeaturesType
   * @tparam E
@@ -106,7 +106,6 @@ abstract class Solver[FeaturesType,
     var deltaModel = Model.zero(form)
     val label = instance.label
     val activations = new ActivationStack
-    // Input vector can be regarded as it is applied indentity mapping.
     activations.push(instance.features)
 
     // Feed forward
@@ -148,8 +147,8 @@ abstract class Solver[FeaturesType,
 abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val network: Network)
   extends PredictionModel[FeaturesType, M] {
 
-  val model = network.model
-  val graph = network.graph
+  val model: Model = network.model
+  val graph: Graph = network.graph
 
   protected def predictInternal(features: brzVector[Double]): Double = {
     val activations = new ActivationStack
