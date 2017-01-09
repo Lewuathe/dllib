@@ -85,4 +85,22 @@ package object activations {
     val denom = sum(x.map(Math.exp))
     x.map(Math.exp(_) / denom)
   }
+
+  /**
+    * Rectified linear unit activation function
+    * @param input
+    * @return
+    */
+  def relu(input: Double): Double = if (input > 0.0) input else 0.0
+
+  def relu(x: Vector[Double]): Vector[Double] = x.map(relu)
+
+  /**
+    * Differential of Rectified linear unit activation function
+    * @param input
+    * @return
+    */
+  def reluPrime(input: Double): Double = if (input > 0.0) 1.0 else 0.0
+
+  def reluPrime(x: Vector[Double]): Vector[Double] = x.map(reluPrime)
 }
