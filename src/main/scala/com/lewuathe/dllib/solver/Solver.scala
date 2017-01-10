@@ -25,7 +25,9 @@ import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
+
 import breeze.linalg.{Vector => brzVector}
+
 import com.lewuathe.dllib.{ActivationStack, Instance, Model}
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
