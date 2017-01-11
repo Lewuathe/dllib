@@ -1,7 +1,7 @@
 dllib [![Build Status](https://travis-ci.org/Lewuathe/dllib.svg?branch=master)](https://travis-ci.org/Lewuathe/dllib) [![codecov](https://codecov.io/gh/Lewuathe/dllib/branch/master/graph/badge.svg)](https://codecov.io/gh/Lewuathe/dllib)  [![GitHub tag](https://img.shields.io/github/tag/Lewuathe/dllib.svg)]() [![license](https://img.shields.io/github/license/Lewuathe/dllib.svg)](https://www.apache.org/licenses/LICENSE-2.0) [![Maven Central](https://img.shields.io/maven-central/v/com.lewuathe/dllib_2.11.svg)]()
 ================
 
-dllib is a distributed deep learning framework running on Apache Spark. See more detail in [documentation](http://www.lewuathe.com/dllib/). dllib designed to be simple and easy to use for Spark users.
+dllib is a distributed deep learning framework running on Apache Spark. See more detail in [documentation](http://www.lewuathe.com/dllib/). dllib is designed to be simple and easy to use for Spark users.
 
 Since dllib has completely same interface of MLlib algorithms, libraries in MLlib can be used for feature engineering or transformation.
 
