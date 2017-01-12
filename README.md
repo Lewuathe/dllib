@@ -54,7 +54,7 @@ val multilayerPerceptron = new MultiLayerPerceptron("MNIST", nn3)
 // We can pass Dataset of Spark to the network.
 val trainedModel = multilayerPerceptron.fit(df)
 
-val result = model.transform(df)
+val result = trainedModel.transform(df)
 
 result.filter("label = prediction").count()
 ```
