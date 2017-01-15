@@ -107,7 +107,7 @@ trait Pretrainer extends Solver[Vector,
             = createPretrainTmpNetwork(pretrainLayer)
           val bcPretrainTmpForm
             = dataset.sqlContext.sparkContext.broadcast(pretrainTmpForm)
-          for (iter <- 0 until numIterations) {
+          for (iter <- 0 until $(numIterations)) {
             val ret = iteration(pretrainLayer, iter, instances, localModel,
               bcGraph.value, pretrainTmpModel , bcPretrainTmpForm.value,
               instances.sparkContext)

@@ -89,4 +89,15 @@ package object param {
     /** @group getParam */
     final def getWeightCol: String = $(weightCol)
   }
+
+  private[dllib] trait HasNumIterations extends Params {
+
+    /**
+      * Param for the number of iterations to be trained which should be positive integer.
+      */
+    final val numIterations: Param[Int] = new Param[Int](this, "numIterations",
+      "Specify the count of iterations to be trained.")
+
+    final def getNumIterations: Int = $(numIterations)
+  }
 }

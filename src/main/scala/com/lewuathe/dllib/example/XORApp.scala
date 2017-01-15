@@ -63,8 +63,8 @@ object XORApp {
     val nn3 = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("XOR", nn3)
+    multilayerPerceptron.setNumIterations(numIterations)
     multilayerPerceptron.miniBatchFraction = miniBatchFraction
-    multilayerPerceptron.numIterations = numIterations
     multilayerPerceptron.learningRate = learningRate
     val model = multilayerPerceptron.fit(createTrainingData(sqlContext))
 
