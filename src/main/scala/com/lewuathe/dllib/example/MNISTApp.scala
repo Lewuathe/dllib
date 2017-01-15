@@ -25,7 +25,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.layer.{AffineLayer, ReLULayer, SoftmaxLayer}
+import com.lewuathe.dllib.layer.{AffineLayer, ReLULayer, SoftmaxLayer, SoftplusLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.param.HasNumIterations
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
