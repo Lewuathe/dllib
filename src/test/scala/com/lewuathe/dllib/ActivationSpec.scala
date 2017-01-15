@@ -22,7 +22,7 @@ package com.lewuathe.dllib
 import breeze.linalg.Vector
 import org.scalatest._
 
-import com.lewuathe.dllib.activations.{relu, reluPrime}
+import com.lewuathe.dllib.activations.{relu, reluPrime, softplus, softplusPrime}
 
 class ActivationSpec extends FlatSpec with Matchers {
   "Rectified linear unit" should "return given value" in {
@@ -33,5 +33,15 @@ class ActivationSpec extends FlatSpec with Matchers {
   "Rectified linear unit" should "return 1.0 as differential" in {
     val x = Vector(-2.0, 0.0, 2.0)
     reluPrime(x) should be (Vector(0.0, 0.0, 1.0))
+  }
+
+  "Softplus unit" should "return 0.0 with small value" in {
+    val x = Vector(-10.0, 0.0, 10.0)
+    softplus(x) should be (Vector(4.5398899216870535E-5, 0.6931471805599453, 10.000045398899218))
+  }
+
+  "Softplus" should "return differential properly" in {
+    val x = Vector(-10.0, 0.0, 10.0)
+    softplusPrime(x) should be (Vector(4.5397868702434395E-5, 0.5, 0.9999546021312976))
   }
 }

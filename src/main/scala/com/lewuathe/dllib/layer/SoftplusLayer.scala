@@ -22,13 +22,10 @@ package com.lewuathe.dllib.layer
 import breeze.linalg.Vector
 
 import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
-import com.lewuathe.dllib.activations.{relu, reluPrime}
+import com.lewuathe.dllib.activations.{softplus, softplusPrime}
 import com.lewuathe.dllib.util.genId
 
-/**
-  * Rectified linear unit layer
-  */
-class ReLULayer(override val outputSize: Int,
+class SoftplusLayer(override val outputSize: Int,
                 override val inputSize: Int) extends Layer with Visualizable {
   override var id: String = genId
 
@@ -44,7 +41,7 @@ class ReLULayer(override val outputSize: Int,
     val input = acts.top
     require(input.size == inputSize, "Invalid input")
 
-    relu(input)
+    softplus(input)
   }
 
   /**
@@ -67,7 +64,7 @@ class ReLULayer(override val outputSize: Int,
     val dWeight = Weight.zero(id, outputSize, inputSize)
     val dBias = Bias.zero(id, outputSize)
 
-    val d: Vector[Double] = reluPrime(thisInput) :* delta.toDenseVector
+    val d: Vector[Double] = softplusPrime(thisInput) :* delta.toDenseVector
     (d, dWeight, dBias)
   }
 }

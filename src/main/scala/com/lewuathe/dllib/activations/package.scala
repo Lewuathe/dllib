@@ -103,4 +103,32 @@ package object activations {
   def reluPrime(input: Double): Double = if (input > 0.0) 1.0 else 0.0
 
   def reluPrime(x: Vector[Double]): Vector[Double] = x.map(reluPrime)
+
+  /**
+   * A smooth approximation of ReLU
+   * @param input
+   * @return
+   */
+  def softplus(input: Double): Double = Math.log(1.0 + Math.exp(input))
+
+  /**
+   * A smooth approximation of ReLU for vector
+   * @param x
+   * @return
+   */
+   def softplus(x: Vector[Double]): Vector[Double] = x.map(softplus)
+
+  /**
+   * Derivative of softplus function
+   * @param input
+   * @return
+   */
+  def softplusPrime(input: Double): Double = 1.0 / (1.0 + Math.exp(-input))
+
+  /**
+   * Derivative of softplus function for vector
+   * @param x
+   * @return
+   */
+   def softplusPrime(x: Vector[Double]): Vector[Double] = x.map(softplusPrime)
 }
