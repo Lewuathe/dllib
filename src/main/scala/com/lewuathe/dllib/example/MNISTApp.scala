@@ -27,10 +27,11 @@ import org.apache.spark.sql.{DataFrame, SQLContext}
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.{AffineLayer, ReLULayer, SoftmaxLayer}
 import com.lewuathe.dllib.network.Network
+import com.lewuathe.dllib.param.HasNumIterations
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import com.lewuathe.dllib.Model
 
-class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Double) {
+class MNISTApp(miniBatchFraction: Double, numIter: Int, learningRate: Double) {
   def createMNISTDataset(path: String, sc: SparkContext): DataFrame = {
     val dataset = MNIST(path)
     MNIST.asDF(dataset, sc, 5000)
@@ -51,8 +52,8 @@ class MNISTApp(miniBatchFraction: Double, numIterations: Int, learningRate: Doub
     val nn3 = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("MNIST", nn3)
+    multilayerPerceptron.setNumIterations(numIter)
     multilayerPerceptron.miniBatchFraction = miniBatchFraction
-    multilayerPerceptron.numIterations = numIterations
     multilayerPerceptron.learningRate = learningRate
     val model = multilayerPerceptron.fit(df)
 

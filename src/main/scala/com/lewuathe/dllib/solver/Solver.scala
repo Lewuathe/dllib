@@ -33,7 +33,7 @@ import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.objective.{MeanSquaredError, Objective}
-import com.lewuathe.dllib.param.HasWeightCol
+import com.lewuathe.dllib.param.{HasNumIterations, HasWeightCol}
 import com.lewuathe.dllib.util
 
 /**
@@ -47,19 +47,20 @@ import com.lewuathe.dllib.util
 abstract class Solver[FeaturesType,
                       E <: Solver[FeaturesType, E, M],
                       M <: SolverModel[FeaturesType, M]](val network: Network)
-  extends Predictor[FeaturesType, E, M] with HasWeightCol {
+  extends Predictor[FeaturesType, E, M] with HasWeightCol with HasNumIterations {
 
   val graph: Graph = network.graph
   val model: Model = network.model
 
-  logInfo(network.toString)
+  logDebug(network.toString)
 
   var miniBatchFraction = 1.0
-  var numIterations = 10
   var learningRate = 0.3
   val objective: Objective = new MeanSquaredError
 
   val learningRateDecay = 0.99
+
+  def setNumIterations(value: Int): E = set(numIterations, value).asInstanceOf[E]
 
   protected def trainInternal(dataset: Dataset[_], model: Model): Model = {
     val numFeatures = dataset.select(col($(featuresCol))).first().getAs[Vector](0).size
@@ -75,7 +76,7 @@ abstract class Solver[FeaturesType,
     var localModel = model
     val bcGraph = dataset.sqlContext.sparkContext.broadcast(graph)
 
-    for (i <- 0 until numIterations) {
+    for (i <- 0 until $(numIterations)) {
       val bcModel = dataset.sqlContext.sparkContext.broadcast(localModel)
       val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
       = instances.sample(false, miniBatchFraction, 42 + i)

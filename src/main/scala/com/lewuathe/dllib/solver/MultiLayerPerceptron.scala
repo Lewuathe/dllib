@@ -50,5 +50,5 @@ class MultiLayerPerceptronModel(override val uid: String, network: Network)
   override protected def predict(features: Vector): Double = {
     val brzFeatures = brzVector[Double](features.toArray)
     predictInternal(brzFeatures)
-}
+  }
 }

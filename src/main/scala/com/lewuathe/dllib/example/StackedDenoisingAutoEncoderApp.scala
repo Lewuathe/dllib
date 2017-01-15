@@ -50,8 +50,8 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     val sda = Network(sdaModel, sdaGraph)
 
     val unsupervisedPretrainer = new UnsupervisedPretrainingSolver("MNIST", sda)
+    unsupervisedPretrainer.setNumIterations(numIterations)
     unsupervisedPretrainer.miniBatchFraction = miniBatchFraction
-    unsupervisedPretrainer.numIterations = numIterations
     unsupervisedPretrainer.learningRate = learningRate
     val model = unsupervisedPretrainer.fit(df)
 
