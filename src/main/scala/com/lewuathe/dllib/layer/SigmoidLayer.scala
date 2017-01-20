@@ -21,7 +21,7 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.Vector
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob, Model, Weight}
 import com.lewuathe.dllib.activations.{sigmoid, sigmoidPrime}
 import com.lewuathe.dllib.util.genId
 
@@ -29,7 +29,7 @@ import com.lewuathe.dllib.util.genId
   * Sigmoid function layer
   */
 class SigmoidLayer(override val outputSize: Int,
-                   override val inputSize: Int) extends Layer with Visualizable {
+                   override val inputSize: Int) extends Layer with Visualizable with UniBlobSupport {
   override var id: String = genId()
 
   /**
@@ -42,11 +42,12 @@ class SigmoidLayer(override val outputSize: Int,
     *         represents the raw output, the second is applied activation
     *         function of the layer.
     */
-  override def forward(acts: ActivationStack, model: Model): Vector[Double] = {
+  override def forward(acts: ActivationStack, model: Model): Blob[Double] = {
     val input = acts.top
-    require(input.size == inputSize, "Invalid input")
+    checkBlobSize(input)
+    require(input.head.size == inputSize, "Invalid input")
 
-    sigmoid(input)
+    Blob.uni(sigmoid(input.head))
   }
 
   /**
@@ -61,7 +62,7 @@ class SigmoidLayer(override val outputSize: Int,
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  override def backward(delta: Vector[Double], acts: ActivationStack, model: Model): (Vector[Double], Weight, Bias) = {
+  override def backward(delta: Blob[Double], acts: ActivationStack, model: Model): (Blob[Double], Weight, Bias) = {
     val thisOutput = acts.pop()
     val thisInput = acts.top
 
@@ -69,7 +70,7 @@ class SigmoidLayer(override val outputSize: Int,
     val dWeight = Weight.zero(id, outputSize, inputSize)
     val dBias = Bias.zero(id, outputSize)
 
-    val d: Vector[Double] = sigmoidPrime(thisInput) :* delta.toDenseVector
-    (d, dWeight, dBias)
+    val d: Vector[Double] = sigmoidPrime(thisInput.head) :* delta.head.toDenseVector
+    (Blob.uni(d), dWeight, dBias)
   }
 }

@@ -19,11 +19,13 @@
 
 package com.lewuathe.dllib.solver
 
-import breeze.linalg.{Vector => brzVector}
 import org.apache.spark.ml.linalg.Vector
 import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.sql.Dataset
 
+import breeze.linalg.{Vector => brzVector}
+
+import com.lewuathe.dllib.Blob
 import com.lewuathe.dllib.network.Network
 
 class UnsupervisedPretrainingSolver(override val uid: String, network: Network)
@@ -49,6 +51,6 @@ class UnsupervisedPretrainingSolverModel(override val uid: String, network: Netw
     UnsupervisedPretrainingSolverModel](network) {
   override protected def predict(features: Vector): Double = {
     val brzFeatures = brzVector[Double](features.toArray)
-    predictInternal(brzFeatures)
+    predictInternal(Blob.uni(brzFeatures))
   }
 }

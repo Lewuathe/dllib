@@ -33,7 +33,7 @@ class LabelEncoderSpec extends FlatSpec with Matchers {
 
   "Vector" should "be decoded into one max integer" in {
     val v = Vector[Double](0.1, 0.2, 0.3, 0.1, 0.2, 0.1, 0.3, 0.4, 0.1, 0.1)
-    val label = util.decodeLabel(v)
+    val label = util.decodeLabel(Blob.uni(v))
     label should be (7.0)
   }
 }

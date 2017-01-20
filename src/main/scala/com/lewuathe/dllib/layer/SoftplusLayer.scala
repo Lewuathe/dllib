@@ -21,12 +21,12 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.Vector
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob, Model, Weight}
 import com.lewuathe.dllib.activations.{softplus, softplusPrime}
 import com.lewuathe.dllib.util.genId
 
 class SoftplusLayer(override val outputSize: Int,
-                override val inputSize: Int) extends Layer with Visualizable {
+                override val inputSize: Int) extends Layer with Visualizable with UniBlobSupport {
   override var id: String = genId
 
   /**
@@ -37,11 +37,12 @@ class SoftplusLayer(override val outputSize: Int,
     * @param model
     * @return The output tuple of the layer.
     */
-  override def forward(acts: ActivationStack, model: Model): Vector[Double] = {
+  override def forward(acts: ActivationStack, model: Model): Blob[Double] = {
     val input = acts.top
-    require(input.size == inputSize, "Invalid input")
+    checkBlobSize(input)
+    require(input.head.size == inputSize, "Invalid input")
 
-    softplus(input)
+    Blob.uni(softplus(input.head))
   }
 
   /**
@@ -56,7 +57,7 @@ class SoftplusLayer(override val outputSize: Int,
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  override def backward(delta: Vector[Double], acts: ActivationStack, model: Model): (Vector[Double], Weight, Bias) = {
+  override def backward(delta: Blob[Double], acts: ActivationStack, model: Model): (Blob[Double], Weight, Bias) = {
     val thisOutput = acts.pop()
     val thisInput = acts.top
 
@@ -64,7 +65,7 @@ class SoftplusLayer(override val outputSize: Int,
     val dWeight = Weight.zero(id, outputSize, inputSize)
     val dBias = Bias.zero(id, outputSize)
 
-    val d: Vector[Double] = softplusPrime(thisInput) :* delta.toDenseVector
-    (d, dWeight, dBias)
+    val d: Vector[Double] = softplusPrime(thisInput.head) :* delta.head.toDenseVector
+    (Blob.uni(d), dWeight, dBias)
   }
 }

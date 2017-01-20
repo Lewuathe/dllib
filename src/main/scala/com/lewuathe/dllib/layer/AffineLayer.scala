@@ -21,7 +21,7 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.{Matrix, Vector}
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob, Model, Weight}
 import com.lewuathe.dllib.util.genId
 
 /**
@@ -31,38 +31,43 @@ import com.lewuathe.dllib.util.genId
   * @param inputSize
   */
 class AffineLayer(override val outputSize: Int,
-                  override val inputSize: Int) extends Layer with ShapeValidator with Visualizable {
+                  override val inputSize: Int)
+    extends Layer with ShapeValidator with Visualizable with UniBlobSupport {
 
   override var id = genId()
 
-  override def forward(acts: ActivationStack, model: Model): Vector[Double] = {
+  override def forward(acts: ActivationStack, model: Model): Blob[Double] = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
     validateParamShapes(weight, bias)
 
-    val input = acts.top
-    require(input.size == inputSize, "Invalid input")
+    val input: Blob[Double] = acts.top
+    checkBlobSize(input)
+    require(input.head.length == inputSize, "Invalid input")
 
-    val u: Vector[Double] = weight * input + bias
-    u
+    val u: Vector[Double] = weight * input.head + bias
+    Blob.uni(u)
   }
 
-  override def backward(delta: Vector[Double], acts: ActivationStack,
-                        model: Model): (Vector[Double], Weight, Bias) = {
+  override def backward(delta: Blob[Double], acts: ActivationStack,
+                        model: Model): (Blob[Double], Weight, Bias) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
     val thisOutput = acts.pop()
     val thisInput = acts.top
 
+    checkBlobSize(delta)
+    checkBlobSize(thisInput)
+
     val dWeight: Weight = new Weight(id, outputSize,
-      inputSize)(delta.toDenseVector * thisInput.toDenseVector.t)
-    val dBias: Bias = new Bias(id, outputSize)(delta)
+      inputSize)(delta.head.toDenseVector * thisInput.head.toDenseVector.t)
+    val dBias: Bias = new Bias(id, outputSize)(delta.head)
 
     validateParamShapes(dWeight.value, dBias.value)
 
-    val d: Vector[Double] = weight.toDenseMatrix.t * delta.toDenseVector
-    (d, dWeight, dBias)
+    val d: Vector[Double] = weight.toDenseMatrix.t * delta.head.toDenseVector
+    (Blob.uni(d), dWeight, dBias)
   }
 }

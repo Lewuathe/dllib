@@ -19,9 +19,11 @@
 
 package com.lewuathe.dllib.layer
 
-import breeze.linalg.Vector
-
-import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
+import com.lewuathe.dllib.ActivationStack
+import com.lewuathe.dllib.Bias
+import com.lewuathe.dllib.Blob
+import com.lewuathe.dllib.Model
+import com.lewuathe.dllib.Weight
 
 /**
   * Layer is an abstraction of neural network layer.
@@ -42,7 +44,7 @@ abstract class Layer extends Serializable {
     * @return The output tuple of the layer.
     */
   def forward(acts: ActivationStack, model: Model)
-      : Vector[Double]
+      : Blob[Double]
 
   /**
     * Calculate the delta of this iteration. The input of the layer in forward
@@ -55,8 +57,8 @@ abstract class Layer extends Serializable {
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  def backward(delta: Vector[Double], acts: ActivationStack, model: Model)
-      : (Vector[Double], Weight, Bias)
+  def backward(delta: Blob[Double], acts: ActivationStack, model: Model)
+      : (Blob[Double], Weight, Bias)
 
   override def toString: String = {
     s"id: ${id}, ${inputSize} -> ${outputSize}"

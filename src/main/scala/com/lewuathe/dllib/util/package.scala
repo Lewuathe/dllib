@@ -49,8 +49,9 @@ package object util {
     * @param output label encoded with a vector
     * @return label
     */
-  def decodeLabel(output: Vector[Double]): Double = {
-    output.argmax.toDouble
+  def decodeLabel(output: Blob[Double]): Double = {
+    require(output.size == 1)
+    output.channel(0).argmax.toDouble
   }
 
   def oneHotLabel(output: Vector[Double]): Vector[Double] = {

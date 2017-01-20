@@ -25,6 +25,7 @@ import org.apache.spark.sql.Dataset
 
 import breeze.linalg.{Vector => brzVector}
 
+import com.lewuathe.dllib.Blob
 import com.lewuathe.dllib.network.Network
 
 /**
@@ -49,6 +50,6 @@ class MultiLayerPerceptronModel(override val uid: String, network: Network)
     MultiLayerPerceptronModel](network) {
   override protected def predict(features: Vector): Double = {
     val brzFeatures = brzVector[Double](features.toArray)
-    predictInternal(brzFeatures)
+    predictInternal(Blob.uni(brzFeatures))
   }
 }

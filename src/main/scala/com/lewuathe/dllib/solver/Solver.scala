@@ -28,7 +28,7 @@ import org.apache.spark.sql.functions.{col, lit}
 
 import breeze.linalg.{Vector => brzVector}
 
-import com.lewuathe.dllib.{ActivationStack, Instance, Model}
+import com.lewuathe.dllib.{ActivationStack, Blob, Instance, Model}
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.network.Network
@@ -109,7 +109,7 @@ abstract class Solver[FeaturesType,
     var deltaModel = Model.zero(form)
     val label = instance.label
     val activations = new ActivationStack
-    activations.push(instance.features)
+    activations.push(instance.blob)
 
     // Feed forward
     for (l: Layer <- form.layers) {
@@ -138,7 +138,7 @@ abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val 
   val model: Model = network.model
   val graph: Graph = network.graph
 
-  protected def predictInternal(features: brzVector[Double]): Double = {
+  protected def predictInternal(features: Blob[Double]): Double = {
     val activations = new ActivationStack
     activations.push(features)
     // Feed forward

@@ -18,9 +18,10 @@
  */
 package com.lewuathe.dllib.objective
 
-import breeze.linalg.{Vector => brzVector}
+import com.lewuathe.dllib.Blob
+import com.lewuathe.dllib.layer.UniBlobSupport
 
-class MeanSquaredError extends Objective {
+class MeanSquaredError extends Objective with UniBlobSupport {
 
 
   /**
@@ -30,13 +31,16 @@ class MeanSquaredError extends Objective {
     * @param prediction prediction vector
     * @return the difference between two vectors
     */
-  override def error(label: brzVector[Double], prediction: brzVector[Double]): brzVector[Double] = {
+  override def error(label: Blob[Double], prediction: Blob[Double]): Blob[Double] = {
     require(label.size == prediction.size)
-    val ret = label - prediction
-    ret.map({
+    checkBlobSize(label)
+    checkBlobSize(prediction)
+
+    val ret = label.head - prediction.head
+    Blob.uni(ret.map({
       case (d: Double) if d.isNaN => 0.0
       case (d: Double) => d
-    })
+    }))
   }
 
   /**
@@ -47,9 +51,9 @@ class MeanSquaredError extends Objective {
     * @param prediction prediction vector
     * @return the loss calculated with label and prediction
     */
-  override def loss(label: brzVector[Double], prediction: brzVector[Double]): Double = {
+  override def loss(label: Blob[Double], prediction: Blob[Double]): Double = {
     val delta = error(label, prediction)
-    Math.sqrt((delta :* delta).sum)
+    Math.sqrt((delta.head :* delta.head).sum)
   }
 }
 
