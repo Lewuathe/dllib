@@ -19,7 +19,7 @@
 
 package com.lewuathe.dllib.objective
 
-import breeze.linalg.{Vector => brzVector}
+import com.lewuathe.dllib.Blob
 
 /**
   * Objective specifies the interface of objective function
@@ -32,7 +32,7 @@ trait Objective extends Serializable {
     * @param prediction prediction vector
     * @return the difference between two vectors
     */
-  def error(label: brzVector[Double], prediction: brzVector[Double]): brzVector[Double]
+  def error(label: Blob[Double], prediction: Blob[Double]): Blob[Double]
 
   /**
     * Calculate the objective value which should be minimized with given
@@ -41,5 +41,5 @@ trait Objective extends Serializable {
     * @param prediction prediction vector
     * @return the loss calculated with label and prediction
     */
-  def loss(label: brzVector[Double], prediction: brzVector[Double]): Double
+  def loss(label: Blob[Double], prediction: Blob[Double]): Double
 }

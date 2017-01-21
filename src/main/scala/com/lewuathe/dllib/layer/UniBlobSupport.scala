@@ -17,15 +17,14 @@
  * under the License.
  */
 
-package com.lewuathe.dllib
+package com.lewuathe.dllib.layer
 
-import scala.collection.mutable.Stack
-
-import breeze.linalg.Vector
+import com.lewuathe.dllib.Blob
 
 /**
-  * ActivationStack collects all raw output of each layer.
-  * - Raw output that multiplication weight and input
+  * Supports only uni blob (which is a Blob includes a Vector in the channel)
   */
-class ActivationStack extends Stack[Blob[Double]] {}
-
+trait UniBlobSupport {
+  def checkBlobSize[E](blob: Blob[E]): Unit
+    = require(blob.size == 1, s"Unsupported Blob size : ${blob.size}")
+}

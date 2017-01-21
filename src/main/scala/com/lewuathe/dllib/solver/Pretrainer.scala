@@ -55,7 +55,7 @@ trait Pretrainer extends Solver[Vector,
         seqOp = (c: (Model, Double, Int, Model), instance: Instance) => {
           // Sample feature
           val activations = new ActivationStack
-          activations.push(instance.features)
+          activations.push(instance.blob)
 
           // Feed forward to pretrained target layer
           breakable(

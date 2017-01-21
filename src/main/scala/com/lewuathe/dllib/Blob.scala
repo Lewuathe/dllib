@@ -19,13 +19,17 @@
 
 package com.lewuathe.dllib
 
-import scala.collection.mutable.Stack
-
-import breeze.linalg.Vector
-
+import breeze.linalg.{Vector => brzVector}
 /**
-  * ActivationStack collects all raw output of each layer.
-  * - Raw output that multiplication weight and input
+  * Blob is a wrapper of actual data which collects the list of Vector
   */
-class ActivationStack extends Stack[Blob[Double]] {}
+class Blob[E](val channel: Array[brzVector[E]]) {
+  def size: Int = channel.length
+  def head: brzVector[E] = channel.head
+}
 
+object Blob {
+  def apply[E](channel: Array[brzVector[E]]): Blob[E] = new Blob(channel)
+
+  def uni[E](v: brzVector[E]): Blob[E] = new Blob(Array(v))
+}

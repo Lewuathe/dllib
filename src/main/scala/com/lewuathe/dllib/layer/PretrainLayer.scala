@@ -24,7 +24,7 @@ import breeze.linalg.{Matrix, Vector}
 import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
 import com.lewuathe.dllib.activations._
 
-abstract class PretrainLayer extends Layer with ShapeValidator {
+abstract class PretrainLayer extends Layer with ShapeValidator with UniBlobSupport {
 
   /**
     * Pretraining with input data to the layer.
@@ -41,10 +41,12 @@ abstract class PretrainLayer extends Layer with ShapeValidator {
       ((Weight, Bias), (Weight, Bias), Double) = {
     val input = acts.top
 
-    val (hiddenU, hiddenZ) = encode(input, model, tmpModel)
+    checkBlobSize(input)
+
+    val (hiddenU, hiddenZ) = encode(input.head, model, tmpModel)
     val (visibleU, visibleZ) = decode(hiddenZ, model, tmpModel)
 
-    val delta2 = error(input, visibleZ)
+    val delta2 = error(input.head, visibleZ)
     val loss = Math.sqrt((delta2 :* delta2).sum)
 
     // NOTE: Gradient of decode layer.
@@ -59,7 +61,7 @@ abstract class PretrainLayer extends Layer with ShapeValidator {
       (weight.toDenseMatrix * delta2.toDenseVector)
 
     val dWeight1: Weight = new Weight(id, outputSize,
-      inputSize)(delta1.toDenseVector * input.toDenseVector.t)
+      inputSize)(delta1.toDenseVector * input.head.toDenseVector.t)
     val dBias1: Bias = new Bias(id, outputSize)(delta1)
     validateParamShapes(dWeight1.value, dBias1.value)
 

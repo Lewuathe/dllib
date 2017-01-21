@@ -34,7 +34,7 @@ class MockLayer34 extends Layer {
     * @param model
     * @return
     */
-  override def forward(acts: ActivationStack, model: Model): linalg.Vector[Double] = ???
+  override def forward(acts: ActivationStack, model: Model): Blob[Double] = ???
 
   /**
     * Calculate the delta of this iteration. The input of the layer in forward
@@ -45,7 +45,7 @@ class MockLayer34 extends Layer {
     * @param model
     * @return
     */
-  override def backward(delta: linalg.Vector[Double], acts: ActivationStack, model: Model): (linalg.Vector[Double], Weight, Bias) = ???
+  override def backward(delta: Blob[Double], acts: ActivationStack, model: Model): (Blob[Double], Weight, Bias) = ???
 
   override val outputSize: Int = 3
   override val inputSize: Int = 4

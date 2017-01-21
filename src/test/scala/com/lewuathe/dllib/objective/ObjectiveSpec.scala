@@ -20,15 +20,16 @@
 package com.lewuathe.dllib.objective
 
 import breeze.linalg.{Vector => brzVector}
+import com.lewuathe.dllib.Blob
 import org.scalatest._
 
 class ObjectiveSpec extends FlatSpec with Matchers {
   "Mean squared error" should "calculate error and loss" in {
-    val t = brzVector(0.0, 0.0, 1.0)
-    val p = brzVector(0.0, 1.0, 0.0)
+    val t = Blob.uni(brzVector(0.0, 0.0, 1.0))
+    val p = Blob.uni(brzVector(0.0, 1.0, 0.0))
 
     val objective = MeanSquaredError()
-    objective.error(t, p) should be(brzVector(0.0, -1.0, 1.0))
+    objective.error(t, p).head should be(brzVector(0.0, -1.0, 1.0))
     objective.loss(t, p) should be(1.4142135623730951) // Root squared of 2.0
   }
 }
