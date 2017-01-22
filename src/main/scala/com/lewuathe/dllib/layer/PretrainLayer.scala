@@ -24,7 +24,8 @@ import breeze.linalg.{Matrix, Vector}
 import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
 import com.lewuathe.dllib.activations._
 
-abstract class PretrainLayer extends Layer with ShapeValidator with UniBlobSupport {
+abstract class PretrainLayer extends Layer
+  with ShapeValidator with UniBlobSupport {
 
   /**
     * Pretraining with input data to the layer.
@@ -75,7 +76,8 @@ abstract class PretrainLayer extends Layer with ShapeValidator with UniBlobSuppo
     */
   def createTmpLayer(): PretrainLayer
 
-  protected def error(input: Vector[Double], visible: Vector[Double]): Vector[Double]
+  protected def error(input: Vector[Double], visible: Vector[Double]):
+    Vector[Double]
 
   /**
     * Encode the input toward hidden layer

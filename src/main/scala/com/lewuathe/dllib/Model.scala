@@ -31,8 +31,11 @@ class ModelShape(graph: Graph) extends Serializable {
   })
 }
 
-class Model(graph: Graph, isZero: Boolean = false)
-           (implicit ws: Map[String, Weight], bs: Map[String, Bias]) extends Serializable {
+class Model(
+    graph: Graph,
+    isZero: Boolean = false)
+    (implicit ws: Map[String, Weight], bs: Map[String, Bias])
+  extends Serializable {
   val shape: ModelShape = new ModelShape(graph)
 
   def init(): (Map[String, Weight], Map[String, Bias]) = {

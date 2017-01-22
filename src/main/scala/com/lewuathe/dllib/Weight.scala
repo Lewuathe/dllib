@@ -27,8 +27,12 @@ import breeze.linalg.Matrix
   * @param inputSize
   * @param outputSize
   */
-class Weight(val id: String, val outputSize: Int, val inputSize: Int, isZero: Boolean = false)
-            (implicit v: Matrix[Double]) extends Serializable {
+class Weight(
+    val id: String,
+    val outputSize: Int,
+    val inputSize: Int,
+    isZero: Boolean = false)
+  (implicit v: Matrix[Double]) extends Serializable {
 
   val value: Matrix[Double] = if (v != null) {
     v
@@ -80,7 +84,8 @@ object Weight {
   def apply(outputSize: Int, inputSize: Int): Weight
     = new Weight(util.genId(), outputSize, inputSize)
 
-  def apply(id: String, outputSize: Int, inputSize: Int, isZero: Boolean): Weight
+  def apply(id: String, outputSize: Int, inputSize: Int,
+      isZero: Boolean): Weight
     = new Weight(id, outputSize, inputSize, isZero)
 
   def zero(id: String, outputSize: Int, inputSize: Int): Weight

@@ -21,7 +21,8 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.{Matrix, Vector}
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Blob, BlobShape, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob}
+import com.lewuathe.dllib.{BlobShape, Model, Weight}
 import com.lewuathe.dllib.util.genId
 
 /**
@@ -30,8 +31,9 @@ import com.lewuathe.dllib.util.genId
   * @param outputSize
   * @param inputSize
   */
-class AffineLayer(override val outputSize: Int,
-                  override val inputSize: Int)
+class AffineLayer(
+      override val outputSize: Int,
+      override val inputSize: Int)
     extends Layer with ShapeValidator with Visualizable with UniBlobSupport {
 
   override var id = genId()

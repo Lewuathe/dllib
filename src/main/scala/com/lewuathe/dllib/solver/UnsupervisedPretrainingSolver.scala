@@ -36,7 +36,8 @@ class UnsupervisedPretrainingSolver(override val uid: String, network: Network)
     = defaultCopy(extra)
 
 
-  override protected def train(dataset: Dataset[_]): UnsupervisedPretrainingSolverModel = {
+  override protected def train(dataset: Dataset[_]):
+      UnsupervisedPretrainingSolverModel = {
     logInfo(s"Pretraining...")
     val pretrainedModel = pretrainInternal(dataset, model)
     logInfo(s"Fine tuning")
@@ -46,7 +47,9 @@ class UnsupervisedPretrainingSolver(override val uid: String, network: Network)
   }
 }
 
-class UnsupervisedPretrainingSolverModel(override val uid: String, network: Network)
+class UnsupervisedPretrainingSolverModel(
+    override val uid: String,
+    network: Network)
   extends SolverModel[Vector,
     UnsupervisedPretrainingSolverModel](network) {
   override protected def predict(features: Vector): Double = {

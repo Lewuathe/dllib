@@ -75,7 +75,8 @@ object Bias {
 
   def apply(size: Int): Bias = new Bias(util.genId(), size)
 
-  def apply(id: String, size: Int, isZero: Boolean): Bias = new Bias(id, size, isZero)
+  def apply(id: String, size: Int, isZero: Boolean): Bias
+    = new Bias(id, size, isZero)
 
   def zero(id: String, size: Int): Bias = new Bias(id, size, isZero = true)
 }

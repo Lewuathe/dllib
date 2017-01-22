@@ -38,16 +38,19 @@ import com.lewuathe.dllib.util
 
 /**
   * Solver implements distributed training algorithm for deep learning models.
-  * Currently this class is doing Back propagation under data parallelism schema.
+  * Currently this class is doing Back propagation under data parallelism
+  * schema.
   * @param network
   * @tparam FeaturesType
   * @tparam E
   * @tparam M
   */
 abstract class Solver[FeaturesType,
-                      E <: Solver[FeaturesType, E, M],
-                      M <: SolverModel[FeaturesType, M]](val network: Network)
-  extends Predictor[FeaturesType, E, M] with HasWeightCol with HasNumIterations {
+    E <: Solver[FeaturesType, E, M],
+    M <: SolverModel[FeaturesType, M]](val network: Network)
+  extends Predictor[FeaturesType, E, M]
+    with HasWeightCol
+    with HasNumIterations {
 
   val graph: Graph = network.graph
   val model: Model = network.model
@@ -60,11 +63,17 @@ abstract class Solver[FeaturesType,
 
   val learningRateDecay = 0.99
 
-  def setNumIterations(value: Int): E = set(numIterations, value).asInstanceOf[E]
+  def setNumIterations(value: Int): E = set(numIterations, value)
+    .asInstanceOf[E]
 
   protected def trainInternal(dataset: Dataset[_], model: Model): Model = {
-    val numFeatures = dataset.select(col($(featuresCol))).first().getAs[Vector](0).size
-    val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) lit(1.0) else col($(weightCol))
+    val numFeatures = dataset.select(col($(featuresCol)))
+      .first().getAs[Vector](0).size
+    val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) {
+      lit(1.0)
+    } else {
+      col($(weightCol))
+    }
 
     val instances: RDD[Instance] = dataset.select(
       col($(labelCol)), w, col($(featuresCol))).rdd.map {
@@ -82,7 +91,8 @@ abstract class Solver[FeaturesType,
       = instances.sample(false, miniBatchFraction, 42 + i)
         .treeAggregate((Model.zero(graph), 0.0, 0))(
           seqOp = (c: (Model, Double, Int), instance: Instance) => {
-            val (dModel, loss) = gradient(bcGraph.value, bcModel.value, instance)
+            val (dModel, loss)
+              = gradient(bcGraph.value, bcModel.value, instance)
             (c._1 + dModel, c._2 + loss, c._3 + 1)
           },
           combOp = (c1, c2) => {
@@ -105,7 +115,10 @@ abstract class Solver[FeaturesType,
     * @param instance
     * @return
     */
-  protected def gradient(form: Graph, model: Model, instance: Instance): (Model, Double) = {
+  protected def gradient(
+      form: Graph,
+      model: Model,
+      instance: Instance): (Model, Double) = {
     var deltaModel = Model.zero(form)
     val label = instance.label
     val activations = new ActivationStack
@@ -132,7 +145,8 @@ abstract class Solver[FeaturesType,
   }
 }
 
-abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](val network: Network)
+abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](
+    val network: Network)
   extends PredictionModel[FeaturesType, M] {
 
   val model: Model = network.model

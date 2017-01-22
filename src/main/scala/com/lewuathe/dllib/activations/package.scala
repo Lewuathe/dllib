@@ -51,7 +51,8 @@ package object activations {
    * @param input
    * @return
    */
-  def sigmoidPrime(input: Double): Double = sigmoid(input) * (1.0 - sigmoid(input))
+  def sigmoidPrime(input: Double): Double
+    = sigmoid(input) * (1.0 - sigmoid(input))
 
   /**
    * Hyperbolic tangent for vector

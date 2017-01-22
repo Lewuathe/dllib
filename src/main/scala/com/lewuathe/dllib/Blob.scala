@@ -33,7 +33,8 @@ case class BlobShape(numChannel: Int, featureSize: Int)
 /**
   * Blob is a wrapper of actual data which collects the list of Vector
   */
-class Blob[E: ClassTag](val channel: Array[brzVector[E]]) extends Iterable[brzVector[E]] {
+class Blob[E: ClassTag](
+    val channel: Array[brzVector[E]]) extends Iterable[brzVector[E]] {
   override def size: Int = channel.length
   override def head: brzVector[E] = channel.head
   override def iterator: Iterator[brzVector[E]] = channel.iterator
@@ -44,7 +45,8 @@ class Blob[E: ClassTag](val channel: Array[brzVector[E]]) extends Iterable[brzVe
 }
 
 object Blob {
-  def apply[E: ClassTag](channel: Array[brzVector[E]]): Blob[E] = new Blob(channel)
+  def apply[E: ClassTag](channel: Array[brzVector[E]]): Blob[E]
+    = new Blob(channel)
 
   def uni[E: ClassTag](v: brzVector[E]): Blob[E] = new Blob(Array(v))
 

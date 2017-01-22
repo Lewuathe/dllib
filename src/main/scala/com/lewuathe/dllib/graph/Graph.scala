@@ -28,7 +28,5 @@ import com.lewuathe.dllib.layer.Layer
   * @param layers
   */
 class Graph(val layers: Array[Layer]) extends Serializable {
-  override def toString: String = {
-    layers.mkString(" ==> ")
-  }
+  override def toString: String = layers.mkString(" ==> ")
 }

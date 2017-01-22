@@ -21,15 +21,18 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.Vector
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Blob, BlobShape, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob}
+import com.lewuathe.dllib.{BlobShape, Model, Weight}
 import com.lewuathe.dllib.activations.{relu, reluPrime}
 import com.lewuathe.dllib.util.genId
 
 /**
   * Rectified linear unit layer
   */
-class ReLULayer(override val outputSize: Int,
-                override val inputSize: Int) extends Layer with Visualizable with UniBlobSupport {
+class ReLULayer(
+    override val outputSize: Int,
+    override val inputSize: Int)
+  extends Layer with Visualizable with UniBlobSupport {
   override var id: String = genId
   override val inputShape: BlobShape = BlobShape(1, inputSize)
   override val outputShape: BlobShape = BlobShape(1, outputSize)
@@ -63,7 +66,10 @@ class ReLULayer(override val outputSize: Int,
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  override def backward(delta: Blob[Double], acts: ActivationStack, model: Model): (Blob[Double], Weight, Bias) = {
+  override def backward(
+      delta: Blob[Double],
+      acts: ActivationStack,
+      model: Model): (Blob[Double], Weight, Bias) = {
     val thisOutput = acts.pop()
     val thisInput = acts.top
 
@@ -71,7 +77,8 @@ class ReLULayer(override val outputSize: Int,
     val dWeight = Weight.zero(id, outputSize, inputSize)
     val dBias = Bias.zero(id, outputSize)
 
-    val d: Vector[Double] = reluPrime(thisInput.head) :* delta.head.toDenseVector
+    val d: Vector[Double]
+      = reluPrime(thisInput.head) :* delta.head.toDenseVector
     (Blob.uni(d), dWeight, dBias)
   }
 }

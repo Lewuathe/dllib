@@ -19,7 +19,7 @@
 
 package com.lewuathe.dllib.layer
 
-import breeze.linalg._
+import breeze.linalg.{DenseMatrix, Matrix}
 import breeze.plot._
 
 import com.lewuathe.dllib.Model
@@ -30,14 +30,17 @@ trait Visualizable extends Layer {
     convertToImage(outputPath, weight)
   }
 
-  private def convertToImage(outputPath: String, weight: Matrix[Double]): Unit = {
+  private def convertToImage(
+      outputPath: String,
+      weight: Matrix[Double]): Unit = {
     val fWeight = Figure()
 
     val denseWeight: DenseMatrix[Double] = weight.toDenseMatrix
     for (i <- 0 until denseWeight.rows) {
       val (outputHeight, outputWidth) = calculateWindow(outputSize)
       val (inputHeight, inputWidth) = calculateWindow(inputSize)
-      val reshaped = denseWeight(i, ::).t.toDenseMatrix.reshape(inputHeight, inputWidth)
+      val reshaped = denseWeight(i, ::).t.toDenseMatrix
+        .reshape(inputHeight, inputWidth)
       fWeight.subplot(outputHeight, outputWidth, i) += image(reshaped)
     }
     fWeight.saveas(outputPath)
@@ -53,5 +56,4 @@ trait Visualizable extends Layer {
     val width = size / height
     (height.toInt, width.toInt)
   }
-
 }

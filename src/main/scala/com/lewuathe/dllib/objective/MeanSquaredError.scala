@@ -31,7 +31,8 @@ class MeanSquaredError extends Objective with UniBlobSupport {
     * @param prediction prediction vector
     * @return the difference between two vectors
     */
-  override def error(label: Blob[Double], prediction: Blob[Double]): Blob[Double] = {
+  override def error(label: Blob[Double], prediction: Blob[Double]):
+      Blob[Double] = {
     require(label.size == prediction.size)
     checkBlobSize(label)
     checkBlobSize(prediction)

@@ -64,7 +64,8 @@ class MNISTApp(miniBatchFraction: Double, numIter: Int, learningRate: Double) {
 }
 
 object MNISTApp {
-  def submit(spark: SparkSession): Double = new MNISTApp(0.03, 10, 0.5).submit(spark)
+  def submit(spark: SparkSession): Double
+    = new MNISTApp(0.03, 10, 0.5).submit(spark)
 
   def apply(spark: SparkSession, miniBatchFraction: Double,
             numIterations: Int, learningRate: Double): Double = {

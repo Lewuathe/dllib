@@ -85,8 +85,13 @@ trait Pretrainer extends Solver[Vector,
   }
 
   def pretrainInternal(dataset: Dataset[_], model: Model): Model = {
-    val numFeatures = dataset.select(col($(featuresCol))).first().getAs[Vector](0).size
-    val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) lit(1.0) else col($(weightCol))
+    val numFeatures = dataset.select(col($(featuresCol)))
+      .first().getAs[Vector](0).size
+    val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) {
+      lit(1.0)
+    } else {
+      col($(weightCol))
+    }
 
     val instances: RDD[Instance] = dataset.select(
       col($(labelCol)), w, col($(featuresCol))).rdd.map {

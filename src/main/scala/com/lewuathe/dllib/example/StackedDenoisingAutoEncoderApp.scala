@@ -24,7 +24,8 @@ import org.apache.spark.sql.{DataFrame, SQLContext}
 
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.Model
-import com.lewuathe.dllib.layer.{AffineLayer, DenoisingAutoEncodeLayer, SigmoidLayer, SoftmaxLayer}
+import com.lewuathe.dllib.layer.{AffineLayer, DenoisingAutoEncodeLayer}
+import com.lewuathe.dllib.layer.{SigmoidLayer, SoftmaxLayer}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
 
@@ -56,7 +57,8 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
     val model = unsupervisedPretrainer.fit(df)
 
     sdaGraph.layers.foreach({
-      case l: DenoisingAutoEncodeLayer => l.vizWeight("./images/weight_denoising.png", model.model)
+      case l: DenoisingAutoEncodeLayer
+        => l.vizWeight("./images/weight_denoising.png", model.model)
     })
 
     val result = model.transform(df)
@@ -71,8 +73,9 @@ object StackedDenoisingAutoEncoderApp {
 
   def apply(sc: SparkContext, miniBatchFraction: Double,
             numIterations: Int, learningRate: Double): Unit = {
-    new StackedDenoisingAutoEncoderApp(miniBatchFraction, numIterations, learningRate).submit(sc)
+    new StackedDenoisingAutoEncoderApp(
+      miniBatchFraction,
+      numIterations,
+      learningRate).submit(sc)
   }
 }
-
-

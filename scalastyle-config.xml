@@ -130,4 +130,9 @@
   </parameters>
  </check>
  <check enabled="false" class="org.scalastyle.scalariform.UnderscoreImportChecker" level="warning"/>
+ <check enabled="true" class="org.scalastyle.file.FileLineLengthChecker" level="warning">
+  <parameters>
+   <parameter name="maxLineLength">80</parameter>
+  </parameters>
+ </check>
 </scalastyle>

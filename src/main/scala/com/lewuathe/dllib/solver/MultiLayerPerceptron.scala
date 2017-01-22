@@ -39,7 +39,8 @@ class MultiLayerPerceptron(override val uid: String, network: Network)
                  MultiLayerPerceptronModel](network) {
   override def copy(extra: ParamMap): MultiLayerPerceptron = defaultCopy(extra)
 
-  override protected def train(dataset: Dataset[_]): MultiLayerPerceptronModel = {
+  override protected def train(dataset: Dataset[_]):
+      MultiLayerPerceptronModel = {
     val newModel = trainInternal(dataset, model)
     val newNetwork = new Network(newModel, network.graph)
     copyValues(new MultiLayerPerceptronModel(uid, newNetwork))
