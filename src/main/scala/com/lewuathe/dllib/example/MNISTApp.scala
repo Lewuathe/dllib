@@ -21,25 +21,25 @@ package com.lewuathe.dllib.example
 
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.layer.{AffineLayer, ReLULayer, SoftmaxLayer, SoftplusLayer}
+import com.lewuathe.dllib.layer.{AffineLayer, ReLULayer, SoftmaxLayer}
 import com.lewuathe.dllib.network.Network
-import com.lewuathe.dllib.param.HasNumIterations
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 import com.lewuathe.dllib.Model
 
 class MNISTApp(miniBatchFraction: Double, numIter: Int, learningRate: Double) {
+  var numSamples = 5000
   def createMNISTDataset(path: String, sc: SparkContext): DataFrame = {
     val dataset = MNIST(path)
-    MNIST.asDF(dataset, sc, 5000)
+    MNIST.asDF(dataset, sc, numSamples)
   }
 
-  def submit(sc: SparkContext): Unit = {
-    val sqlContext = new SQLContext(sc)
-    val df = createMNISTDataset("/tmp/", sc)
+  def submit(spark: SparkSession): Double = {
+    val sqlContext = spark.sqlContext
+    val df = createMNISTDataset("/tmp/", spark.sparkContext)
 
     val nn3Graph = new Graph(Array(
       new AffineLayer(100, 784),
@@ -59,16 +59,23 @@ class MNISTApp(miniBatchFraction: Double, numIter: Int, learningRate: Double) {
 
     val result = model.transform(df)
 
-    result.filter("label = prediction").count()
+    result.filter("label = prediction").count() / numSamples.toDouble
   }
 }
 
 object MNISTApp {
-  def submit(sc: SparkContext): Unit = new MNISTApp(0.03, 10, 0.5).submit(sc)
+  def submit(spark: SparkSession): Double = new MNISTApp(0.03, 10, 0.5).submit(spark)
 
-  def apply(sc: SparkContext, miniBatchFraction: Double,
-            numIterations: Int, learningRate: Double): Unit = {
+  def apply(spark: SparkSession, miniBatchFraction: Double,
+            numIterations: Int, learningRate: Double): Double = {
     Logger.getLogger("org.apache.spark").setLevel(Level.OFF)
-    new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(sc)
+    new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(spark)
+  }
+
+  def apply(sparkConf: SparkConf, miniBatchFraction: Double,
+            numIterations: Int, learningRate: Double): Double = {
+    val spark = SparkSession.builder().config(sparkConf).getOrCreate()
+    Logger.getLogger("org.apache.spark").setLevel(Level.OFF)
+    new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(spark)
   }
 }
