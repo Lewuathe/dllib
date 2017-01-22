@@ -21,13 +21,15 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.Vector
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Blob, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob, BlobShape, Model, Weight}
 import com.lewuathe.dllib.activations.{softplus, softplusPrime}
 import com.lewuathe.dllib.util.genId
 
 class SoftplusLayer(override val outputSize: Int,
                 override val inputSize: Int) extends Layer with Visualizable with UniBlobSupport {
   override var id: String = genId
+  override val inputShape: BlobShape = BlobShape(1, inputSize)
+  override val outputShape: BlobShape = BlobShape(1, outputSize)
 
   /**
     * Calculate the output corresponding given input.

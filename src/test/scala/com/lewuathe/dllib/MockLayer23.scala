@@ -49,4 +49,6 @@ class MockLayer23 extends Layer {
 
   override val outputSize: Int = 2
   override val inputSize: Int = 3
+  override val inputShape: BlobShape = BlobShape(1, inputSize)
+  override val outputShape: BlobShape = BlobShape(1, outputSize)
 }

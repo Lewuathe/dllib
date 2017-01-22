@@ -19,17 +19,34 @@
 
 package com.lewuathe.dllib
 
+import scala.reflect.ClassTag
+
 import breeze.linalg.{Vector => brzVector}
+
+/**
+  * BlobShape specifies the size of Blob
+  * @param numChannel - The number of channels
+  * @param featureSize - The size of feature vector
+  */
+case class BlobShape(numChannel: Int, featureSize: Int)
+
 /**
   * Blob is a wrapper of actual data which collects the list of Vector
   */
-class Blob[E](val channel: Array[brzVector[E]]) {
-  def size: Int = channel.length
-  def head: brzVector[E] = channel.head
+class Blob[E: ClassTag](val channel: Array[brzVector[E]]) extends Iterable[brzVector[E]] {
+  override def size: Int = channel.length
+  override def head: brzVector[E] = channel.head
+  override def iterator: Iterator[brzVector[E]] = channel.iterator
+
+  def flatten: Blob[E] = {
+    Blob.uni(brzVector(channel.flatMap(v => v.toArray)))
+  }
 }
 
 object Blob {
-  def apply[E](channel: Array[brzVector[E]]): Blob[E] = new Blob(channel)
+  def apply[E: ClassTag](channel: Array[brzVector[E]]): Blob[E] = new Blob(channel)
 
-  def uni[E](v: brzVector[E]): Blob[E] = new Blob(Array(v))
+  def uni[E: ClassTag](v: brzVector[E]): Blob[E] = new Blob(Array(v))
+
+  def empty[E: ClassTag](): Blob[E] = new Blob(Array.empty[brzVector[E]])
 }

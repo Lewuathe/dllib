@@ -21,7 +21,7 @@ package com.lewuathe.dllib.layer
 
 import breeze.linalg.{Matrix, Vector}
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Blob, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob, BlobShape, Model, Weight}
 import com.lewuathe.dllib.util.genId
 
 /**
@@ -35,6 +35,8 @@ class AffineLayer(override val outputSize: Int,
     extends Layer with ShapeValidator with Visualizable with UniBlobSupport {
 
   override var id = genId()
+  override val inputShape: BlobShape = BlobShape(1, inputSize)
+  override val outputShape: BlobShape = BlobShape(1, outputSize)
 
   override def forward(acts: ActivationStack, model: Model): Blob[Double] = {
     val weight: Matrix[Double] = model.getWeight(id).get.value

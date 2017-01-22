@@ -22,15 +22,17 @@ package com.lewuathe.dllib.layer
 import breeze.linalg.{Matrix, Vector => brzVector}
 import breeze.stats.distributions.Binomial
 
-import com.lewuathe.dllib.{ActivationStack, Bias, Blob, Model, Weight}
+import com.lewuathe.dllib.{ActivationStack, Bias, Blob, BlobShape, Model, Weight}
 import com.lewuathe.dllib.activations.sigmoid
 import com.lewuathe.dllib.util.genId
 
 class DenoisingAutoEncodeLayer(override val outputSize: Int,
                               override val inputSize: Int)
   extends PretrainLayer with ShapeValidator with Visualizable with UniBlobSupport {
-  override var id = genId()
   // Temporary ID used for storing pretrain parameters on Model
+  override var id = genId()
+  override val inputShape: BlobShape = BlobShape(1, inputSize)
+  override val outputShape: BlobShape = BlobShape(1, outputSize)
 
   val corruptionLevel = 0.7
 
