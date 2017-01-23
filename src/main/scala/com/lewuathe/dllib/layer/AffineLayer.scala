@@ -54,8 +54,10 @@ class AffineLayer(
     Blob.uni(u)
   }
 
-  override def backward(delta: Blob[Double], acts: ActivationStack,
-                        model: Model): (Blob[Double], Weight, Bias) = {
+  override def backward(
+      delta: Blob[Double],
+      acts: ActivationStack,
+      model: Model): (Blob[Double], Weight, Bias) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     val bias: Vector[Double] = model.getBias(id).get.value
 
