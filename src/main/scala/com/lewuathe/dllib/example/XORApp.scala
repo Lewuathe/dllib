@@ -24,9 +24,9 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.network.Network
-import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.layer.{AffineLayer, SoftmaxLayer}
+import com.lewuathe.dllib.model.InMemoryModel
+import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.MultiLayerPerceptron
 
 object XORApp {
@@ -59,7 +59,7 @@ object XORApp {
       new SoftmaxLayer(2, 2)
     ))
 
-    val nn3Model = Model(nn3Graph)
+    val nn3Model = InMemoryModel(nn3Graph)
     val nn3 = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("XOR", nn3)

@@ -19,10 +19,10 @@
 
 package com.lewuathe.dllib
 
-import breeze.linalg.{Vector, Matrix}
+import breeze.linalg.{Matrix, Vector}
 import com.lewuathe.dllib.graph.Graph
-
 import com.lewuathe.dllib.layer.{AffineLayer, Layer}
+import com.lewuathe.dllib.model.{InMemoryModel, Model}
 import org.scalatest._
 import org.scalamock.scalatest.MockFactory
 
@@ -74,15 +74,15 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
 
   "Model" should "create correct shape" in {
     val graph = new Graph(mockLayers)
-    val model = Model(graph)
+    val model = InMemoryModel(graph)
 
     verifyModelShape(model)
   }
 
   "Model" should "be added" in {
     val graph = new Graph(mockLayers)
-    val model1 = Model(graph)
-    val model2 = Model(graph)
+    val model1 = InMemoryModel(graph)
+    val model2 = InMemoryModel(graph)
 
     val ret = model1 + model2
 
@@ -91,8 +91,8 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
 
   "Model" should "be subtracted" in {
     val graph = new Graph(mockLayers)
-    val model1 = Model(graph)
-    val model2 = Model(graph)
+    val model1 = InMemoryModel(graph)
+    val model2 = InMemoryModel(graph)
 
     val ret = model1 - model2
 
@@ -101,7 +101,7 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
 
   "Model" should "be divided" in {
     val graph = new Graph(mockLayers)
-    val model1 = Model(graph)
+    val model1 = InMemoryModel(graph)
 
     val ret = model1 / 2.0
 
@@ -110,7 +110,7 @@ class ModelSpec extends FlatSpec with Matchers with MockFactory {
 
   "Model" should "be multiplied" in {
     val graph = new Graph(mockLayers)
-    val model1 = Model(graph)
+    val model1 = InMemoryModel(graph)
 
     val ret = model1 * 0.5
 

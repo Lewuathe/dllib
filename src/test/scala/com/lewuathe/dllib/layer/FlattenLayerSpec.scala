@@ -24,12 +24,12 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
 import com.lewuathe.dllib.{ActivationStack, Blob, BlobShape}
-import com.lewuathe.dllib.MockModel
+import com.lewuathe.dllib.MockInMemoryModel
 import com.lewuathe.dllib.graph.Graph
 
 
 class FlattenLayerSpec extends FlatSpec with Matchers with MockFactory {
-  val model = new MockModel(new Graph(Array()))
+  val model = new MockInMemoryModel(new Graph(Array()))
   val inputShape = BlobShape(3, 3)
   val outputShape = BlobShape(1, 9)
 

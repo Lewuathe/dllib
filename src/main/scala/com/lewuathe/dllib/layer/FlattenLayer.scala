@@ -22,7 +22,8 @@ package com.lewuathe.dllib.layer
 import breeze.linalg.{Vector => brzVector}
 
 import com.lewuathe.dllib.{ActivationStack, Bias, Blob}
-import com.lewuathe.dllib.{BlobShape, Model, Weight}
+import com.lewuathe.dllib.{BlobShape, Weight}
+import com.lewuathe.dllib.model.Model
 import com.lewuathe.dllib.util.genId
 
 /**

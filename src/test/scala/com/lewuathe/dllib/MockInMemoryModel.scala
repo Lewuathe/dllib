@@ -20,6 +20,7 @@
 package com.lewuathe.dllib
 
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.Model._
+import com.lewuathe.dllib.model.InMemoryModel
+import com.lewuathe.dllib.model.InMemoryModel._
 
-class MockModel(g: Graph) extends Model(g) {}
+class MockInMemoryModel(g: Graph) extends InMemoryModel(g) {}

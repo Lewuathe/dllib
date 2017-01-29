@@ -23,9 +23,9 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.{DataFrame, SQLContext}
 
 import com.lewuathe.dllib.graph.Graph
-import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.layer.{AffineLayer, DenoisingAutoEncodeLayer}
 import com.lewuathe.dllib.layer.{SigmoidLayer, SoftmaxLayer}
+import com.lewuathe.dllib.model.{InMemoryModel, Model}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
 
@@ -47,7 +47,7 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
       new SoftmaxLayer(10, 10)
     ))
 
-    val sdaModel = Model(sdaGraph)
+    val sdaModel = InMemoryModel(sdaGraph)
     val sda = Network(sdaModel, sdaGraph)
 
     val unsupervisedPretrainer = new UnsupervisedPretrainingSolver("MNIST", sda)

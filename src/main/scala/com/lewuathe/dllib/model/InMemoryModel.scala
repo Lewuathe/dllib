@@ -17,26 +17,17 @@
  * under the License.
  */
 
-package com.lewuathe.dllib
+package com.lewuathe.dllib.model
 
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
+import com.lewuathe.dllib.{Bias, Weight}
 
-class ModelShape(graph: Graph) extends Serializable {
-  val weightShape = graph.layers.map({
-    case layer: Layer => (layer.id, layer.outputSize, layer.inputSize)
-  })
-  val biasShape = graph.layers.map({
-    case layer: Layer => (layer.id, layer.outputSize)
-  })
-}
-
-class Model(
+class InMemoryModel(
     graph: Graph,
-    isZero: Boolean = false)
-    (implicit ws: Map[String, Weight], bs: Map[String, Bias])
-  extends Serializable {
-  val shape: ModelShape = new ModelShape(graph)
+    isZero: Boolean = false)(
+  implicit ws: Map[String, Weight], bs: Map[String, Bias]
+) extends Model(graph, isZero)(ws, bs) {
 
   def init(): (Map[String, Weight], Map[String, Bias]) = {
     val weights: Map[String, Weight] = graph.layers.map({
@@ -55,13 +46,7 @@ class Model(
     (weights, biases)
   }
 
-  var (weights, biases) = if (ws == null && bs == null) {
-    init()
-  } else {
-    (ws, bs)
-  }
-
-  def +(that: Model): Model = {
+  override def +(that: Model): Model = {
     require(this.weights.size == that.weights.size)
     require(this.biases.size == that.biases.size)
     val newWeights = this.weights.map({
@@ -70,10 +55,10 @@ class Model(
     val newBiases = this.biases.map({
       case (id, b) => (id, b + that.biases(id))
     })
-    new Model(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(newWeights, newBiases)
   }
 
-  def -(that: Model): Model = {
+  override def -(that: Model): Model = {
     require(this.weights.size == that.weights.size)
     require(this.biases.size == that.biases.size)
     val newWeights = this.weights.map({
@@ -82,76 +67,64 @@ class Model(
     val newBiases = this.biases.map({
       case (id, b) => (id, b - that.biases(id))
     })
-    new Model(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(newWeights, newBiases)
   }
 
-  def /(denom: Double): Model = {
+  override def /(denom: Double): Model = {
     val newWeights = this.weights.map({
       case (id, w) => (id, w / denom)
     })
     val newBiases = this.biases.map({
       case (id, b) => (id, b / denom)
     })
-    new Model(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(newWeights, newBiases)
   }
 
-  def *(times: Double): Model = {
+  override def *(times: Double): Model = {
     val newWeights = this.weights.map({
       case (id, w) => (id, w * times)
     })
     val newBiases = this.biases.map({
       case (id, b) => (id, b * times)
     })
-    new Model(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(newWeights, newBiases)
   }
 
-  def +(that: Weight): Model = {
+  override def +(that: Weight): Model = {
     val oldWeight = this.weights.get(that.id).get
     this.weights += (that.id -> (oldWeight + that))
     this
   }
 
-  def +(that: Bias): Model = {
+  override def +(that: Bias): Model = {
     val oldBias = this.biases.get(that.id).get
     this.biases += (that.id -> (oldBias + that))
     this
   }
 
-  def getWeight(id: String): Option[Weight] = weights.get(id)
-  def getBias(id: String): Option[Bias] = biases.get(id)
+  override def getWeight(id: String): Option[Weight] = weights.get(id)
+  override def getBias(id: String): Option[Bias] = biases.get(id)
 
-  def addWeight(w: Weight): Unit = {
+  override def addWeight(w: Weight): Unit = {
     require(!weights.contains(w.id))
     weights += (w.id -> w)
   }
 
-  def addBias(b: Bias): Unit = {
+  override def addBias(b: Bias): Unit = {
     require(!biases.contains(b.id))
     biases += (b.id -> b)
   }
 
-  def contains(w: Weight): Boolean = weights.contains(w.id)
+  override def contains(w: Weight): Boolean = weights.contains(w.id)
 
-  def contains(b: Bias): Boolean = biases.contains(b.id)
+  override def contains(b: Bias): Boolean = biases.contains(b.id)
 
-
-  override def toString: String = {
-    "Model\n  " +
-    "  Weights\n" +
-    weights.map({
-      case (id, w) => s"    id=>${id}, weight=>${w}\n"
-    }) +
-    "  Biases\n" +
-    biases.map({
-      case (id, b) => s"    id=>${id}, bias=>${b}\n"
-    })
-  }
 }
 
-object Model {
+object InMemoryModel {
   implicit val nullWeight: Map[String, Weight] = null
   implicit val nullBias : Map[String, Bias] = null
 
-  def apply(graph: Graph): Model = new Model(graph)
-  def zero(graph: Graph): Model = new Model(graph, isZero = true)
+  def apply(graph: Graph): Model = new InMemoryModel(graph)
+  def zero(graph: Graph): Model = new InMemoryModel(graph, isZero = true)
 }
