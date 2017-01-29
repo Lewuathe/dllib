@@ -20,18 +20,16 @@
 package com.lewuathe.dllib.solver
 
 import scala.util.control.Breaks._
-
 import org.apache.spark.ml.linalg.Vector
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
-
 import breeze.linalg.{Vector => brzVector}
-
-import com.lewuathe.dllib.{ActivationStack, Instance, Model}
+import com.lewuathe.dllib.{ActivationStack, Instance}
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.{Layer, PretrainLayer}
+import com.lewuathe.dllib.model.{InMemoryModel, Model}
 import com.lewuathe.dllib.util
 
 /**
@@ -51,7 +49,7 @@ trait Pretrainer extends Solver[Vector,
     val (modelDelta: Model, lossSum: Double, miniBatchSize: Int,
         pretrainTmpModelDelta: Model)
     = instances.sample(false, miniBatchFraction, 42 + iter)
-      .treeAggregate(Model.zero(graph), 0.0, 0, Model.zero(pretrainTmpGraph))(
+      .treeAggregate(InMemoryModel.zero(graph), 0.0, 0, InMemoryModel.zero(pretrainTmpGraph))(
         seqOp = (c: (Model, Double, Int, Model), instance: Instance) => {
           // Sample feature
           val activations = new ActivationStack
@@ -130,6 +128,6 @@ trait Pretrainer extends Solver[Vector,
   private def createPretrainTmpNetwork(pretrainLayer: PretrainLayer):
       (Model, Graph) = {
     val tmpForm = new Graph(Array(pretrainLayer.createTmpLayer()))
-    (Model(tmpForm), tmpForm)
+    (InMemoryModel(tmpForm), tmpForm)
   }
 }

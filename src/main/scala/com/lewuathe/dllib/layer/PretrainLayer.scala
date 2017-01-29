@@ -20,9 +20,9 @@
 package com.lewuathe.dllib.layer
 
 import breeze.linalg.{Matrix, Vector}
-
-import com.lewuathe.dllib.{ActivationStack, Bias, Model, Weight}
-import com.lewuathe.dllib.activations._
+import com.lewuathe.dllib.{ActivationStack, Bias, Weight}
+import com.lewuathe.dllib.activations.sigmoidPrime
+import com.lewuathe.dllib.model.Model
 
 abstract class PretrainLayer extends Layer
   with ShapeValidator with UniBlobSupport {

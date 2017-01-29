@@ -25,12 +25,11 @@ import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Dataset, Row}
 import org.apache.spark.sql.functions.{col, lit}
-
 import breeze.linalg.{Vector => brzVector}
-
-import com.lewuathe.dllib.{ActivationStack, Blob, Instance, Model}
+import com.lewuathe.dllib.{ActivationStack, Blob, Instance}
 import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
+import com.lewuathe.dllib.model.{InMemoryModel, Model}
 import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.objective.{MeanSquaredError, Objective}
 import com.lewuathe.dllib.param.{HasNumIterations, HasWeightCol}
@@ -89,7 +88,7 @@ abstract class Solver[FeaturesType,
       val bcModel = dataset.sqlContext.sparkContext.broadcast(localModel)
       val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
       = instances.sample(false, miniBatchFraction, 42 + i)
-        .treeAggregate((Model.zero(graph), 0.0, 0))(
+        .treeAggregate((InMemoryModel.zero(graph), 0.0, 0))(
           seqOp = (c: (Model, Double, Int), instance: Instance) => {
             val (dModel, loss)
               = gradient(bcGraph.value, bcModel.value, instance)
@@ -119,7 +118,7 @@ abstract class Solver[FeaturesType,
       form: Graph,
       model: Model,
       instance: Instance): (Model, Double) = {
-    var deltaModel = Model.zero(form)
+    var deltaModel = InMemoryModel.zero(form)
     val label = instance.label
     val activations = new ActivationStack
     activations.push(instance.blob)

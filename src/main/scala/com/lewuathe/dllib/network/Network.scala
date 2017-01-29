@@ -19,8 +19,8 @@
 
 package com.lewuathe.dllib.network
 
-import com.lewuathe.dllib.Model
 import com.lewuathe.dllib.graph.Graph
+import com.lewuathe.dllib.model.{InMemoryModel, Model}
 
 /**
   * Network is a representation that has Model parameters and Model formation.

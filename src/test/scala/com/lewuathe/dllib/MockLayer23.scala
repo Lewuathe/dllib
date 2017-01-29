@@ -20,9 +20,9 @@
 package com.lewuathe.dllib
 
 import breeze.linalg
-
 import com.lewuathe.dllib.util._
 import com.lewuathe.dllib.layer.Layer
+import com.lewuathe.dllib.model.Model
 
 class MockLayer23 extends Layer {
   override var id: String = "layer23"

@@ -23,8 +23,9 @@ import breeze.linalg.{Matrix, Vector => brzVector}
 import breeze.stats.distributions.Binomial
 
 import com.lewuathe.dllib.{ActivationStack, Bias, Blob}
-import com.lewuathe.dllib.{BlobShape, Model, Weight}
+import com.lewuathe.dllib.{BlobShape, Weight}
 import com.lewuathe.dllib.activations.sigmoid
+import com.lewuathe.dllib.model.Model
 import com.lewuathe.dllib.util.genId
 
 class DenoisingAutoEncodeLayer(

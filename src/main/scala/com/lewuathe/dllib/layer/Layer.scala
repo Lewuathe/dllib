@@ -20,6 +20,7 @@
 package com.lewuathe.dllib.layer
 
 import com.lewuathe.dllib._
+import com.lewuathe.dllib.model.{InMemoryModel, Model}
 
 /**
   * Layer is an abstraction of neural network layer.
