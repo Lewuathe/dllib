@@ -32,10 +32,10 @@ class Weight(
     val outputSize: Int,
     val inputSize: Int,
     isZero: Boolean = false)
-  (implicit v: Matrix[Double]) extends Serializable {
+  (implicit v: Option[Matrix[Double]]) extends Serializable {
 
-  val value: Matrix[Double] = if (v != null) {
-    v
+  val value: Matrix[Double] = if (v.isDefined) {
+    v.get
   } else if (isZero) {
     zeroWeight(outputSize, inputSize)
   } else {
@@ -53,21 +53,21 @@ class Weight(
   def +(that: Weight): Weight = {
     require(this.outputSize == that.outputSize)
     require(this.inputSize == that.inputSize)
-    new Weight(id, outputSize, inputSize)(this.value + that.value)
+    new Weight(id, outputSize, inputSize)(Some(this.value + that.value))
   }
 
   def -(that: Weight): Weight = {
     require(this.outputSize == that.outputSize)
     require(this.inputSize == that.inputSize)
-    new Weight(id, outputSize, inputSize)(this.value - that.value)
+    new Weight(id, outputSize, inputSize)(Some(this.value - that.value))
   }
 
   def /(denom: Double): Weight = {
-    new Weight(id, outputSize, inputSize)(this.value / denom)
+    new Weight(id, outputSize, inputSize)(Some(this.value / denom))
   }
 
   def *(times: Double): Weight = {
-    new Weight(id, outputSize, inputSize)(this.value * times)
+    new Weight(id, outputSize, inputSize)(Some(this.value * times))
   }
 
   override def toString: String = {
@@ -76,7 +76,7 @@ class Weight(
 }
 
 object Weight {
-  implicit val nullMatrix: Matrix[Double] = null
+  implicit val nullMatrix: Option[Matrix[Double]] = Option.empty
 
   def apply(id: String, outputSize: Int, inputSize: Int): Weight
     = new Weight(id, outputSize, inputSize)

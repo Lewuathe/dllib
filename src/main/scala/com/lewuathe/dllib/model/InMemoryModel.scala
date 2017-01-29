@@ -26,7 +26,7 @@ import com.lewuathe.dllib.{Bias, Weight}
 class InMemoryModel(
     graph: Graph,
     isZero: Boolean = false)(
-  implicit ws: Map[String, Weight], bs: Map[String, Bias]
+  implicit ws: Option[Map[String, Weight]], bs: Option[Map[String, Bias]]
 ) extends Model(graph, isZero)(ws, bs) {
 
   def init(): (Map[String, Weight], Map[String, Bias]) = {
@@ -55,7 +55,7 @@ class InMemoryModel(
     val newBiases = this.biases.map({
       case (id, b) => (id, b + that.biases(id))
     })
-    new InMemoryModel(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(Some(newWeights), Some(newBiases))
   }
 
   override def -(that: Model): Model = {
@@ -67,7 +67,7 @@ class InMemoryModel(
     val newBiases = this.biases.map({
       case (id, b) => (id, b - that.biases(id))
     })
-    new InMemoryModel(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(Some(newWeights), Some(newBiases))
   }
 
   override def /(denom: Double): Model = {
@@ -77,7 +77,7 @@ class InMemoryModel(
     val newBiases = this.biases.map({
       case (id, b) => (id, b / denom)
     })
-    new InMemoryModel(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(Some(newWeights), Some(newBiases))
   }
 
   override def *(times: Double): Model = {
@@ -87,7 +87,7 @@ class InMemoryModel(
     val newBiases = this.biases.map({
       case (id, b) => (id, b * times)
     })
-    new InMemoryModel(this.graph)(newWeights, newBiases)
+    new InMemoryModel(this.graph)(Some(newWeights), Some(newBiases))
   }
 
   override def +(that: Weight): Model = {
@@ -122,8 +122,8 @@ class InMemoryModel(
 }
 
 object InMemoryModel {
-  implicit val nullWeight: Map[String, Weight] = null
-  implicit val nullBias : Map[String, Bias] = null
+  implicit val nullWeight: Option[Map[String, Weight]] = Option.empty
+  implicit val nullBias : Option[Map[String, Bias]] = Option.empty
 
   def apply(graph: Graph): Model = new InMemoryModel(graph)
   def zero(graph: Graph): Model = new InMemoryModel(graph, isZero = true)

@@ -19,6 +19,7 @@
 
 package com.lewuathe.dllib
 
+import breeze.linalg.Vector
 import org.scalatest._
 
 class BiasSpec extends FlatSpec with Matchers {
@@ -29,5 +30,12 @@ class BiasSpec extends FlatSpec with Matchers {
   "Bias" should "match size" in {
     val b = Bias(4)
     b.value.size should be (4)
+  }
+  "Bias" should "keep given vector" in {
+    val b = new Bias("id", 4)(Some(Vector(1,2,3,4)))
+    b.value.size should be (4)
+    for (i <- 1 to 4) {
+      b.value(i - 1) should be (i)
+    }
   }
 }

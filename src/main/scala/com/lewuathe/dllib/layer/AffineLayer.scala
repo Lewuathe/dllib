@@ -69,8 +69,8 @@ class AffineLayer(
     checkBlobSize(thisInput)
 
     val dWeight: Weight = new Weight(id, outputSize,
-      inputSize)(delta.head.toDenseVector * thisInput.head.toDenseVector.t)
-    val dBias: Bias = new Bias(id, outputSize)(delta.head)
+      inputSize)(Some(delta.head.toDenseVector * thisInput.head.toDenseVector.t))
+    val dBias: Bias = new Bias(id, outputSize)(Some(delta.head))
 
     validateParamShapes(dWeight.value, dBias.value)
 

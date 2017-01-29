@@ -19,6 +19,7 @@
 
 package com.lewuathe.dllib
 
+import breeze.linalg.Matrix
 import org.scalatest._
 
 class WeightSpec extends FlatSpec with Matchers {
@@ -30,5 +31,13 @@ class WeightSpec extends FlatSpec with Matchers {
     val w = Weight(3, 2)
     w.value.rows should be (3)
     w.value.cols should be (2)
+  }
+
+  "Weight" should "keep given matrix" in {
+    val w = new Weight("id", 3, 2)(
+      Some(Matrix.create(3, 2, Array(1,2,3,4,5,6))))
+    w.value.rows should be (3)
+    w.value.cols should be (2)
+    w.value(0, 0) should be (1)
   }
 }
