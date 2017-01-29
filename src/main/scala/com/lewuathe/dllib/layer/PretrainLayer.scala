@@ -53,8 +53,8 @@ abstract class PretrainLayer extends Layer
     // NOTE: Gradient of decode layer.
     // Make sure output and input is reversed
     val dWeight2: Weight = new Weight(id, inputSize,
-      outputSize)(delta2.toDenseVector * hiddenZ.toDenseVector.t)
-    val dBias2: Bias = new Bias(id, inputSize)(delta2)
+      outputSize)(Some(delta2.toDenseVector * hiddenZ.toDenseVector.t))
+    val dBias2: Bias = new Bias(id, inputSize)(Some(delta2))
 
     // Back propagation of delta
     val weight: Matrix[Double] = model.getWeight(id).get.value
@@ -62,8 +62,8 @@ abstract class PretrainLayer extends Layer
       (weight.toDenseMatrix * delta2.toDenseVector)
 
     val dWeight1: Weight = new Weight(id, outputSize,
-      inputSize)(delta1.toDenseVector * input.head.toDenseVector.t)
-    val dBias1: Bias = new Bias(id, outputSize)(delta1)
+      inputSize)(Some(delta1.toDenseVector * input.head.toDenseVector.t))
+    val dBias1: Bias = new Bias(id, outputSize)(Some(delta1))
     validateParamShapes(dWeight1.value, dBias1.value)
 
     // (Hidden Layer Gradient, Visible Layer Gradient)

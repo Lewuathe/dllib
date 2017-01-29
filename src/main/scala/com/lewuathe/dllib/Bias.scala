@@ -27,10 +27,10 @@ import breeze.linalg.Vector
   * @param size
   */
 class Bias(val id: String, val size: Int, isZero: Boolean = false)
-          (implicit v: Vector[Double]) extends Serializable {
+          (implicit v: Option[Vector[Double]]) extends Serializable {
 
-  val value: Vector[Double] = if (v != null) {
-    v
+  val value: Vector[Double] = if (v.isDefined) {
+    v.get
   } else if (isZero) {
     zeroBias(size)
   } else {
@@ -47,20 +47,20 @@ class Bias(val id: String, val size: Int, isZero: Boolean = false)
 
   def +(that: Bias): Bias = {
     require(this.size == that.size)
-    new Bias(id, size)(this.value + that.value)
+    new Bias(id, size)(Some(this.value + that.value))
   }
 
   def -(that: Bias): Bias = {
     require(this.size == that.size)
-    new Bias(id, size)(this.value - that.value)
+    new Bias(id, size)(Some(this.value - that.value))
   }
 
   def /(denom: Double): Bias = {
-    new Bias(id, size)(this.value / denom)
+    new Bias(id, size)(Some(this.value / denom))
   }
 
   def *(times: Double): Bias = {
-    new Bias(id, size)(this.value * times)
+    new Bias(id, size)(Some(this.value * times))
   }
 
   override def toString: String = {
@@ -69,7 +69,7 @@ class Bias(val id: String, val size: Int, isZero: Boolean = false)
 }
 
 object Bias {
-  implicit val nullVector: Vector[Double] = null
+  implicit val nullVector: Option[Vector[Double]] = Option.empty
 
   def apply(id: String, size: Int): Bias = new Bias(id, size)
 
