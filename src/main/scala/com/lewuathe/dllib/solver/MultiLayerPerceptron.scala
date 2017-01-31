@@ -34,22 +34,20 @@ import com.lewuathe.dllib.network.Network
   * @param network
   */
 class MultiLayerPerceptron(override val uid: String, network: Network)
-  extends Solver[Vector,
-                 MultiLayerPerceptron,
-                 MultiLayerPerceptronModel](network) {
+    extends Solver[Vector, MultiLayerPerceptron, MultiLayerPerceptronModel](
+      network) {
   override def copy(extra: ParamMap): MultiLayerPerceptron = defaultCopy(extra)
 
-  override protected def train(dataset: Dataset[_]):
-      MultiLayerPerceptronModel = {
-    val newModel = trainInternal(dataset, model)
+  override protected def train(
+      dataset: Dataset[_]): MultiLayerPerceptronModel = {
+    val newModel   = trainInternal(dataset, model)
     val newNetwork = new Network(newModel, network.graph)
     copyValues(new MultiLayerPerceptronModel(uid, newNetwork))
   }
 }
 
 class MultiLayerPerceptronModel(override val uid: String, network: Network)
-  extends SolverModel[Vector,
-                      MultiLayerPerceptronModel](network) {
+    extends SolverModel[Vector, MultiLayerPerceptronModel](network) {
   override protected def predict(features: Vector): Double = {
     val brzFeatures = brzVector[Double](features.toArray)
     predictInternal(Blob.uni(brzFeatures))

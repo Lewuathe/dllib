@@ -42,8 +42,7 @@ abstract class Layer extends Serializable {
     * @param model
     * @return The output tuple of the layer.
     */
-  def forward(acts: ActivationStack, model: Model)
-      : Blob[Double]
+  def forward(acts: ActivationStack, model: Model): Blob[Double]
 
   /**
     * Calculate the delta of this iteration. The input of the layer in forward
@@ -56,8 +55,9 @@ abstract class Layer extends Serializable {
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  def backward(delta: Blob[Double], acts: ActivationStack, model: Model)
-      : (Blob[Double], Weight, Bias)
+  def backward(delta: Blob[Double],
+               acts: ActivationStack,
+               model: Model): (Blob[Double], Weight, Bias)
 
   override def toString: String = {
     s"id: ${id}, ${inputSize} -> ${outputSize}"

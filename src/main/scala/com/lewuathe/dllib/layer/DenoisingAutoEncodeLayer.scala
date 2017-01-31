@@ -28,21 +28,24 @@ import com.lewuathe.dllib.activations.sigmoid
 import com.lewuathe.dllib.model.Model
 import com.lewuathe.dllib.util.genId
 
-class DenoisingAutoEncodeLayer(
-    override val outputSize: Int,
-    override val inputSize: Int)
-  extends PretrainLayer with ShapeValidator
-    with Visualizable with UniBlobSupport {
+class DenoisingAutoEncodeLayer(override val outputSize: Int,
+                               override val inputSize: Int)
+    extends PretrainLayer
+    with ShapeValidator
+    with Visualizable
+    with UniBlobSupport {
   // Temporary ID used for storing pretrain parameters on Model
-  override var id = genId()
-  override val inputShape: BlobShape = BlobShape(1, inputSize)
+  override var id                     = genId()
+  override val inputShape: BlobShape  = BlobShape(1, inputSize)
   override val outputShape: BlobShape = BlobShape(1, outputSize)
 
   val corruptionLevel = 0.7
 
   protected def corrupt(input: brzVector[Double]): brzVector[Double] = {
-    val mask = brzVector(Binomial(1, 1.0 - corruptionLevel)
-      .sample(input.length).map(_.toDouble): _*)
+    val mask = brzVector(
+      Binomial(1, 1.0 - corruptionLevel)
+        .sample(input.length)
+        .map(_.toDouble): _*)
     mask :* input
   }
 
@@ -54,13 +57,15 @@ class DenoisingAutoEncodeLayer(
     * @param tmpModel
     * @return
     */
-  override def encode(input: brzVector[Double], model: Model, tmpModel: Model):
-      (brzVector[Double], brzVector[Double]) = {
-    val weight: Matrix[Double] = model.getWeight(id).get.value
+  override def encode(
+      input: brzVector[Double],
+      model: Model,
+      tmpModel: Model): (brzVector[Double], brzVector[Double]) = {
+    val weight: Matrix[Double]  = model.getWeight(id).get.value
     val bias: brzVector[Double] = model.getBias(id).get.value
 
     val u: brzVector[Double] = weight * corrupt(input) + bias
-    val z = sigmoid(u)
+    val z                    = sigmoid(u)
     (u, z)
   }
 
@@ -72,15 +77,17 @@ class DenoisingAutoEncodeLayer(
     * @param tmpModel
     * @return
     */
-  override def decode(input: brzVector[Double], model: Model, tmpModel: Model):
-      (brzVector[Double], brzVector[Double]) = {
+  override def decode(
+      input: brzVector[Double],
+      model: Model,
+      tmpModel: Model): (brzVector[Double], brzVector[Double]) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
     // Make sure to restore a Bias for pretrain visualization layer
     val bias: brzVector[Double] = tmpModel.getBias(id).get.value
 
     // TODO: decode bias should be stored in model
     val u: brzVector[Double] = weight.toDenseMatrix.t * input + bias
-    val z = sigmoid(u)
+    val z                    = sigmoid(u)
     (u, z)
   }
 
@@ -91,13 +98,13 @@ class DenoisingAutoEncodeLayer(
     * @param prediction
     * @return
     */
-  protected def error(label: brzVector[Double], prediction: brzVector[Double]):
-      brzVector[Double] = {
+  protected def error(label: brzVector[Double],
+                      prediction: brzVector[Double]): brzVector[Double] = {
     require(label.size == prediction.size)
     val ret = label - prediction
     ret.map({
       case (d: Double) if d.isNaN => 0.0
-      case (d: Double) => d
+      case (d: Double)            => d
     })
   }
 
@@ -124,9 +131,8 @@ class DenoisingAutoEncodeLayer(
     *         represents the raw output, the second is applied activation
     *         function of the layer.
     */
-  override def forward(acts: ActivationStack, model: Model):
-      Blob[Double] = {
-    val weight: Matrix[Double] = model.getWeight(id).get.value
+  override def forward(acts: ActivationStack, model: Model): Blob[Double] = {
+    val weight: Matrix[Double]  = model.getWeight(id).get.value
     val bias: brzVector[Double] = model.getBias(id).get.value
 
     validateParamShapes(weight, bias)
@@ -143,29 +149,31 @@ class DenoisingAutoEncodeLayer(
     * Calculate the delta of this iteration. The input of the layer in forward
     * phase can be restored from ActivationStack. It returns the delta of input
     * layer of this layer and the delta of coefficient and intercept parameter.
- *
+    *
     * @param delta
     * @param acts
     * @param model
     * @return
     */
-  override def backward(delta: Blob[Double], acts: ActivationStack,
+  override def backward(delta: Blob[Double],
+                        acts: ActivationStack,
                         model: Model): (Blob[Double], Weight, Bias) = {
-    val weight: Matrix[Double] = model.getWeight(id).get.value
+    val weight: Matrix[Double]  = model.getWeight(id).get.value
     val bias: brzVector[Double] = model.getBias(id).get.value
 
     val thisOutput = acts.pop()
-    val thisInput = acts.top
+    val thisInput  = acts.top
 
     checkBlobSize(delta)
 
-    val dWeight: Weight = new Weight(id, outputSize,
-      inputSize)(Some(delta.head.toDenseVector * thisInput.head.toDenseVector.t))
+    val dWeight: Weight = new Weight(id, outputSize, inputSize)(
+      Some(delta.head.toDenseVector * thisInput.head.toDenseVector.t))
     val dBias: Bias = new Bias(id, outputSize)(Some(delta.head))
 
     validateParamShapes(dWeight.value, dBias.value)
 
-    val d: brzVector[Double] = weight.toDenseMatrix.t * delta.head.toDenseVector
+    val d: brzVector[Double] = weight.toDenseMatrix.t * delta.head
+        .toDenseVector
     (Blob.uni(d), dWeight, dBias)
   }
 }

@@ -29,29 +29,27 @@ import com.lewuathe.dllib.Blob
 import com.lewuathe.dllib.network.Network
 
 class UnsupervisedPretrainingSolver(override val uid: String, network: Network)
-  extends Solver[Vector,
-    UnsupervisedPretrainingSolver, UnsupervisedPretrainingSolverModel](network)
-  with Pretrainer {
-  override def copy(extra: ParamMap): UnsupervisedPretrainingSolver
-    = defaultCopy(extra)
+    extends Solver[Vector,
+                   UnsupervisedPretrainingSolver,
+                   UnsupervisedPretrainingSolverModel](network)
+    with Pretrainer {
+  override def copy(extra: ParamMap): UnsupervisedPretrainingSolver =
+    defaultCopy(extra)
 
-
-  override protected def train(dataset: Dataset[_]):
-      UnsupervisedPretrainingSolverModel = {
+  override protected def train(
+      dataset: Dataset[_]): UnsupervisedPretrainingSolverModel = {
     logInfo(s"Pretraining...")
     val pretrainedModel = pretrainInternal(dataset, model)
     logInfo(s"Fine tuning")
-    val newModel = trainInternal(dataset, pretrainedModel)
+    val newModel   = trainInternal(dataset, pretrainedModel)
     val newNetwork = new Network(newModel, network.graph)
     copyValues(new UnsupervisedPretrainingSolverModel(uid, newNetwork))
   }
 }
 
-class UnsupervisedPretrainingSolverModel(
-    override val uid: String,
-    network: Network)
-  extends SolverModel[Vector,
-    UnsupervisedPretrainingSolverModel](network) {
+class UnsupervisedPretrainingSolverModel(override val uid: String,
+                                         network: Network)
+    extends SolverModel[Vector, UnsupervisedPretrainingSolverModel](network) {
   override protected def predict(features: Vector): Double = {
     val brzFeatures = brzVector[Double](features.toArray)
     predictInternal(Blob.uni(brzFeatures))

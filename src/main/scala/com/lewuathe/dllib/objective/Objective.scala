@@ -26,6 +26,7 @@ import com.lewuathe.dllib.Blob
   * which should be minimized.
   */
 trait Objective extends Serializable {
+
   /**
     * Calculate the difference between label vector and prediction vector.
     * @param label label vector

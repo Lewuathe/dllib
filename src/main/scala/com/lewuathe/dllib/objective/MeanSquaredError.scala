@@ -23,7 +23,6 @@ import com.lewuathe.dllib.layer.UniBlobSupport
 
 class MeanSquaredError extends Objective with UniBlobSupport {
 
-
   /**
     * Calculate the difference between label vector and prediction vector.
     *
@@ -31,8 +30,8 @@ class MeanSquaredError extends Objective with UniBlobSupport {
     * @param prediction prediction vector
     * @return the difference between two vectors
     */
-  override def error(label: Blob[Double], prediction: Blob[Double]):
-      Blob[Double] = {
+  override def error(label: Blob[Double],
+                     prediction: Blob[Double]): Blob[Double] = {
     require(label.size == prediction.size)
     checkBlobSize(label)
     checkBlobSize(prediction)
@@ -40,7 +39,7 @@ class MeanSquaredError extends Objective with UniBlobSupport {
     val ret = label.head - prediction.head
     Blob.uni(ret.map({
       case (d: Double) if d.isNaN => 0.0
-      case (d: Double) => d
+      case (d: Double)            => d
     }))
   }
 

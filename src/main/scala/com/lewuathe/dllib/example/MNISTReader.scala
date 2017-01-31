@@ -59,7 +59,9 @@ class MNISTLabelReader(location: String, fileName: String)
 
   val labelsAsInts = readLabels(0)
   val labelsAsVectors = labelsAsInts.map { label =>
-    DenseVector.tabulate[Double](10) { i => if (i == label) 1.0 else 0.0 }
+    DenseVector.tabulate[Double](10) { i =>
+      if (i == label) 1.0 else 0.0
+    }
   }
 
   private[this] def readLabels(ind: Int): Stream[Int] =
@@ -76,15 +78,16 @@ class MNISTImageReader(location: String, fileName: String)
 
   assert(stream.readInt() == 2051, "Wrong MNIST image stream magic")
 
-  val count = stream.readInt()
-  val width = stream.readInt()
+  val count  = stream.readInt()
+  val width  = stream.readInt()
   val height = stream.readInt()
 
   val imagesAsMatrices = readImages(0)
   val imagesAsVectors = imagesAsMatrices map { image =>
-    DenseVector.tabulate(width * height) {
-      i => image(i / width, i % height) / 255.0
-    }}
+    DenseVector.tabulate(width * height) { i =>
+      image(i / width, i % height) / 255.0
+    }
+  }
 
   private[this] def readImages(ind: Int): Stream[DenseMatrix[Int]] =
     if (ind >= count) {
@@ -109,22 +112,21 @@ class MNISTImageReader(location: String, fileName: String)
   */
 class MNISTDataset(location: String, dataset: String) {
 
-  lazy val imageReader
-    = new MNISTImageReader(location, s"$dataset-images-idx3-ubyte.gz")
-  lazy val labelReader
-    = new MNISTLabelReader(location, s"$dataset-labels-idx1-ubyte.gz")
+  lazy val imageReader =
+    new MNISTImageReader(location, s"$dataset-images-idx3-ubyte.gz")
+  lazy val labelReader =
+    new MNISTLabelReader(location, s"$dataset-labels-idx1-ubyte.gz")
 
-  def imageWidth: Int = imageReader.width
+  def imageWidth: Int  = imageReader.width
   def imageHeight: Int = imageReader.height
 
-  def imagesAsMatrices: Stream[DenseMatrix[Int]]
-    = imageReader.imagesAsMatrices
-  def imagesAsVectors: Stream[DenseVector[Double]]
-    = imageReader.imagesAsVectors
+  def imagesAsMatrices: Stream[DenseMatrix[Int]] = imageReader.imagesAsMatrices
+  def imagesAsVectors: Stream[DenseVector[Double]] =
+    imageReader.imagesAsVectors
 
   def labelsAsInts: Stream[Int] = labelReader.labelsAsInts
-  def labelsAsVectors: Stream[DenseVector[Double]]
-    = labelReader.labelsAsVectors
+  def labelsAsVectors: Stream[DenseVector[Double]] =
+    labelReader.labelsAsVectors
 }
 
 object MNIST {
@@ -136,16 +138,16 @@ object MNIST {
     new MNISTDataset(location, "train")
   }
 
-  def asDF(dataset: MNISTDataset, sc: SparkContext, numData: Int):
-      DataFrame = {
+  def asDF(dataset: MNISTDataset, sc: SparkContext, numData: Int): DataFrame = {
     val sqlContext = new SQLContext(sc)
     import sqlContext.implicits._
     val labelsStream = dataset.labelsAsInts.take(numData)
     val imagesStream = dataset.imagesAsVectors.take(numData)
 
     sc.parallelize((labelsStream zip imagesStream).map({
-      case (label, image)
-        => Sample(label.toDouble, Vectors.dense(image.toArray))
-    })).toDF
+        case (label, image) =>
+          Sample(label.toDouble, Vectors.dense(image.toArray))
+      }))
+      .toDF
   }
 }

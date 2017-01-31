@@ -44,10 +44,9 @@ import com.lewuathe.dllib.util
   * @tparam E
   * @tparam M
   */
-abstract class Solver[FeaturesType,
-    E <: Solver[FeaturesType, E, M],
-    M <: SolverModel[FeaturesType, M]](val network: Network)
-  extends Predictor[FeaturesType, E, M]
+abstract class Solver[FeaturesType, E <: Solver[FeaturesType, E, M],
+M <: SolverModel[FeaturesType, M]](val network: Network)
+    extends Predictor[FeaturesType, E, M]
     with HasWeightCol
     with HasNumIterations {
 
@@ -56,42 +55,42 @@ abstract class Solver[FeaturesType,
 
   logDebug(network.toString)
 
-  var miniBatchFraction = 1.0
-  var learningRate = 0.3
+  var miniBatchFraction    = 1.0
+  var learningRate         = 0.3
   val objective: Objective = new MeanSquaredError
 
   val learningRateDecay = 0.99
 
-  def setNumIterations(value: Int): E = set(numIterations, value)
-    .asInstanceOf[E]
+  def setNumIterations(value: Int): E =
+    set(numIterations, value).asInstanceOf[E]
 
   protected def trainInternal(dataset: Dataset[_], model: Model): Model = {
-    val numFeatures = dataset.select(col($(featuresCol)))
-      .first().getAs[Vector](0).size
+    val numFeatures =
+      dataset.select(col($(featuresCol))).first().getAs[Vector](0).size
     val w = if (!isDefined(weightCol) || $(weightCol).isEmpty) {
       lit(1.0)
     } else {
       col($(weightCol))
     }
 
-    val instances: RDD[Instance] = dataset.select(
-      col($(labelCol)), w, col($(featuresCol))).rdd.map {
-      case Row(label: Double, weight: Double, features: Vector) =>
-        val l = util.encodeLabel(label, graph.layers.last.outputSize)
-        Instance(l, weight, brzVector[Double](features.toArray))
-    }
+    val instances: RDD[Instance] =
+      dataset.select(col($(labelCol)), w, col($(featuresCol))).rdd.map {
+        case Row(label: Double, weight: Double, features: Vector) =>
+          val l = util.encodeLabel(label, graph.layers.last.outputSize)
+          Instance(l, weight, brzVector[Double](features.toArray))
+      }
 
     var localModel = model
-    val bcGraph = dataset.sqlContext.sparkContext.broadcast(graph)
+    val bcGraph    = dataset.sqlContext.sparkContext.broadcast(graph)
 
     for (i <- 0 until $(numIterations)) {
       val bcModel = dataset.sqlContext.sparkContext.broadcast(localModel)
-      val (modelDelta: Model, lossSum: Double, miniBatchSize: Int)
-      = instances.sample(false, miniBatchFraction, 42 + i)
+      val (modelDelta: Model, lossSum: Double, miniBatchSize: Int) = instances
+        .sample(false, miniBatchFraction, 42 + i)
         .treeAggregate((InMemoryModel.zero(graph), 0.0, 0))(
           seqOp = (c: (Model, Double, Int), instance: Instance) => {
-            val (dModel, loss)
-              = gradient(bcGraph.value, bcModel.value, instance)
+            val (dModel, loss) =
+              gradient(bcGraph.value, bcModel.value, instance)
             (c._1 + dModel, c._2 + loss, c._3 + 1)
           },
           combOp = (c1, c2) => {
@@ -99,8 +98,9 @@ abstract class Solver[FeaturesType,
             (c1._1 + c2._1, c1._2 + c2._2, c1._3 + c2._3)
           })
 
-      logInfo(s"Iteration ${i} -> loss: ${lossSum / miniBatchSize}, " +
-        s"count: ${miniBatchSize}, learning rate: ${learningRate}")
+      logInfo(
+        s"Iteration ${i} -> loss: ${lossSum / miniBatchSize}, " +
+          s"count: ${miniBatchSize}, learning rate: ${learningRate}")
       localModel += (modelDelta / miniBatchSize) * learningRate
     }
 
@@ -114,12 +114,11 @@ abstract class Solver[FeaturesType,
     * @param instance
     * @return
     */
-  protected def gradient(
-      form: Graph,
-      model: Model,
-      instance: Instance): (Model, Double) = {
-    var deltaModel = InMemoryModel.zero(form)
-    val label = instance.label
+  protected def gradient(form: Graph,
+                         model: Model,
+                         instance: Instance): (Model, Double) = {
+    var deltaModel  = InMemoryModel.zero(form)
+    val label       = instance.label
     val activations = new ActivationStack
     activations.push(instance.blob)
 
@@ -130,7 +129,7 @@ abstract class Solver[FeaturesType,
     }
 
     var delta = objective.error(label, activations.top)
-    val loss = objective.loss(label, activations.top)
+    val loss  = objective.loss(label, activations.top)
 
     // Back propagation
     for (l: Layer <- form.layers.reverse) {
@@ -146,7 +145,7 @@ abstract class Solver[FeaturesType,
 
 abstract class SolverModel[FeaturesType, M <: SolverModel[FeaturesType, M]](
     val network: Network)
-  extends PredictionModel[FeaturesType, M] {
+    extends PredictionModel[FeaturesType, M] {
 
   val model: Model = network.model
   val graph: Graph = network.graph

@@ -32,18 +32,19 @@ import com.lewuathe.dllib.util.genId
   * @param outputSize
   * @param inputSize
   */
-class AffineLayer(
-      override val outputSize: Int,
-      override val inputSize: Int)
-    extends Layer with ShapeValidator with Visualizable with UniBlobSupport {
+class AffineLayer(override val outputSize: Int, override val inputSize: Int)
+    extends Layer
+    with ShapeValidator
+    with Visualizable
+    with UniBlobSupport {
 
-  override var id = genId()
-  override val inputShape: BlobShape = BlobShape(1, inputSize)
+  override var id                     = genId()
+  override val inputShape: BlobShape  = BlobShape(1, inputSize)
   override val outputShape: BlobShape = BlobShape(1, outputSize)
 
   override def forward(acts: ActivationStack, model: Model): Blob[Double] = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
-    val bias: Vector[Double] = model.getBias(id).get.value
+    val bias: Vector[Double]   = model.getBias(id).get.value
 
     validateParamShapes(weight, bias)
 
@@ -55,21 +56,20 @@ class AffineLayer(
     Blob.uni(u)
   }
 
-  override def backward(
-      delta: Blob[Double],
-      acts: ActivationStack,
-      model: Model): (Blob[Double], Weight, Bias) = {
+  override def backward(delta: Blob[Double],
+                        acts: ActivationStack,
+                        model: Model): (Blob[Double], Weight, Bias) = {
     val weight: Matrix[Double] = model.getWeight(id).get.value
-    val bias: Vector[Double] = model.getBias(id).get.value
+    val bias: Vector[Double]   = model.getBias(id).get.value
 
     val thisOutput = acts.pop()
-    val thisInput = acts.top
+    val thisInput  = acts.top
 
     checkBlobSize(delta)
     checkBlobSize(thisInput)
 
-    val dWeight: Weight = new Weight(id, outputSize,
-      inputSize)(Some(delta.head.toDenseVector * thisInput.head.toDenseVector.t))
+    val dWeight: Weight = new Weight(id, outputSize, inputSize)(
+      Some(delta.head.toDenseVector * thisInput.head.toDenseVector.t))
     val dBias: Bias = new Bias(id, outputSize)(Some(delta.head))
 
     validateParamShapes(dWeight.value, dBias.value)

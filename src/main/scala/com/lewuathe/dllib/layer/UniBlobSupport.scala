@@ -25,6 +25,6 @@ import com.lewuathe.dllib.Blob
   * Supports only uni blob (which is a Blob includes a Vector in the channel)
   */
 trait UniBlobSupport {
-  def checkBlobSize[E](blob: Blob[E]): Unit
-    = require(blob.size == 1, s"Unsupported Blob size : ${blob.size}")
+  def checkBlobSize[E](blob: Blob[E]): Unit =
+    require(blob.size == 1, s"Unsupported Blob size : ${blob.size}")
 }

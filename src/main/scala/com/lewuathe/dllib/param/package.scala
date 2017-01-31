@@ -22,6 +22,7 @@ package com.lewuathe.dllib
 import org.apache.spark.ml.param.{Param, Params}
 
 package object param {
+
   /**
     * Trait for shared param featuresCol (default: "features").
     */
@@ -31,8 +32,8 @@ package object param {
       * Param for features column name.
       * @group param
       */
-    final val featuresCol: Param[String]
-      = new Param[String](this, "featuresCol", "features column name")
+    final val featuresCol: Param[String] =
+      new Param[String](this, "featuresCol", "features column name")
 
     setDefault(featuresCol, "features")
 
@@ -49,8 +50,8 @@ package object param {
       * Param for label column name.
       * @group param
       */
-    final val labelCol: Param[String]
-      = new Param[String](this, "labelCol", "label column name")
+    final val labelCol: Param[String] =
+      new Param[String](this, "labelCol", "label column name")
 
     setDefault(labelCol, "label")
 
@@ -67,8 +68,8 @@ package object param {
       * Param for prediction column name.
       * @group param
       */
-    final val predictionCol: Param[String]
-      = new Param[String](this, "predictionCol", "prediction column name")
+    final val predictionCol: Param[String] =
+      new Param[String](this, "predictionCol", "prediction column name")
 
 //    setDefault(predictionCol, "prediction")
 
@@ -86,8 +87,10 @@ package object param {
       * instance weights as 1.0..
       * @group param
       */
-    final val weightCol: Param[String]
-      = new Param[String](this, "weightCol", "weight column name. " +
+    final val weightCol: Param[String] = new Param[String](
+      this,
+      "weightCol",
+      "weight column name. " +
         "If this is not set or empty, we treat all instance weights as 1.0.")
 
     /** @group getParam */
@@ -100,7 +103,9 @@ package object param {
       * Param for the number of iterations to be trained which should be
       * positive integer.
       */
-    final val numIterations: Param[Int] = new Param[Int](this, "numIterations",
+    final val numIterations: Param[Int] = new Param[Int](
+      this,
+      "numIterations",
       "Specify the count of iterations to be trained.")
 
     final def getNumIterations: Int = $(numIterations)

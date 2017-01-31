@@ -27,12 +27,12 @@ import com.lewuathe.dllib.activations.{softplus, softplusPrime}
 import com.lewuathe.dllib.model.Model
 import com.lewuathe.dllib.util.genId
 
-class SoftplusLayer(
-    override val outputSize: Int,
-    override val inputSize: Int)
-  extends Layer with Visualizable with UniBlobSupport {
-  override var id: String = genId
-  override val inputShape: BlobShape = BlobShape(1, inputSize)
+class SoftplusLayer(override val outputSize: Int, override val inputSize: Int)
+    extends Layer
+    with Visualizable
+    with UniBlobSupport {
+  override var id: String             = genId
+  override val inputShape: BlobShape  = BlobShape(1, inputSize)
   override val outputShape: BlobShape = BlobShape(1, outputSize)
 
   /**
@@ -63,19 +63,18 @@ class SoftplusLayer(
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  override def backward(
-      delta: Blob[Double],
-      acts: ActivationStack,
-      model: Model): (Blob[Double], Weight, Bias) = {
+  override def backward(delta: Blob[Double],
+                        acts: ActivationStack,
+                        model: Model): (Blob[Double], Weight, Bias) = {
     val thisOutput = acts.pop()
-    val thisInput = acts.top
+    val thisInput  = acts.top
 
     // No necessary to train this layer.
     val dWeight = Weight.zero(id, outputSize, inputSize)
-    val dBias = Bias.zero(id, outputSize)
+    val dBias   = Bias.zero(id, outputSize)
 
-    val d: Vector[Double]
-      = softplusPrime(thisInput.head) :* delta.head.toDenseVector
+    val d: Vector[Double] = softplusPrime(thisInput.head) :* delta.head
+        .toDenseVector
     (Blob.uni(d), dWeight, dBias)
   }
 }
