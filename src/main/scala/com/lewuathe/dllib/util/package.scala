@@ -28,8 +28,11 @@ package object util {
 
   // Generate a random string of length n from the given alphabet
   private def randomString(alphabet: String)(n: Int): String =
-    Stream.continually(random.nextInt(alphabet.size))
-      .map(alphabet).take(n).mkString
+    Stream
+      .continually(random.nextInt(alphabet.size))
+      .map(alphabet)
+      .take(n)
+      .mkString
 
   // Generate a random alphabnumeric string of length n
   private def randomAlphanumericString(n: Int) =
@@ -56,7 +59,7 @@ package object util {
   }
 
   def oneHotLabel(output: Vector[Double]): Vector[Double] = {
-    val i = output.argmax
+    val i   = output.argmax
     val ret = DenseVector.zeros[Double](output.size)
     ret(i) = 1.0
     ret

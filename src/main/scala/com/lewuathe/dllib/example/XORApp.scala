@@ -34,33 +34,37 @@ object XORApp {
   def createTrainingData(sqlContext: SQLContext): DataFrame = {
     import sqlContext.implicits._
     val sc = sqlContext.sparkContext
-    val data = sc.parallelize(Seq(
-      (1.0, Array(1.0, 0.0)),
-      (1.0, Array(0.0, 1.0)),
-      (0.0, Array(0.0, 0.0)),
-      (0.0, Array(1.0, 1.0))
-    )).map({
-      case (label, features) => Sample(label, Vectors.dense(features))
-    })
+    val data = sc
+      .parallelize(
+        Seq(
+          (1.0, Array(1.0, 0.0)),
+          (1.0, Array(0.0, 1.0)),
+          (0.0, Array(0.0, 0.0)),
+          (0.0, Array(1.0, 1.0))
+        ))
+      .map({
+        case (label, features) => Sample(label, Vectors.dense(features))
+      })
     data.toDF()
   }
 
   var miniBatchFraction = 1.0
-  var numIterations = 100
-  var learningRate = 0.7
+  var numIterations     = 100
+  var learningRate      = 0.7
 
   def submit(sc: SparkContext): Unit = {
     val sqlContext = new SQLContext(sc)
 
     val df = createTrainingData(sqlContext)
 
-    val nn3Graph = new Graph(Array(
-      new AffineLayer(2, 2),
-      new SoftmaxLayer(2, 2)
-    ))
+    val nn3Graph = new Graph(
+      Array(
+        new AffineLayer(2, 2),
+        new SoftmaxLayer(2, 2)
+      ))
 
     val nn3Model = InMemoryModel(nn3Graph)
-    val nn3 = Network(nn3Model, nn3Graph)
+    val nn3      = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("XOR", nn3)
     multilayerPerceptron.setNumIterations(numIterations)

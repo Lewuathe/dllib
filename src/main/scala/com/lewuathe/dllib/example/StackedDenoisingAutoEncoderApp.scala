@@ -30,7 +30,8 @@ import com.lewuathe.dllib.network.Network
 import com.lewuathe.dllib.solver.UnsupervisedPretrainingSolver
 
 class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
-                                     numIterations: Int, learningRate: Double) {
+                                     numIterations: Int,
+                                     learningRate: Double) {
   def createMNISTDataset(path: String, sc: SparkContext): DataFrame = {
     val dataset = MNIST(path)
     MNIST.asDF(dataset, sc, 5000)
@@ -38,27 +39,29 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
 
   def submit(sc: SparkContext): Unit = {
     val sqlContext = new SQLContext(sc)
-    val df = createMNISTDataset("/tmp/", sc)
+    val df         = createMNISTDataset("/tmp/", sc)
 
-    val sdaGraph = new Graph(Array(
-      new DenoisingAutoEncodeLayer(100, 784),
-      new SigmoidLayer(100, 100),
-      new AffineLayer(10, 100),
-      new SoftmaxLayer(10, 10)
-    ))
+    val sdaGraph = new Graph(
+      Array(
+        new DenoisingAutoEncodeLayer(100, 784),
+        new SigmoidLayer(100, 100),
+        new AffineLayer(10, 100),
+        new SoftmaxLayer(10, 10)
+      ))
 
     val sdaModel = InMemoryModel(sdaGraph)
-    val sda = Network(sdaModel, sdaGraph)
+    val sda      = Network(sdaModel, sdaGraph)
 
-    val unsupervisedPretrainer = new UnsupervisedPretrainingSolver("MNIST", sda)
+    val unsupervisedPretrainer =
+      new UnsupervisedPretrainingSolver("MNIST", sda)
     unsupervisedPretrainer.setNumIterations(numIterations)
     unsupervisedPretrainer.miniBatchFraction = miniBatchFraction
     unsupervisedPretrainer.learningRate = learningRate
     val model = unsupervisedPretrainer.fit(df)
 
     sdaGraph.layers.foreach({
-      case l: DenoisingAutoEncodeLayer
-        => l.vizWeight("./images/weight_denoising.png", model.model)
+      case l: DenoisingAutoEncodeLayer =>
+        l.vizWeight("./images/weight_denoising.png", model.model)
     })
 
     val result = model.transform(df)
@@ -68,14 +71,15 @@ class StackedDenoisingAutoEncoderApp(miniBatchFraction: Double,
 }
 
 object StackedDenoisingAutoEncoderApp {
-  def submit(sc: SparkContext): Unit
-    = new StackedDenoisingAutoEncoderApp(0.03, 10, 0.5).submit(sc)
+  def submit(sc: SparkContext): Unit =
+    new StackedDenoisingAutoEncoderApp(0.03, 10, 0.5).submit(sc)
 
-  def apply(sc: SparkContext, miniBatchFraction: Double,
-            numIterations: Int, learningRate: Double): Unit = {
-    new StackedDenoisingAutoEncoderApp(
-      miniBatchFraction,
-      numIterations,
-      learningRate).submit(sc)
+  def apply(sc: SparkContext,
+            miniBatchFraction: Double,
+            numIterations: Int,
+            learningRate: Double): Unit = {
+    new StackedDenoisingAutoEncoderApp(miniBatchFraction,
+                                       numIterations,
+                                       learningRate).submit(sc)
   }
 }

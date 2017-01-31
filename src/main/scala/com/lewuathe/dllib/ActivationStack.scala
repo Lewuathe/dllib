@@ -28,4 +28,3 @@ import breeze.linalg.Vector
   * - Raw output that multiplication weight and input
   */
 class ActivationStack extends Stack[Blob[Double]] {}
-

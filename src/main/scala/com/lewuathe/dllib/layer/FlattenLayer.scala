@@ -29,13 +29,13 @@ import com.lewuathe.dllib.util.genId
 /**
   * Convert multiple vector Blob into uni Blob.
   */
-class FlattenLayer(
-    override val outputShape: BlobShape,
-    override val inputShape: BlobShape)
-  extends Layer with Visualizable {
+class FlattenLayer(override val outputShape: BlobShape,
+                   override val inputShape: BlobShape)
+    extends Layer
+    with Visualizable {
   override var id: String = genId()
 
-  override val inputSize: Int = inputShape.featureSize
+  override val inputSize: Int  = inputShape.featureSize
   override val outputSize: Int = outputShape.featureSize
 
   /**
@@ -65,25 +65,24 @@ class FlattenLayer(
     *         First is passed previous layer, the second and third is
     *         the delta of Weight and Bias parameter of the layer.
     */
-  override def backward(
-      delta: Blob[Double],
-      acts: ActivationStack,
-      model: Model): (Blob[Double], Weight, Bias) = {
+  override def backward(delta: Blob[Double],
+                        acts: ActivationStack,
+                        model: Model): (Blob[Double], Weight, Bias) = {
     val thisOutput = acts.pop()
-    val thisInput = acts.top
+    val thisInput  = acts.top
 
     require(delta.size == 1, "The delta is not flattened")
 
     // Convert uni blob into input shape blob
-    val d = Blob[Double](delta.head
-        .toArray
+    val d = Blob[Double](
+      delta.head.toArray
         .sliding(inputSize, inputSize)
         .map(a => brzVector(a))
         .toArray)
 
     // No necessary to train this layer.
     val dWeight = Weight.zero(id, outputSize, inputSize)
-    val dBias = Bias.zero(id, outputSize)
+    val dBias   = Bias.zero(id, outputSize)
 
     (d, dWeight, dBias)
   }

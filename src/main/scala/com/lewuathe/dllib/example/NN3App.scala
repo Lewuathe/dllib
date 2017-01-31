@@ -34,14 +34,17 @@ object NN3App {
   def createTrainingData(sqlContext: SQLContext): DataFrame = {
     import sqlContext.implicits._
     val sc = sqlContext.sparkContext
-    val data = sc.parallelize(Seq(
-      (1.0, Array(1.0, 0.0, 1.0)),
-      (1.0, Array(0.0, 1.0, 1.0)),
-      (0.0, Array(0.0, 0.0, 0.0)),
-      (0.0, Array(1.0, 0.0, 0.0))
-    )).map({
-      case (label, features) => Sample(label, Vectors.dense(features))
-    })
+    val data = sc
+      .parallelize(
+        Seq(
+          (1.0, Array(1.0, 0.0, 1.0)),
+          (1.0, Array(0.0, 1.0, 1.0)),
+          (0.0, Array(0.0, 0.0, 0.0)),
+          (0.0, Array(1.0, 0.0, 0.0))
+        ))
+      .map({
+        case (label, features) => Sample(label, Vectors.dense(features))
+      })
     data.toDF()
   }
 
@@ -50,18 +53,19 @@ object NN3App {
 
     val df = createTrainingData(sqlContext)
 
-    val nn3Graph = new Graph(Array(
-      new AffineLayer(3, 3),
-      new SigmoidLayer(3, 3),
-      new AffineLayer(2, 3),
-      new SoftmaxLayer(2, 2)
-    ))
+    val nn3Graph = new Graph(
+      Array(
+        new AffineLayer(3, 3),
+        new SigmoidLayer(3, 3),
+        new AffineLayer(2, 3),
+        new SoftmaxLayer(2, 2)
+      ))
 
     val nn3Model = InMemoryModel(nn3Graph)
-    val nn3 = Network(nn3Model, nn3Graph)
+    val nn3      = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("one", nn3)
-    val model = multilayerPerceptron.fit(createTrainingData(sqlContext))
+    val model                = multilayerPerceptron.fit(createTrainingData(sqlContext))
 
     val testData = Seq(
       Array(1.0, 0.0, 1.0),

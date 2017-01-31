@@ -32,17 +32,16 @@ class ModelShape(graph: Graph) extends Serializable {
   })
 }
 
-abstract class Model(
-    val graph: Graph,
-    isZero: Boolean)(
-  implicit ws: Option[Map[String, Weight]], bs: Option[Map[String, Bias]]
+abstract class Model(val graph: Graph, isZero: Boolean)(
+    implicit ws: Option[Map[String, Weight]],
+    bs: Option[Map[String, Bias]]
 ) extends Serializable {
   def init(): (Map[String, Weight], Map[String, Bias])
 
   val shape: ModelShape = new ModelShape(graph)
   var (weights, biases) = if (ws.isEmpty && bs.isEmpty) {
     init()
-  }  else {
+  } else {
     (ws.get, bs.get)
   }
 
@@ -82,4 +81,3 @@ abstract class Model(
       })
   }
 }
-

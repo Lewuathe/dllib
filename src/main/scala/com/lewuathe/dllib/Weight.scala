@@ -27,12 +27,11 @@ import breeze.linalg.Matrix
   * @param inputSize
   * @param outputSize
   */
-class Weight(
-    val id: String,
-    val outputSize: Int,
-    val inputSize: Int,
-    isZero: Boolean = false)
-  (implicit v: Option[Matrix[Double]]) extends Serializable {
+class Weight(val id: String,
+             val outputSize: Int,
+             val inputSize: Int,
+             isZero: Boolean = false)(implicit v: Option[Matrix[Double]])
+    extends Serializable {
 
   val value: Matrix[Double] = if (v.isDefined) {
     v.get
@@ -78,16 +77,18 @@ class Weight(
 object Weight {
   implicit val nullMatrix: Option[Matrix[Double]] = Option.empty
 
-  def apply(id: String, outputSize: Int, inputSize: Int): Weight
-    = new Weight(id, outputSize, inputSize)
+  def apply(id: String, outputSize: Int, inputSize: Int): Weight =
+    new Weight(id, outputSize, inputSize)
 
-  def apply(outputSize: Int, inputSize: Int): Weight
-    = new Weight(util.genId(), outputSize, inputSize)
+  def apply(outputSize: Int, inputSize: Int): Weight =
+    new Weight(util.genId(), outputSize, inputSize)
 
-  def apply(id: String, outputSize: Int, inputSize: Int,
-      isZero: Boolean): Weight
-    = new Weight(id, outputSize, inputSize, isZero)
+  def apply(id: String,
+            outputSize: Int,
+            inputSize: Int,
+            isZero: Boolean): Weight =
+    new Weight(id, outputSize, inputSize, isZero)
 
-  def zero(id: String, outputSize: Int, inputSize: Int): Weight
-    = new Weight(id, outputSize, inputSize, isZero = true)
+  def zero(id: String, outputSize: Int, inputSize: Int): Weight =
+    new Weight(id, outputSize, inputSize, isZero = true)
 }

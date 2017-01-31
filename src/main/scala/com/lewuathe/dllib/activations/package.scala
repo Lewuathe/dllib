@@ -25,61 +25,62 @@ import breeze.linalg.{sum, Vector}
   * The collection of activation functions
   */
 package object activations {
+
   /**
-   * sigmoid function for vector
-   * @param x
-   * @return
-   */
+    * sigmoid function for vector
+    * @param x
+    * @return
+    */
   def sigmoid(x: Vector[Double]): Vector[Double] = x.map(sigmoid)
 
   /**
-   * sigmoid function for double value
-   * @param input
-   * @return
-   */
+    * sigmoid function for double value
+    * @param input
+    * @return
+    */
   def sigmoid(input: Double): Double = 1.0 / (1.0 + Math.exp(-input))
 
   /**
-   * Derivative of sigmoid function for vector
-   * @param x
-   * @return
-   */
+    * Derivative of sigmoid function for vector
+    * @param x
+    * @return
+    */
   def sigmoidPrime(x: Vector[Double]): Vector[Double] = x.map(sigmoidPrime)
 
   /**
-   * Derivative of sigmoid function for double value
-   * @param input
-   * @return
-   */
-  def sigmoidPrime(input: Double): Double
-    = sigmoid(input) * (1.0 - sigmoid(input))
+    * Derivative of sigmoid function for double value
+    * @param input
+    * @return
+    */
+  def sigmoidPrime(input: Double): Double =
+    sigmoid(input) * (1.0 - sigmoid(input))
 
   /**
-   * Hyperbolic tangent for vector
-   * @param x
-   * @return
-   */
+    * Hyperbolic tangent for vector
+    * @param x
+    * @return
+    */
   def tanh(x: Vector[Double]): Vector[Double] = x.map(tanh)
 
   /**
-   * Hyperbolic tangent for double value
-   * @param input
-   * @return
-   */
+    * Hyperbolic tangent for double value
+    * @param input
+    * @return
+    */
   def tanh(input: Double): Double = Math.tanh(input)
 
   /**
-   * Derivative of hyperbolic tangent for vector
-   * @param x
-   * @return
-   */
+    * Derivative of hyperbolic tangent for vector
+    * @param x
+    * @return
+    */
   def tanhPrime(x: Vector[Double]): Vector[Double] = x.map(tanhPrime)
 
   /**
-   * Derivative of hyperbolic tangent for double value
-   * @param input
-   * @return
-   */
+    * Derivative of hyperbolic tangent for double value
+    * @param input
+    * @return
+    */
   def tanhPrime(input: Double): Double = 1.0 - Math.pow(tanh(input), 2.0)
 
   def softmax(x: Vector[Double]): Vector[Double] = {
@@ -106,30 +107,30 @@ package object activations {
   def reluPrime(x: Vector[Double]): Vector[Double] = x.map(reluPrime)
 
   /**
-   * A smooth approximation of ReLU
-   * @param input
-   * @return
-   */
+    * A smooth approximation of ReLU
+    * @param input
+    * @return
+    */
   def softplus(input: Double): Double = Math.log(1.0 + Math.exp(input))
 
   /**
-   * A smooth approximation of ReLU for vector
-   * @param x
-   * @return
-   */
-   def softplus(x: Vector[Double]): Vector[Double] = x.map(softplus)
+    * A smooth approximation of ReLU for vector
+    * @param x
+    * @return
+    */
+  def softplus(x: Vector[Double]): Vector[Double] = x.map(softplus)
 
   /**
-   * Derivative of softplus function
-   * @param input
-   * @return
-   */
+    * Derivative of softplus function
+    * @param input
+    * @return
+    */
   def softplusPrime(input: Double): Double = 1.0 / (1.0 + Math.exp(-input))
 
   /**
-   * Derivative of softplus function for vector
-   * @param x
-   * @return
-   */
-   def softplusPrime(x: Vector[Double]): Vector[Double] = x.map(softplusPrime)
+    * Derivative of softplus function for vector
+    * @param x
+    * @return
+    */
+  def softplusPrime(x: Vector[Double]): Vector[Double] = x.map(softplusPrime)
 }

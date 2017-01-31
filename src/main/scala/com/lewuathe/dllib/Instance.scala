@@ -22,9 +22,10 @@ package com.lewuathe.dllib
 import breeze.linalg.Vector
 
 private[dllib] case class Instance(labelVector: Vector[Double],
-    weight: Double, features: Vector[Double]) {
+                                   weight: Double,
+                                   features: Vector[Double]) {
 
   // TODO: Multi vector blob instance
-  val blob: Blob[Double] = new Blob(Array(features))
+  val blob: Blob[Double]  = new Blob(Array(features))
   val label: Blob[Double] = new Blob(Array(labelVector))
 }

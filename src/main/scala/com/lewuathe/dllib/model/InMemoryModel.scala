@@ -23,26 +23,29 @@ import com.lewuathe.dllib.graph.Graph
 import com.lewuathe.dllib.layer.Layer
 import com.lewuathe.dllib.{Bias, Weight}
 
-class InMemoryModel(
-    graph: Graph,
-    isZero: Boolean = false)(
-  implicit ws: Option[Map[String, Weight]], bs: Option[Map[String, Bias]]
+class InMemoryModel(graph: Graph, isZero: Boolean = false)(
+    implicit ws: Option[Map[String, Weight]],
+    bs: Option[Map[String, Bias]]
 ) extends Model(graph, isZero)(ws, bs) {
 
   def init(): (Map[String, Weight], Map[String, Bias]) = {
-    val weights: Map[String, Weight] = graph.layers.map({
-      case layer: Layer => {
-        val w = Weight(layer.id, layer.outputSize, layer.inputSize, isZero)
-        (w.id, w)
-      }
-    }).toMap
+    val weights: Map[String, Weight] = graph.layers
+      .map({
+        case layer: Layer => {
+          val w = Weight(layer.id, layer.outputSize, layer.inputSize, isZero)
+          (w.id, w)
+        }
+      })
+      .toMap
 
-    val biases: Map[String, Bias] = graph.layers.map({
-      case layer: Layer => {
-        val b = Bias(layer.id, layer.outputSize, isZero)
-        (b.id, b)
-      }
-    }).toMap
+    val biases: Map[String, Bias] = graph.layers
+      .map({
+        case layer: Layer => {
+          val b = Bias(layer.id, layer.outputSize, isZero)
+          (b.id, b)
+        }
+      })
+      .toMap
     (weights, biases)
   }
 
@@ -103,7 +106,7 @@ class InMemoryModel(
   }
 
   override def getWeight(id: String): Option[Weight] = weights.get(id)
-  override def getBias(id: String): Option[Bias] = biases.get(id)
+  override def getBias(id: String): Option[Bias]     = biases.get(id)
 
   override def addWeight(w: Weight): Unit = {
     require(!weights.contains(w.id))
@@ -123,8 +126,8 @@ class InMemoryModel(
 
 object InMemoryModel {
   implicit val nullWeight: Option[Map[String, Weight]] = Option.empty
-  implicit val nullBias : Option[Map[String, Bias]] = Option.empty
+  implicit val nullBias: Option[Map[String, Bias]]     = Option.empty
 
   def apply(graph: Graph): Model = new InMemoryModel(graph)
-  def zero(graph: Graph): Model = new InMemoryModel(graph, isZero = true)
+  def zero(graph: Graph): Model  = new InMemoryModel(graph, isZero = true)
 }

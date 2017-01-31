@@ -39,17 +39,18 @@ class MNISTApp(miniBatchFraction: Double, numIter: Int, learningRate: Double) {
 
   def submit(spark: SparkSession): Double = {
     val sqlContext = spark.sqlContext
-    val df = createMNISTDataset("/tmp/", spark.sparkContext)
+    val df         = createMNISTDataset("/tmp/", spark.sparkContext)
 
-    val nn3Graph = new Graph(Array(
-      new AffineLayer(100, 784),
-      new ReLULayer(100, 100),
-      new AffineLayer(10, 100),
-      new SoftmaxLayer(10, 10)
-    ))
+    val nn3Graph = new Graph(
+      Array(
+        new AffineLayer(100, 784),
+        new ReLULayer(100, 100),
+        new AffineLayer(10, 100),
+        new SoftmaxLayer(10, 10)
+      ))
 
     val nn3Model = InMemoryModel(nn3Graph)
-    val nn3 = Network(nn3Model, nn3Graph)
+    val nn3      = Network(nn3Model, nn3Graph)
 
     val multilayerPerceptron = new MultiLayerPerceptron("MNIST", nn3)
     multilayerPerceptron.setNumIterations(numIter)
@@ -64,17 +65,21 @@ class MNISTApp(miniBatchFraction: Double, numIter: Int, learningRate: Double) {
 }
 
 object MNISTApp {
-  def submit(spark: SparkSession): Double
-    = new MNISTApp(0.03, 10, 0.5).submit(spark)
+  def submit(spark: SparkSession): Double =
+    new MNISTApp(0.03, 10, 0.5).submit(spark)
 
-  def apply(spark: SparkSession, miniBatchFraction: Double,
-            numIterations: Int, learningRate: Double): Double = {
+  def apply(spark: SparkSession,
+            miniBatchFraction: Double,
+            numIterations: Int,
+            learningRate: Double): Double = {
     Logger.getLogger("org.apache.spark").setLevel(Level.OFF)
     new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(spark)
   }
 
-  def apply(sparkConf: SparkConf, miniBatchFraction: Double,
-            numIterations: Int, learningRate: Double): Double = {
+  def apply(sparkConf: SparkConf,
+            miniBatchFraction: Double,
+            numIterations: Int,
+            learningRate: Double): Double = {
     val spark = SparkSession.builder().config(sparkConf).getOrCreate()
     Logger.getLogger("org.apache.spark").setLevel(Level.OFF)
     new MNISTApp(miniBatchFraction, numIterations, learningRate).submit(spark)
