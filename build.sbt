@@ -31,7 +31,7 @@ val buildSettings = Seq(
                 enableCrossBuild = true),
     pushChanges
   ),
-  sparkVersion := "2.1.0",
+  sparkVersion := "2.2.0",
   sparkComponents ++= Seq("mllib", "sql"),
   spName := "Lewuathe/dllib",
   spShortDescription := "Distributed Deep learning module on Apache Spark",
